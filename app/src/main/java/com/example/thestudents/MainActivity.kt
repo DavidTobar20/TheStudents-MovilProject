@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.example.thestudents.ui.MensajeBienvenida
+import com.example.thestudents.ui.HomeScreen
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,11 +19,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TheStudentsTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MensajeBienvenida(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                HomeScreen()
             }
         }
     }
