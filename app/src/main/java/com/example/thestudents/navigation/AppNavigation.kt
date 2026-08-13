@@ -24,9 +24,9 @@ fun AppNavigation() {
         composable("login") { 
             LoginScreen(onLoginSuccess = { navController.navigate("search") }) 
         }
-        composable("home") { HomeScreen() }
-        composable("search") { SearchScreen() }
-        composable("profile") { ProfileScreen() }
-        composable("reviews") { ReviewsScreen() }
+        composable("home") { HomeScreen(navController) }
+        composable("search") { SearchScreen(navController) }
+        composable("profile") { ProfileScreen(navController) }
+        composable("reviews") { ReviewsScreen(navController) }
     }
 }

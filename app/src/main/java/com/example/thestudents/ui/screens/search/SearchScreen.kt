@@ -13,7 +13,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontFamily
@@ -23,13 +22,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
-// Colores
-val DarkGreenS = Color(0xFF1B3935)
-val MediumGreenS = Color(0xFF376052)
-val SageS = Color(0xFFB2B7AC)
-val CreamS = Color(0xFFFBF7F2)
-val TanS = Color(0xFFD3C3A7)
-val GoldS = Color(0xFFD4AF37)
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.thestudents.ui.components.DiamondDivider
+import com.example.thestudents.ui.components.FixedBottomBar
+import com.example.thestudents.ui.theme.*
 
 // 1. PREVIEW: Encabezado
 @Composable
@@ -43,24 +40,10 @@ fun HeaderSearch(modifier: Modifier = Modifier) {
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Serif,
-            color = DarkGreenS,
+            color = DarkGreen,
             letterSpacing = 1.sp
         )
-        Row(
-            modifier = Modifier.padding(vertical = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            HorizontalDivider(modifier = Modifier.width(60.dp), color = TanS, thickness = 1.dp)
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .size(10.dp)
-                    .rotate(45f)
-                    .background(TanS)
-            )
-            HorizontalDivider(modifier = Modifier.width(60.dp), color = TanS, thickness = 1.dp)
-        }
+        DiamondDivider(modifier = Modifier.padding(vertical = 16.dp).width(200.dp))
     }
 }
 
@@ -77,14 +60,14 @@ fun SearchBarComponent(query: String, onQueryChange: (String) -> Unit) {
         value = query,
         onValueChange = onQueryChange,
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text("Buscar por nombre o carrera...", color = SageS) },
-        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = SageS) },
+        placeholder = { Text("Buscar por nombre o carrera...", color = Sage) },
+        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Sage) },
         shape = RoundedCornerShape(12.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = SageS.copy(alpha = 0.5f),
-            unfocusedBorderColor = SageS.copy(alpha = 0.5f),
+            focusedBorderColor = Sage.copy(alpha = 0.5f),
+            unfocusedBorderColor = Sage.copy(alpha = 0.5f),
             focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White
+            unfocusedContainerColor = Color.White,
         ),
         singleLine = true
     )
@@ -93,7 +76,7 @@ fun SearchBarComponent(query: String, onQueryChange: (String) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun SearchBarPreview() {
-    TheStudentsTheme { SearchBarComponent("", {}) }
+    TheStudentsTheme { SearchBarComponent("") {} }
 }
 
 // 3. PREVIEW: Tarjeta de Estudiante
@@ -116,17 +99,17 @@ fun StudentCard(student: Student) {
             }
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = student.name, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = DarkGreenS)
-                Text(text = "${student.program} · ${student.reviews} reseñas", fontSize = 13.sp, color = MediumGreenS.copy(alpha = 0.6f))
+                Text(text = student.name, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = DarkGreen)
+                Text(text = "${student.program} · ${student.reviews} reseñas", fontSize = 13.sp, color = MediumGreen.copy(alpha = 0.6f))
                 Row(modifier = Modifier.padding(top = 4.dp)) {
                     repeat(5) { index ->
-                        Icon(Icons.Default.Star, null, Modifier.size(16.dp), tint = if (index < student.rating) GoldS else SageS.copy(alpha = 0.3f))
+                        Icon(Icons.Default.Star, null, Modifier.size(16.dp), tint = if (index < student.rating) Gold else Sage.copy(alpha = 0.3f))
                     }
                 }
             }
             Button(
                 onClick = { },
-                colors = ButtonDefaults.buttonColors(containerColor = DarkGreenS),
+                colors = ButtonDefaults.buttonColors(containerColor = DarkGreen),
                 shape = RoundedCornerShape(8.dp),
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
             ) {
@@ -142,49 +125,9 @@ fun StudentCardPreview() {
     TheStudentsTheme { StudentCard(Student("VT", "Valentina Torres", "Psicología", 28, 5, Color(0xFF7B5CAB))) }
 }
 
-// 4. PREVIEW: Barra de Navegación corregida
-@Composable
-fun FixedBottomBar() {
-    Surface(
-        modifier = Modifier.fillMaxWidth().height(80.dp),
-        color = Color.White,
-        tonalElevation = 8.dp
-    ) {
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            NavItem(Icons.Default.Home, "Inicio", false)
-            NavItem(Icons.Default.Search, "Explorar", true)
-            
-            Surface(shape = CircleShape, color = DarkGreenS, modifier = Modifier.size(52.dp)) {
-                Icon(Icons.Default.School, null, Modifier.padding(12.dp), tint = Color.White)
-            }
-
-            NavItem(Icons.Default.Edit, "Publicar", false)
-            NavItem(Icons.Default.Person, "Perfil", false)
-        }
-    }
-}
-
-@Composable
-fun NavItem(icon: ImageVector, label: String, selected: Boolean) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Icon(icon, null, tint = if (selected) DarkGreenS else MediumGreenS, modifier = Modifier.size(24.dp))
-        Text(text = label, fontSize = 10.sp, color = if (selected) DarkGreenS else MediumGreenS)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun BottomBarPreview() {
-    TheStudentsTheme { FixedBottomBar() }
-}
-
 // 5. PANTALLA COMPLETA
 @Composable
-fun SearchScreen() {
+fun SearchScreen(navController: NavController = rememberNavController()) {
     var query by remember { mutableStateOf("") }
     val students = listOf(
         Student("VT", "Valentina Torres", "Psicología", 28, 5, Color(0xFF7B5CAB)),
@@ -196,8 +139,8 @@ fun SearchScreen() {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = CreamS,
-        bottomBar = { FixedBottomBar() }
+        containerColor = Cream,
+        bottomBar = { FixedBottomBar(navController, "search") }
     ) { padding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 24.dp),
@@ -214,7 +157,7 @@ fun SearchScreen() {
                 modifier = Modifier.fillMaxWidth(),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                color = MediumGreenS.copy(alpha = 0.7f),
+                color = MediumGreen.copy(alpha = 0.7f),
                 letterSpacing = 1.sp
             )
             
