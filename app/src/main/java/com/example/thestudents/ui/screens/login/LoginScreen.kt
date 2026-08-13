@@ -121,7 +121,7 @@ fun AppButtonPreview() {
 }
 
 @Composable
-fun BodyLoginScreen() {
+fun BodyLoginScreen(onLoginClick: () -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -218,7 +218,7 @@ fun BodyLoginScreen() {
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        AppButton("INGRESAR") { /* TODO */ }
+        AppButton("INGRESAR") { onLoginClick() }
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -271,13 +271,13 @@ fun BodyLoginScreen() {
 @Preview(showBackground = true)
 fun BodyLoginScreenPreview() {
     TheStudentsTheme {
-        BodyLoginScreen()
+        BodyLoginScreen(onLoginClick = {})
     }
 }
 
 @Composable
-fun LoginScreen() {
-    BodyLoginScreen()
+fun LoginScreen(onLoginSuccess: () -> Unit = {}) {
+    BodyLoginScreen(onLoginClick = onLoginSuccess)
 }
 
 @Composable

@@ -1,6 +1,8 @@
 package com.example.thestudents.navigation
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -16,22 +18,15 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = "login"
+        startDestination = "login",
+        modifier = Modifier.fillMaxSize()
     ) {
-        composable("login") {
-            LoginScreen()
+        composable("login") { 
+            LoginScreen(onLoginSuccess = { navController.navigate("search") }) 
         }
-        composable("home") {
-            HomeScreen()
-        }
-        composable("search") {
-            SearchScreen()
-        }
-        composable("profile") {
-            ProfileScreen()
-        }
-        composable("reviews") {
-            ReviewsScreen()
-        }
+        composable("home") { HomeScreen() }
+        composable("search") { SearchScreen() }
+        composable("profile") { ProfileScreen() }
+        composable("reviews") { ReviewsScreen() }
     }
 }
