@@ -1,10 +1,8 @@
-package com.example.thestudents.ui
-
+package com.example.thestudents.ui.screens.login
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -123,7 +121,7 @@ fun AppButtonPreview() {
 }
 
 @Composable
-fun BodyHomeScreen() {
+fun BodyLoginScreen() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -271,21 +269,21 @@ fun BodyHomeScreen() {
 
 @Composable
 @Preview(showBackground = true)
-fun BodyHomeScreenPreview() {
+fun BodyLoginScreenPreview() {
     TheStudentsTheme {
-        BodyHomeScreen()
+        BodyLoginScreen()
     }
 }
 
 @Composable
-fun HomeScreen() {
-    BodyHomeScreen()
+fun LoginScreen() {
+    BodyLoginScreen()
 }
 
 @Composable
 @Preview(showBackground = true)
-fun HomeScreenPreview() {
+fun LoginScreenPreview() {
     TheStudentsTheme {
-        HomeScreen()
+        LoginScreen()
     }
 }
