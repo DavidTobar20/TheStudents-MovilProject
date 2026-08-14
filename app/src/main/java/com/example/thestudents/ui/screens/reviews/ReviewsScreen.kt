@@ -73,9 +73,12 @@ fun HeaderReviewsPreview() {
 }
 
 @Composable
-fun ReviewStudentItem(student: ReviewStudent) {
+fun ReviewStudentItem(
+    student: ReviewStudent,
+    modifier: Modifier = Modifier
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -128,8 +131,11 @@ fun ReviewStudentItemPreview() {
 }
 
 @Composable
-fun CourseSectionCard(section: CourseSection) {
-    Column(modifier = Modifier.padding(vertical = 12.dp)) {
+fun CourseSectionCard(
+    section: CourseSection,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.padding(vertical = 12.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 imageVector = section.icon,
@@ -180,7 +186,10 @@ fun CourseSectionCardPreview() {
 }
 
 @Composable
-fun ReviewsScreen(navController: NavController = rememberNavController()) {
+fun ReviewsScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController = rememberNavController()
+) {
     val sections = listOf(
         CourseSection(
             title = "Estructuras de Datos (ISIS1206)",
@@ -209,7 +218,7 @@ fun ReviewsScreen(navController: NavController = rememberNavController()) {
     )
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         containerColor = Cream,
         bottomBar = { FixedBottomBar(navController, "reviews") }
     ) { padding ->

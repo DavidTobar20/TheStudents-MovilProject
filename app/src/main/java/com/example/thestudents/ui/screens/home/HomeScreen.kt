@@ -14,9 +14,12 @@ import com.example.thestudents.ui.components.FixedBottomBar
 import com.example.thestudents.ui.theme.Cream
 
 @Composable
-fun HomeScreen(navController: NavController = rememberNavController()) {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController = rememberNavController()
+) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         containerColor = Cream,
         bottomBar = { FixedBottomBar(navController, "home") }
     ) { padding ->

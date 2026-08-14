@@ -49,9 +49,13 @@ fun DiamondDivider(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun FixedBottomBar(navController: NavController, currentRoute: String?) {
+fun FixedBottomBar(
+    navController: NavController,
+    currentRoute: String?,
+    modifier: Modifier = Modifier
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight(),
         contentAlignment = Alignment.BottomCenter
@@ -148,9 +152,15 @@ fun DiamondDividerPreview() {
 }
 
 @Composable
-fun NavItem(icon: ImageVector, label: String, selected: Boolean, onClick: () -> Unit) {
+fun NavItem(
+    icon: ImageVector,
+    label: String,
+    selected: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(12.dp))
             .clickable(onClick = onClick)
             .padding(horizontal = 8.dp, vertical = 4.dp), // Padding más compacto

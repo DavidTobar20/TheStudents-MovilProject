@@ -55,11 +55,15 @@ fun HeaderSearchPreview() {
 
 // 2. PREVIEW: Barra de búsqueda
 @Composable
-fun SearchBarComponent(query: String, onQueryChange: (String) -> Unit) {
+fun SearchBarComponent(
+    query: String,
+    modifier: Modifier = Modifier,
+    onQueryChange: (String) -> Unit
+) {
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         placeholder = { Text("Buscar por nombre o carrera...", color = Sage) },
         leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Sage) },
         shape = RoundedCornerShape(12.dp),
@@ -83,9 +87,12 @@ fun SearchBarPreview() {
 data class Student(val initials: String, val name: String, val program: String, val reviews: Int, val rating: Int, val color: Color)
 
 @Composable
-fun StudentCard(student: Student) {
+fun StudentCard(
+    student: Student,
+    modifier: Modifier = Modifier
+) {
     Surface(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+        modifier = modifier.fillMaxWidth().padding(vertical = 8.dp),
         color = Color.White,
         shape = RoundedCornerShape(16.dp),
         shadowElevation = 2.dp
@@ -127,7 +134,10 @@ fun StudentCardPreview() {
 
 // 5. PANTALLA COMPLETA
 @Composable
-fun SearchScreen(navController: NavController = rememberNavController()) {
+fun SearchScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController = rememberNavController()
+) {
     var query by remember { mutableStateOf("") }
     val students = listOf(
         Student("VT", "Valentina Torres", "Psicología", 28, 5, Color(0xFF7B5CAB)),
@@ -138,7 +148,7 @@ fun SearchScreen(navController: NavController = rememberNavController()) {
     )
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         containerColor = Cream,
         bottomBar = { FixedBottomBar(navController, "search") }
     ) { padding ->

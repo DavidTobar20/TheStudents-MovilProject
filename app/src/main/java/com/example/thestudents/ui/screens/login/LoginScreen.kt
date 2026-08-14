@@ -96,10 +96,14 @@ fun DiamondDivider(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun AppButton(textoBoton: String, onClick: () -> Unit) {
+fun AppButton(
+    textoBoton: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Button(
         onClick = onClick,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(56.dp),
         colors = ButtonDefaults.buttonColors(containerColor = DarkGreen),
@@ -121,12 +125,15 @@ fun AppButtonPreview() {
 }
 
 @Composable
-fun BodyLoginScreen(onLoginClick: () -> Unit) {
+fun BodyLoginScreen(
+    onLoginClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Cream)
             .padding(horizontal = 32.dp, vertical = 24.dp),
@@ -276,8 +283,14 @@ fun BodyLoginScreenPreview() {
 }
 
 @Composable
-fun LoginScreen(onLoginSuccess: () -> Unit = {}) {
-    BodyLoginScreen(onLoginClick = onLoginSuccess)
+fun LoginScreen(
+    modifier: Modifier = Modifier,
+    onLoginSuccess: () -> Unit = {}
+) {
+    BodyLoginScreen(
+        onLoginClick = onLoginSuccess,
+        modifier = modifier
+    )
 }
 
 @Composable

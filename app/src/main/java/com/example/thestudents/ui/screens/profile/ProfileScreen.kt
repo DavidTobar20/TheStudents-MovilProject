@@ -25,9 +25,12 @@ import com.example.thestudents.ui.components.FixedBottomBar
 import com.example.thestudents.ui.theme.*
 
 @Composable
-fun ProfileHeader(onBackClick: () -> Unit) {
+fun ProfileHeader(
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -56,9 +59,9 @@ fun ProfileHeaderPreview() {
 }
 
 @Composable
-fun UserInfoSection() {
+fun UserInfoSection(modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.Start
@@ -135,8 +138,15 @@ fun UserInfoSectionPreview() {
 }
 
 @Composable
-fun StatItem(count: String, label: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+fun StatItem(
+    count: String,
+    label: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             text = count,
             fontSize = 20.sp,
@@ -153,9 +163,9 @@ fun StatItem(count: String, label: String) {
 }
 
 @Composable
-fun StatsSection() {
+fun StatsSection(modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 24.dp),
         horizontalArrangement = Arrangement.SpaceAround
@@ -175,10 +185,10 @@ fun StatsSectionPreview() {
 }
 
 @Composable
-fun EditProfileButton() {
+fun EditProfileButton(modifier: Modifier = Modifier) {
     OutlinedButton(
         onClick = { /* Editar */ },
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 24.dp)
             .height(48.dp),
@@ -199,9 +209,9 @@ fun EditProfileButtonPreview() {
 }
 
 @Composable
-fun RatingChartSection() {
+fun RatingChartSection(modifier: Modifier = Modifier) {
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(24.dp),
         color = Color.White,
@@ -246,9 +256,9 @@ fun RatingChartSectionPreview() {
 }
 
 @Composable
-fun ProfileTabs() {
+fun ProfileTabs(modifier: Modifier = Modifier) {
     var selectedTab by remember { mutableStateOf(0) }
-    Column {
+    Column(modifier = modifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -295,9 +305,9 @@ fun ProfileTabsPreview() {
 }
 
 @Composable
-fun ReviewItem() {
+fun ReviewItem(modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(24.dp)
     ) {
@@ -340,9 +350,12 @@ fun ReviewItemPreview() {
 }
 
 @Composable
-fun ProfileScreen(navController: NavController = rememberNavController()) {
+fun ProfileScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController = rememberNavController()
+) {
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         containerColor = Cream,
         bottomBar = { FixedBottomBar(navController, "profile") }
     ) { padding ->
