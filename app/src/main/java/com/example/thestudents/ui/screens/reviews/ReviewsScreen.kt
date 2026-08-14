@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.reviews
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -25,19 +28,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.ui.components.DiamondDivider
 import com.example.thestudents.ui.components.FixedBottomBar
+import com.example.thestudents.ui.components.Student
 import com.example.thestudents.ui.theme.*
-
-data class ReviewStudent(
-    val initials: String,
-    val name: String,
-    val period: String,
-    val color: Color
-)
 
 data class CourseSection(
     val title: String,
     val icon: ImageVector,
-    val students: List<ReviewStudent>
+    val students: List<Student>
 )
 
 @Composable
@@ -74,7 +71,7 @@ fun HeaderReviewsPreview() {
 
 @Composable
 fun ReviewStudentItem(
-    student: ReviewStudent,
+    student: Student,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -87,15 +84,24 @@ fun ReviewStudentItem(
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
-                .background(student.color),
+                .background(student.profileColor),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = student.initials,
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
+            if (student.profileImageRes != null) {
+                Image(
+                    painter = painterResource(id = student.profileImageRes),
+                    contentDescription = "Imagen de perfil",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Text(
+                    text = student.initials,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+            }
         }
         Spacer(modifier = Modifier.width(16.dp))
         Column(modifier = Modifier.weight(1f)) {
@@ -126,7 +132,19 @@ fun ReviewStudentItem(
 @Composable
 fun ReviewStudentItemPreview() {
     ReviewStudentItem(
-        ReviewStudent("MJ", "María Jiménez", "2025-2", Color(0xFF4C8C64))
+        Student(
+            id = "mj",
+            name = "María Jiménez",
+            email = "maria@u.edu.co",
+            program = "Ingeniería",
+            semester = 4,
+            bio = "",
+            rating = 5f,
+            reviewsCount = 10,
+            initials = "MJ",
+            profileColor = Color(0xFF4C8C64),
+            period = "2025-2"
+        )
     )
 }
 
@@ -178,8 +196,8 @@ fun CourseSectionCardPreview() {
             title = "Estructuras de Datos (ISIS1206)",
             icon = Icons.Default.Storage,
             students = listOf(
-                ReviewStudent("MJ", "María Jiménez", "2025-2", Color(0xFF4C8C64)),
-                ReviewStudent("LM", "Laura Martínez", "2025-2", Color(0xFF7B5CAB))
+                Student("mj", "María Jiménez", "maria@u.edu.co", "Ingeniería", 4, "", 5f, 10, "MJ", Color(0xFF4C8C64), "2025-2"),
+                Student("lm", "Laura Martínez", "laura@u.edu.co", "Ingeniería", 4, "", 5f, 10, "LM", Color(0xFF7B5CAB), "2025-2")
             )
         )
     )
@@ -195,24 +213,24 @@ fun ReviewsScreen(
             title = "Estructuras de Datos (ISIS1206)",
             icon = Icons.Default.Storage,
             students = listOf(
-                ReviewStudent("MJ", "María Jiménez", "2025-2", Color(0xFF4C8C64)),
-                ReviewStudent("LM", "Laura Martínez", "2025-2", Color(0xFF7B5CAB))
+                Student("mj", "María Jiménez", "maria@u.edu.co", "Ingeniería", 4, "", 5f, 10, "MJ", Color(0xFF4C8C64), "2025-2"),
+                Student("lm", "Laura Martínez", "laura@u.edu.co", "Ingeniería", 4, "", 5f, 10, "LM", Color(0xFF7B5CAB), "2025-2")
             )
         ),
         CourseSection(
             title = "Física Mecánica (FIS1027)",
             icon = Icons.Default.Settings,
             students = listOf(
-                ReviewStudent("DR", "Daniel Ruiz", "2025-2", Color(0xFF1E3D2A)),
-                ReviewStudent("SP", "Sofía Pérez", "2025-2", Color(0xFF2C55A0))
+                Student("dr", "Daniel Ruiz", "daniel@u.edu.co", "Física", 3, "", 4f, 8, "DR", Color(0xFF1E3D2A), "2025-2"),
+                Student("sp", "Sofía Pérez", "sofia@u.edu.co", "Física", 3, "", 5f, 12, "SP", Color(0xFF2C55A0), "2025-2")
             )
         ),
         CourseSection(
             title = "Cálculo I (MATE1103)",
             icon = Icons.Default.Calculate,
             students = listOf(
-                ReviewStudent("CG", "Carlos Gómez", "2025-1", Color(0xFF9E4B31)),
-                ReviewStudent("AV", "Andrés Vargas", "2025-1", Color(0xFF8B5E3C))
+                Student("cg", "Carlos Gómez", "carlos@u.edu.co", "Matemáticas", 2, "", 4f, 5, "CG", Color(0xFF9E4B31), "2025-1"),
+                Student("av", "Andrés Vargas", "andres@u.edu.co", "Matemáticas", 2, "", 3f, 4, "AV", Color(0xFF8B5E3C), "2025-1")
             )
         )
     )

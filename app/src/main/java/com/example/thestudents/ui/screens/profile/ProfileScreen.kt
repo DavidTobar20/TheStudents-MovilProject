@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.profile
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,7 +24,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.thestudents.R
 import com.example.thestudents.ui.components.FixedBottomBar
+import com.example.thestudents.ui.components.Student
 import com.example.thestudents.ui.theme.*
 
 @Composable
@@ -59,7 +64,10 @@ fun ProfileHeaderPreview() {
 }
 
 @Composable
-fun UserInfoSection(modifier: Modifier = Modifier) {
+fun UserInfoSection(
+    student: Student,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -74,24 +82,33 @@ fun UserInfoSection(modifier: Modifier = Modifier) {
                     .background(LightTan),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "JP",
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = DarkGreen
-                )
+                if (student.profileImageRes != null) {
+                    Image(
+                        painter = painterResource(id = student.profileImageRes),
+                        contentDescription = "Imagen de perfil",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Text(
+                        text = student.initials,
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = DarkGreen
+                    )
+                }
             }
             Spacer(modifier = Modifier.width(20.dp))
             Column {
                 Text(
-                    text = "Juan Pablo Mejía",
+                    text = student.name,
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     color = DarkGreen,
                     fontFamily = FontFamily.Serif
                 )
                 Text(
-                    text = "@juan.pablo.m",
+                    text = student.email.split("@")[0].let { "@$it" },
                     fontSize = 14.sp,
                     color = MediumGreen.copy(alpha = 0.6f)
                 )
@@ -112,7 +129,7 @@ fun UserInfoSection(modifier: Modifier = Modifier) {
                 Icon(Icons.Default.School, null, Modifier.size(16.dp), tint = DarkGreen)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Ingeniería de Sistemas · Sem. 7",
+                    text = "${student.program} · Sem. ${student.semester}",
                     fontSize = 13.sp,
                     color = DarkGreen,
                     fontWeight = FontWeight.Medium
@@ -123,7 +140,7 @@ fun UserInfoSection(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
         
         Text(
-            text = "Me gusta trabajar en equipo y aprender de proyectos reales. Abierto a grupos de estudio.",
+            text = student.bio,
             fontSize = 14.sp,
             color = MediumGreen.copy(alpha = 0.8f),
             lineHeight = 20.sp
@@ -134,7 +151,20 @@ fun UserInfoSection(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun UserInfoSectionPreview() {
-    UserInfoSection()
+    UserInfoSection(
+        student = Student(
+            id = "1",
+            name = "Juan Pablo Mejía",
+            email = "juan.pablo.m@u.edu.co",
+            program = "Ingeniería de Sistemas",
+            semester = 7,
+            bio = "Me gusta trabajar en equipo y aprender de proyectos reales. Abierto a grupos de estudio.",
+            rating = 4.8f,
+            reviewsCount = 21,
+            initials = "JP",
+            profileColor = LightTan
+        )
+    )
 }
 
 @Composable
@@ -163,7 +193,10 @@ fun StatItem(
 }
 
 @Composable
-fun StatsSection(modifier: Modifier = Modifier) {
+fun StatsSection(
+    student: Student,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -174,14 +207,27 @@ fun StatsSection(modifier: Modifier = Modifier) {
         VerticalDivider(modifier = Modifier.height(40.dp), color = Sage.copy(alpha = 0.3f))
         StatItem("96", "SIGUIENDO")
         VerticalDivider(modifier = Modifier.height(40.dp), color = Sage.copy(alpha = 0.3f))
-        StatItem("21", "RESEÑAS")
+        StatItem(student.reviewsCount.toString(), "RESEÑAS")
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun StatsSectionPreview() {
-    StatsSection()
+    StatsSection(
+        student = Student(
+            id = "1",
+            name = "Juan Pablo Mejía",
+            email = "juan.pablo.m@u.edu.co",
+            program = "Ingeniería de Sistemas",
+            semester = 7,
+            bio = "",
+            rating = 4.8f,
+            reviewsCount = 21,
+            initials = "JP",
+            profileColor = LightTan
+        )
+    )
 }
 
 @Composable
@@ -354,6 +400,20 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController()
 ) {
+    val currentUser = Student(
+        id = "1",
+        name = "Juan Pablo Mejía",
+        email = "juan.pablo.m@u.edu.co",
+        program = "Ingeniería de Sistemas",
+        semester = 7,
+        bio = "Me gusta trabajar en equipo y aprender de proyectos reales. Abierto a grupos de estudio.",
+        rating = 4.8f,
+        reviewsCount = 21,
+        initials = "JP",
+        profileColor = LightTan,
+        profileImageRes = R.drawable.logosinfondo // Ejemplo de imagen, puedes cambiarla luego
+    )
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = Cream,
@@ -365,8 +425,8 @@ fun ProfileScreen(
                 .padding(padding)
         ) {
             item { ProfileHeader(onBackClick = { navController.popBackStack() }) }
-            item { UserInfoSection() }
-            item { StatsSection() }
+            item { UserInfoSection(student = currentUser) }
+            item { StatsSection(student = currentUser) }
             item { EditProfileButton() }
             item { RatingChartSection() }
             item { ProfileTabs() }

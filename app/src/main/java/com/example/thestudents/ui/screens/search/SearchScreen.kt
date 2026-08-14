@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.search
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +29,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.ui.components.DiamondDivider
 import com.example.thestudents.ui.components.FixedBottomBar
+import com.example.thestudents.ui.components.Student
 import com.example.thestudents.ui.theme.*
 
 // 1. PREVIEW: Encabezado
@@ -84,8 +88,6 @@ fun SearchBarPreview() {
 }
 
 // 3. PREVIEW: Tarjeta de Estudiante
-data class Student(val initials: String, val name: String, val program: String, val reviews: Int, val rating: Int, val color: Color)
-
 @Composable
 fun StudentCard(
     student: Student,
@@ -101,16 +103,25 @@ fun StudentCard(
             modifier = Modifier.padding(16.dp).fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(modifier = Modifier.size(56.dp).clip(CircleShape).background(student.color), contentAlignment = Alignment.Center) {
-                Text(text = student.initials, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Box(modifier = Modifier.size(56.dp).clip(CircleShape).background(student.profileColor), contentAlignment = Alignment.Center) {
+                if (student.profileImageRes != null) {
+                    Image(
+                        painter = painterResource(id = student.profileImageRes),
+                        contentDescription = "Imagen de perfil",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Text(text = student.initials, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                }
             }
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = student.name, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = DarkGreen)
-                Text(text = "${student.program} · ${student.reviews} reseñas", fontSize = 13.sp, color = MediumGreen.copy(alpha = 0.6f))
+                Text(text = "${student.program} · ${student.reviewsCount} reseñas", fontSize = 13.sp, color = MediumGreen.copy(alpha = 0.6f))
                 Row(modifier = Modifier.padding(top = 4.dp)) {
                     repeat(5) { index ->
-                        Icon(Icons.Default.Star, null, Modifier.size(16.dp), tint = if (index < student.rating) Gold else Sage.copy(alpha = 0.3f))
+                        Icon(Icons.Default.Star, null, Modifier.size(16.dp), tint = if (index < student.rating.toInt()) Gold else Sage.copy(alpha = 0.3f))
                     }
                 }
             }
@@ -129,7 +140,22 @@ fun StudentCard(
 @Preview(showBackground = true)
 @Composable
 fun StudentCardPreview() {
-    TheStudentsTheme { StudentCard(Student("VT", "Valentina Torres", "Psicología", 28, 5, Color(0xFF7B5CAB))) }
+    TheStudentsTheme { 
+        StudentCard(
+            Student(
+                id = "1",
+                initials = "VT",
+                name = "Valentina Torres",
+                program = "Psicología",
+                reviewsCount = 28,
+                rating = 5f,
+                profileColor = Color(0xFF7B5CAB),
+                email = "valentina@u.edu.co",
+                semester = 5,
+                bio = "Estudiante de psicología"
+            )
+        ) 
+    }
 }
 
 // 5. PANTALLA COMPLETA
@@ -140,11 +166,11 @@ fun SearchScreen(
 ) {
     var query by remember { mutableStateOf("") }
     val students = listOf(
-        Student("VT", "Valentina Torres", "Psicología", 28, 5, Color(0xFF7B5CAB)),
-        Student("SL", "Sebastián López", "Medicina", 15, 5, Color(0xFF2C55A0)),
-        Student("CH", "Camila Herrera", "Derecho", 42, 5, Color(0xFF9E4B31)),
-        Student("NV", "Nicolás Vargas", "Economía", 9, 4, Color(0xFF1E3D2A)),
-        Student("IC", "Isabella Castro", "Arquitectura", 33, 5, Color(0xFF4C8C64))
+        Student("1", "Valentina Torres", "valentina@u.edu.co", "Psicología", 5, "Estudiante de psicología", 5f, 28, "VT", Color(0xFF7B5CAB)),
+        Student("2", "Sebastián López", "sebastian@u.edu.co", "Medicina", 4, "Estudiante de medicina", 5f, 15, "SL", Color(0xFF2C55A0)),
+        Student("3", "Camila Herrera", "camila@u.edu.co", "Derecho", 6, "Estudiante de derecho", 5f, 42, "CH", Color(0xFF9E4B31)),
+        Student("4", "Nicolás Vargas", "nicolas@u.edu.co", "Economía", 3, "Estudiante de economía", 4f, 9, "NV", Color(0xFF1E3D2A)),
+        Student("5", "Isabella Castro", "isabella@u.edu.co", "Arquitectura", 7, "Estudiante de arquitectura", 5f, 33, "IC", Color(0xFF4C8C64))
     )
 
     Scaffold(
