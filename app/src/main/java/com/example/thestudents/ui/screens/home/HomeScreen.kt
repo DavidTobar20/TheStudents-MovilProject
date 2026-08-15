@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.thestudents.ui.components.FixedBottomBar
+import com.example.thestudents.ui.utils.FixedBottomBar
 import com.example.thestudents.ui.theme.Cream
 
 @Composable

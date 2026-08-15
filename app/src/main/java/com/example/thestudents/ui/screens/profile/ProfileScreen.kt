@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
-import com.example.thestudents.ui.components.FixedBottomBar
-import com.example.thestudents.ui.components.Student
+import com.example.thestudents.ui.utils.FixedBottomBar
+import com.example.thestudents.ui.utils.Student
 import com.example.thestudents.ui.theme.*
 
 @Composable
