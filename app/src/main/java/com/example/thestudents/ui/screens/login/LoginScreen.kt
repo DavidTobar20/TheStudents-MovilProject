@@ -155,7 +155,5 @@ fun LoginScreen(
 @Composable
 @Preview(showBackground = true)
 fun LoginScreenPreview() {
-    TheStudentsTheme {
-        LoginScreen()
-    }
+    LoginScreen()
 }

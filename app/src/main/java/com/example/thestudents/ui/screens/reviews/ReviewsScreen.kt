@@ -1,7 +1,5 @@
 package com.example.thestudents.ui.screens.reviews
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,9 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -28,130 +24,44 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
+import com.example.thestudents.ui.CourseSection
 import com.example.thestudents.ui.utils.DiamondDivider
 import com.example.thestudents.ui.utils.FixedBottomBar
 import com.example.thestudents.ui.utils.ProfileIcon
 import com.example.thestudents.ui.screens.reviews.components.HeaderReviews
+import com.example.thestudents.ui.screens.reviews.components.ReviewStudentItem
+import com.example.thestudents.ui.screens.reviews.components.CourseSectionCard
 import com.example.thestudents.ui.Student
 import com.example.thestudents.ui.utils.ButtonWithoutLogo
-
-data class CourseSection(
-    val title: String,
-    val icon: ImageVector,
-    val students: List<Student>
-)
-
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
-fun ReviewStudentItem(
-    student: Student,
-    modifier: Modifier = Modifier
+fun BodyReviews(
+    sections: List<CourseSection>,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    Row(
+    LazyColumn(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .fillMaxSize()
+            .padding(contentPadding)
+            .padding(horizontal = 24.dp),
+        contentPadding = PaddingValues(bottom = 24.dp)
     ) {
-        ProfileIcon(
-            initials = student.initials,
-            profileImageRes = student.profileImageRes,
-            backgroundColor = student.profileColor,
-            contentColor = Color.White,
-            fontSize = 18.sp,
-            modifier = Modifier.size(48.dp)
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = student.name,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = colorResource(R.color.dark_green)
-            )
-            Text(
-                text = student.period,
-                fontSize = 13.sp,
-                color = colorResource(R.color.sage)
-            )
+        item {
+            Spacer(modifier = Modifier.height(24.dp))
+            HeaderReviews()
         }
-
-
-        Button(
-            onClick = { },
-            colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.dark_green)),
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-        ) {
-            Text("Reseñar", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color.White)
+        items(sections) { section ->
+            CourseSectionCard(section)
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun ReviewStudentItemPreview() {
-    ReviewStudentItem(
-        Student(
-            id = "mj",
-            name = "María Jiménez",
-            email = "maria@u.edu.co",
-            program = "Ingeniería",
-            semester = 4,
-            bio = "",
-            rating = 5f,
-            reviewsCount = 10,
-            initials = "MJ",
-            profileColor = Color(0xFF4C8C64),
-            period = "2025-2"
-        )
-    )
-}
-
-@Composable
-fun CourseSectionCard(
-    section: CourseSection,
-    modifier: Modifier = Modifier
-) {
-    Column(modifier = modifier.padding(vertical = 12.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = section.icon,
-                contentDescription = null,
-                tint = colorResource(R.color.dark_green),
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            Text(
-                text = section.title,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                color = colorResource(R.color.dark_green)
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = Color.White,
-            shape = RoundedCornerShape(16.dp),
-            shadowElevation = 1.dp
-        ) {
-            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                section.students.forEachIndexed { index, student ->
-                    ReviewStudentItem(student)
-                    if (index < section.students.size - 1) {
-                        HorizontalDivider(color = colorResource(R.color.sage).copy(alpha = 0.2f), thickness = 0.5.dp)
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CourseSectionCardPreview() {
-    CourseSectionCard(
+fun BodyReviewsPreview() {
+    val mockSections = listOf(
         CourseSection(
             title = "Estructuras de Datos (ISIS1206)",
             icon = Icons.Default.Storage,
@@ -161,13 +71,30 @@ fun CourseSectionCardPreview() {
             )
         )
     )
+    BodyReviews(sections = mockSections)
 }
 
 @Composable
 fun ReviewsScreen(
+    sections: List<CourseSection>,
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController()
 ) {
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        containerColor = colorResource(R.color.cream),
+        bottomBar = { FixedBottomBar(navController, "reviews") }
+    ) { padding ->
+        BodyReviews(
+            sections = sections,
+            contentPadding = padding
+        )
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun ReviewsScreenPreview() {
     val sections = listOf(
         CourseSection(
             title = "Estructuras de Datos (ISIS1206)",
@@ -194,32 +121,5 @@ fun ReviewsScreen(
             )
         )
     )
-
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        containerColor = colorResource(R.color.cream),
-        bottomBar = { FixedBottomBar(navController, "reviews") }
-    ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 24.dp),
-            contentPadding = PaddingValues(bottom = 24.dp)
-        ) {
-            item {
-                Spacer(modifier = Modifier.height(24.dp))
-                HeaderReviews()
-            }
-            items(sections) { section ->
-                CourseSectionCard(section)
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun ReviewsScreenPreview() {
-    ReviewsScreen()
+    ReviewsScreen(sections)
 }

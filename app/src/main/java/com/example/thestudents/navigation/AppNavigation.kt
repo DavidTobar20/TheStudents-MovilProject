@@ -22,7 +22,9 @@ fun AppNavigation(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxSize()
     ) {
         composable("login") { 
-            LoginScreen(onLoginSuccess = { navController.navigate("search") }) 
+            LoginScreen(
+                onLoginSuccess = { navController.navigate("search") }
+            )
         }
         composable("home") { HomeScreen(navController = navController) }
         composable("search") { SearchScreen(navController = navController) }

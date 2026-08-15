@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.utils
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,7 +23,8 @@ fun ButtonWithoutLogo(
     textoBoton: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    fontSize: Int
+    fontSize: Int,
+    contentPadding: PaddingValues = PaddingValues()
 ) {
     Button(
         onClick = onClick,
@@ -30,6 +32,7 @@ fun ButtonWithoutLogo(
             containerColor = colorResource(R.color.dark_green)
         ),
         shape = RoundedCornerShape(8.dp),
+        contentPadding = contentPadding,
         modifier = modifier
     ) {
         Text(
@@ -60,6 +63,6 @@ fun ButtonWithoutLogoPreviewReview() {
         textoBoton = "Reseñar",
         onClick = {},
         fontSize = 12,
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     )
 }
