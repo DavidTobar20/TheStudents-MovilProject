@@ -61,7 +61,5 @@ fun ProfileHeader(
 @Preview(showBackground = true)
 @Composable
 fun ProfileHeaderPreview() {
-    TheStudentsTheme {
-        ProfileHeader(onBackClick = {})
-    }
+    ProfileHeader(onBackClick = {})
 }

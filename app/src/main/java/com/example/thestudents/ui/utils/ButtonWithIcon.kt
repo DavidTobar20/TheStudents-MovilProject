@@ -3,11 +3,15 @@ package com.example.thestudents.ui.utils
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -17,9 +21,9 @@ import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 
 @Composable
-fun ButtonWithLogo(
+fun ButtonWithIcon(
     text: String,
-    iconRes: Int,
+    icon: ImageVector,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     borderColor: Color,
@@ -37,7 +41,7 @@ fun ButtonWithLogo(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                painter = painterResource(id = iconRes),
+                imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier.size(20.dp)
             )
@@ -53,10 +57,10 @@ fun ButtonWithLogo(
 
 @Preview(showBackground = true)
 @Composable
-fun ButtonWithLogoPreviewSSO() {
-    ButtonWithLogo(
+fun ButtonWithIconPreviewSSO() {
+    ButtonWithIcon(
         text = "Cuenta institucional (SSO)",
-        iconRes = R.drawable.logosinfondo,
+        icon = Icons.Default.Home,
         onClick = {},
         borderColor = colorResource(R.color.medium_green),
         contentColor = colorResource(R.color.dark_green),
@@ -66,10 +70,10 @@ fun ButtonWithLogoPreviewSSO() {
 
 @Preview(showBackground = true)
 @Composable
-fun ButtonWithLogoPreviewEditProfile() {
-    ButtonWithLogo(
+fun ButtonWithIconPreviewEditProfile() {
+    ButtonWithIcon(
         text = "Editar perfil",
-        iconRes = R.drawable.logo_google,
+        icon = Icons.Outlined.Edit,
         onClick = {},
         borderColor = colorResource(R.color.dark_green),
         contentColor = colorResource(R.color.dark_green),

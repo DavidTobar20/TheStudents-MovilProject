@@ -12,8 +12,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
-import com.example.thestudents.ui.Student
-import com.example.thestudents.ui.utils.ButtonWithoutLogo
+import com.example.thestudents.model.Student
+import com.example.thestudents.ui.utils.ButtonWithoutIcon
 import com.example.thestudents.ui.utils.ProfileIcon
 
 @Composable
@@ -50,10 +50,10 @@ fun ReviewStudentItem(
             )
         }
 
-        ButtonWithoutLogo(
+        ButtonWithoutIcon(
             textoBoton = "Reseñar",
             onClick = {},
-            fontSize = 12,
+            fontSize = 12.sp,
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
         )
     }

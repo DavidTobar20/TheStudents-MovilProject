@@ -15,8 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
-import com.example.thestudents.ui.CourseSection
-import com.example.thestudents.ui.Student
+import com.example.thestudents.model.CourseSection
+import com.example.thestudents.model.Student
 
 @Composable
 fun CourseSectionCard(

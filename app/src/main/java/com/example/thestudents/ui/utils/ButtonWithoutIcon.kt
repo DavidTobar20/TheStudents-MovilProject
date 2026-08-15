@@ -13,16 +13,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 
 @Composable
-fun ButtonWithoutLogo(
+fun ButtonWithoutIcon(
     textoBoton: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    fontSize: Int,
+    fontSize: TextUnit,
     contentPadding: PaddingValues = PaddingValues()
 ) {
     Button(
@@ -37,7 +38,7 @@ fun ButtonWithoutLogo(
         Text(
             text = textoBoton,
             color = Color.White,
-            fontSize = fontSize.sp,
+            fontSize = fontSize,
             fontWeight = FontWeight.Bold
         )
     }
@@ -45,11 +46,11 @@ fun ButtonWithoutLogo(
 
 @Composable
 @Preview(showBackground = true)
-fun ButtonWithoutLogoPreviewLogin() {
-    ButtonWithoutLogo(
+fun ButtonWithoutIconPreviewLogin() {
+    ButtonWithoutIcon(
         textoBoton = "INGRESAR",
         onClick = {},
-        fontSize = 16,
+        fontSize = 16.sp,
         modifier = Modifier.fillMaxWidth()
             .height(56.dp)
     )
@@ -57,11 +58,11 @@ fun ButtonWithoutLogoPreviewLogin() {
 
 @Composable
 @Preview(showBackground = true)
-fun ButtonWithoutLogoPreviewReview() {
-    ButtonWithoutLogo(
+fun ButtonWithoutIconPreviewReview() {
+    ButtonWithoutIcon(
         textoBoton = "Reseñar",
         onClick = {},
-        fontSize = 12,
+        fontSize = 12.sp,
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     )
 }

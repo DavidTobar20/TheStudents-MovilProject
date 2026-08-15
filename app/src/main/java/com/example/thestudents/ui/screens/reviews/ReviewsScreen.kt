@@ -15,11 +15,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
-import com.example.thestudents.ui.CourseSection
+import com.example.thestudents.model.CourseSection
 import com.example.thestudents.ui.utils.FixedBottomBar
 import com.example.thestudents.ui.screens.reviews.components.HeaderReviews
 import com.example.thestudents.ui.screens.reviews.components.CourseSectionCard
-import com.example.thestudents.ui.Student
+import com.example.thestudents.model.Student
 
 @Composable
 fun BodyReviews(

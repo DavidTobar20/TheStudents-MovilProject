@@ -3,6 +3,8 @@ package com.example.thestudents.ui.screens.login
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,13 +17,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
-import com.example.thestudents.ui.utils.ButtonWithoutLogo
+import com.example.thestudents.ui.utils.ButtonWithoutIcon
 import com.example.thestudents.ui.screens.login.components.ContinueWithDivider
 import com.example.thestudents.ui.utils.DiamondDivider
 import com.example.thestudents.ui.screens.login.components.FormularioRegistro
 import com.example.thestudents.ui.screens.login.components.LogoApp
 import com.example.thestudents.ui.screens.login.components.MensajeBienvenida
-import com.example.thestudents.ui.utils.ButtonWithLogo
+import com.example.thestudents.ui.utils.ButtonWithIcon
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 
@@ -72,10 +74,10 @@ fun BodyLoginScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        ButtonWithoutLogo(
+        ButtonWithoutIcon(
             textoBoton = "INGRESAR",
             onClick = onLoginClick,
-            fontSize = 16,
+            fontSize = 16.sp,
             modifier = Modifier.fillMaxWidth()
                 .height(56.dp)
         )
@@ -84,9 +86,9 @@ fun BodyLoginScreen(
 
         ContinueWithDivider()
 
-        ButtonWithLogo(
+        ButtonWithIcon(
             text = "Cuenta institucional (SSO)",
-            iconRes = R.drawable.logosinfondo,
+            icon = Icons.Default.Home,
             onClick = onSSOClick,
             borderColor = colorResource(R.color.medium_green),
             contentColor = colorResource(R.color.dark_green),

@@ -1,4 +1,4 @@
-package com.example.thestudents.ui
+package com.example.thestudents.model
 
 import androidx.compose.ui.graphics.Color
 

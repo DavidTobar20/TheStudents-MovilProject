@@ -2,6 +2,8 @@ package com.example.thestudents.ui.screens.profile
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -12,14 +14,14 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
 import com.example.thestudents.ui.utils.FixedBottomBar
-import com.example.thestudents.ui.Student
+import com.example.thestudents.model.Student
 import com.example.thestudents.ui.screens.profile.components.ProfileHeader
 import com.example.thestudents.ui.screens.profile.components.ProfileTabs
 import com.example.thestudents.ui.screens.profile.components.RatingChartSection
 import com.example.thestudents.ui.screens.profile.components.ReviewItem
 import com.example.thestudents.ui.screens.profile.components.StatsSection
 import com.example.thestudents.ui.screens.profile.components.UserInfoSection
-import com.example.thestudents.ui.utils.ButtonWithLogo
+import com.example.thestudents.ui.utils.ButtonWithIcon
 
 
 @Composable
@@ -37,9 +39,9 @@ fun BodyProfile(
         item { ProfileHeader(onBackClick = onBackClick) }
         item { UserInfoSection(student = student) }
         item { StatsSection(student = student) }
-        item { ButtonWithLogo(
+        item { ButtonWithIcon(
             text = "Editar perfil",
-            iconRes = R.drawable.logo_google,
+            icon = Icons.Outlined.Edit,
             onClick = {},
             borderColor = colorResource(R.color.dark_green),
             contentColor = colorResource(R.color.dark_green),
