@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TheStudents</string>
+    <string name="mostrar_password">Mostrar password</string>
 </resources>
