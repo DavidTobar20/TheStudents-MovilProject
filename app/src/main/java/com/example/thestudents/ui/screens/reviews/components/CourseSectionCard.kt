@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 import com.example.thestudents.ui.CourseSection
 import com.example.thestudents.ui.Student
-import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun CourseSectionCard(
