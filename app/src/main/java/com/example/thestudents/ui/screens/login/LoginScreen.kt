@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
-import com.example.thestudents.ui.screens.login.components.AppButton
+import com.example.thestudents.ui.utils.ButtonWithoutLogo
 import com.example.thestudents.ui.screens.login.components.ContinueWithDivider
 import com.example.thestudents.ui.utils.DiamondDivider
 import com.example.thestudents.ui.screens.login.components.FormularioRegistro
@@ -72,7 +72,13 @@ fun BodyLoginScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        AppButton("INGRESAR") { onLoginClick() }
+        ButtonWithoutLogo(
+            textoBoton = "INGRESAR",
+            onClick = onLoginClick,
+            fontSize = 16,
+            modifier = Modifier.fillMaxWidth()
+                .height(56.dp)
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 

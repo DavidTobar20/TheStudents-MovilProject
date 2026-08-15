@@ -29,6 +29,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.ui.utils.DiamondDivider
 import com.example.thestudents.ui.utils.FixedBottomBar
+import com.example.thestudents.ui.utils.ProfileIcon
 import com.example.thestudents.ui.Student
 
 // 1. PREVIEW: Encabezado
@@ -102,18 +103,14 @@ fun StudentCard(
             modifier = Modifier.padding(16.dp).fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(modifier = Modifier.size(56.dp).clip(CircleShape).background(student.profileColor), contentAlignment = Alignment.Center) {
-                if (student.profileImageRes != null) {
-                    Image(
-                        painter = painterResource(id = student.profileImageRes),
-                        contentDescription = "Imagen de perfil",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    Text(text = student.initials, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-                }
-            }
+            ProfileIcon(
+                initials = student.initials,
+                profileImageRes = student.profileImageRes,
+                backgroundColor = student.profileColor,
+                contentColor = Color.White,
+                fontSize = 20.sp,
+                modifier = Modifier.size(56.dp)
+            )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = student.name, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = colorResource(R.color.dark_green))

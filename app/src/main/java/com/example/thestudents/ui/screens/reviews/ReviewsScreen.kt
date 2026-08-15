@@ -30,7 +30,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
 import com.example.thestudents.ui.utils.DiamondDivider
 import com.example.thestudents.ui.utils.FixedBottomBar
+import com.example.thestudents.ui.utils.ProfileIcon
+import com.example.thestudents.ui.screens.reviews.components.HeaderReviews
 import com.example.thestudents.ui.Student
+import com.example.thestudents.ui.utils.ButtonWithoutLogo
 
 data class CourseSection(
     val title: String,
@@ -38,37 +41,6 @@ data class CourseSection(
     val students: List<Student>
 )
 
-@Composable
-fun HeaderReviews(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "RESEÑAR COMPAÑEROS",
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Serif,
-            color = colorResource(R.color.dark_green),
-            letterSpacing = 1.sp,
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = "Personas con quienes has compartido clase",
-            fontSize = 14.sp,
-            color = colorResource(R.color.medium_green).copy(alpha = 0.7f),
-            modifier = Modifier.padding(top = 4.dp),
-            textAlign = TextAlign.Center
-        )
-        DiamondDivider(modifier = Modifier.padding(horizontal = 48.dp))
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HeaderReviewsPreview() {
-    HeaderReviews(modifier = Modifier.padding(16.dp))
-}
 
 @Composable
 fun ReviewStudentItem(
@@ -81,29 +53,14 @@ fun ReviewStudentItem(
             .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(student.profileColor),
-            contentAlignment = Alignment.Center
-        ) {
-            if (student.profileImageRes != null) {
-                Image(
-                    painter = painterResource(id = student.profileImageRes),
-                    contentDescription = "Imagen de perfil",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-            } else {
-                Text(
-                    text = student.initials,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
-                )
-            }
-        }
+        ProfileIcon(
+            initials = student.initials,
+            profileImageRes = student.profileImageRes,
+            backgroundColor = student.profileColor,
+            contentColor = Color.White,
+            fontSize = 18.sp,
+            modifier = Modifier.size(48.dp)
+        )
         Spacer(modifier = Modifier.width(16.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(
@@ -118,11 +75,13 @@ fun ReviewStudentItem(
                 color = colorResource(R.color.sage)
             )
         }
+
+
         Button(
             onClick = { },
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.dark_green)),
             shape = RoundedCornerShape(8.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             Text("Reseñar", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color.White)
         }

@@ -1,17 +1,12 @@
 package com.example.thestudents.ui.screens.profile.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontStyle
@@ -21,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 import com.example.thestudents.ui.theme.TheStudentsTheme
+import com.example.thestudents.ui.utils.ProfileIcon
 
 @Composable
 fun ReviewItem(
@@ -32,20 +28,14 @@ fun ReviewItem(
             .padding(24.dp)
     ) {
         Row(verticalAlignment = Alignment.Top) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .background(colorResource(R.color.dark_green)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "DR",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
-                )
-            }
+            ProfileIcon(
+                initials = "DR",
+                profileImageRes = null,
+                backgroundColor = colorResource(R.color.dark_green),
+                contentColor = Color.White,
+                fontSize = 14.sp,
+                modifier = Modifier.size(40.dp)
+            )
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {

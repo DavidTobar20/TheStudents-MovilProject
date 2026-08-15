@@ -1,7 +1,8 @@
-package com.example.thestudents.ui.screens.login.components
+package com.example.thestudents.ui.utils
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -17,25 +18,24 @@ import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 
 @Composable
-fun AppButton(
+fun ButtonWithoutLogo(
     textoBoton: String,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    fontSize: Int
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(56.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = colorResource(R.color.dark_green)
         ),
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
+        modifier = modifier
     ) {
         Text(
             text = textoBoton,
             color = Color.White,
-            fontSize = 16.sp,
+            fontSize = fontSize.sp,
             fontWeight = FontWeight.Bold
         )
     }
@@ -43,6 +43,23 @@ fun AppButton(
 
 @Composable
 @Preview(showBackground = true)
-fun AppButtonPreview() {
-    AppButton("INGRESAR") {}
+fun ButtonWithoutLogoPreviewLogin() {
+    ButtonWithoutLogo(
+        textoBoton = "INGRESAR",
+        onClick = {},
+        fontSize = 16,
+        modifier = Modifier.fillMaxWidth()
+            .height(56.dp)
+    )
+}
+
+@Composable
+@Preview(showBackground = true)
+fun ButtonWithoutLogoPreviewReview() {
+    ButtonWithoutLogo(
+        textoBoton = "Reseñar",
+        onClick = {},
+        fontSize = 12,
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+    )
 }
