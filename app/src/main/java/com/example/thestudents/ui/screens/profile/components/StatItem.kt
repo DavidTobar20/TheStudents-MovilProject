@@ -1,0 +1,44 @@
+package com.example.thestudents.ui.screens.profile.components
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
+import com.example.thestudents.R
+import com.example.thestudents.ui.theme.TheStudentsTheme
+
+@Composable
+fun StatItem(
+    count: String,
+    label: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = count,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = colorResource(R.color.dark_green)
+        )
+        Text(
+            text = label,
+            fontSize = 11.sp,
+            color = colorResource(R.color.medium_green).copy(alpha = 0.6f),
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun StatItemPreview() {
+    StatItem(count = "128", label = "SEGUIDORES")
+}

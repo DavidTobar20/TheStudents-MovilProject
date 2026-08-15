@@ -16,20 +16,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.thestudents.R
 import com.example.thestudents.ui.theme.TheStudentsTheme
-
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.ui.utils.DiamondDivider
 import com.example.thestudents.ui.utils.FixedBottomBar
-import com.example.thestudents.ui.utils.Student
-import com.example.thestudents.ui.theme.*
+import com.example.thestudents.ui.Student
 
 // 1. PREVIEW: Encabezado
 @Composable
@@ -43,7 +43,7 @@ fun HeaderSearch(modifier: Modifier = Modifier) {
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Serif,
-            color = DarkGreen,
+            color = colorResource(R.color.dark_green),
             letterSpacing = 1.sp
         )
         DiamondDivider(modifier = Modifier.padding(vertical = 16.dp).width(200.dp))
@@ -67,12 +67,12 @@ fun SearchBarComponent(
         value = query,
         onValueChange = onQueryChange,
         modifier = modifier.fillMaxWidth(),
-        placeholder = { Text("Buscar por nombre o carrera...", color = Sage) },
-        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Sage) },
+        placeholder = { Text("Buscar por nombre o carrera...", color = colorResource(R.color.sage)) },
+        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = colorResource(R.color.sage)) },
         shape = RoundedCornerShape(12.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = Sage.copy(alpha = 0.5f),
-            unfocusedBorderColor = Sage.copy(alpha = 0.5f),
+            focusedBorderColor = colorResource(R.color.sage).copy(alpha = 0.5f),
+            unfocusedBorderColor = colorResource(R.color.sage).copy(alpha = 0.5f),
             focusedContainerColor = Color.White,
             unfocusedContainerColor = Color.White,
         ),
@@ -116,17 +116,17 @@ fun StudentCard(
             }
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = student.name, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = DarkGreen)
-                Text(text = "${student.program} · ${student.reviewsCount} reseñas", fontSize = 13.sp, color = MediumGreen.copy(alpha = 0.6f))
+                Text(text = student.name, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = colorResource(R.color.dark_green))
+                Text(text = "${student.program} · ${student.reviewsCount} reseñas", fontSize = 13.sp, color = colorResource(R.color.medium_green).copy(alpha = 0.6f))
                 Row(modifier = Modifier.padding(top = 4.dp)) {
                     repeat(5) { index ->
-                        Icon(Icons.Default.Star, null, Modifier.size(16.dp), tint = if (index < student.rating.toInt()) Gold else Sage.copy(alpha = 0.3f))
+                        Icon(Icons.Default.Star, null, Modifier.size(16.dp), tint = if (index < student.rating.toInt()) colorResource(R.color.gold) else colorResource(R.color.sage).copy(alpha = 0.3f))
                     }
                 }
             }
             Button(
                 onClick = { },
-                colors = ButtonDefaults.buttonColors(containerColor = DarkGreen),
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.dark_green)),
                 shape = RoundedCornerShape(8.dp),
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
             ) {
@@ -174,7 +174,7 @@ fun SearchScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        containerColor = Cream,
+        containerColor = colorResource(R.color.cream),
         bottomBar = { FixedBottomBar(navController, "search") }
     ) { padding ->
         Column(
@@ -192,7 +192,7 @@ fun SearchScreen(
                 modifier = Modifier.fillMaxWidth(),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                color = MediumGreen.copy(alpha = 0.7f),
+                color = colorResource(R.color.medium_green).copy(alpha = 0.7f),
                 letterSpacing = 1.sp
             )
             

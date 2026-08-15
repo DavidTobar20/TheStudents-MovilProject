@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -26,10 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.thestudents.R
 import com.example.thestudents.ui.utils.DiamondDivider
 import com.example.thestudents.ui.utils.FixedBottomBar
-import com.example.thestudents.ui.utils.Student
-import com.example.thestudents.ui.theme.*
+import com.example.thestudents.ui.Student
 
 data class CourseSection(
     val title: String,
@@ -48,14 +49,14 @@ fun HeaderReviews(modifier: Modifier = Modifier) {
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Serif,
-            color = DarkGreen,
+            color = colorResource(R.color.dark_green),
             letterSpacing = 1.sp,
             textAlign = TextAlign.Center
         )
         Text(
             text = "Personas con quienes has compartido clase",
             fontSize = 14.sp,
-            color = MediumGreen.copy(alpha = 0.7f),
+            color = colorResource(R.color.medium_green).copy(alpha = 0.7f),
             modifier = Modifier.padding(top = 4.dp),
             textAlign = TextAlign.Center
         )
@@ -109,17 +110,17 @@ fun ReviewStudentItem(
                 text = student.name,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
-                color = DarkGreen
+                color = colorResource(R.color.dark_green)
             )
             Text(
                 text = student.period,
                 fontSize = 13.sp,
-                color = Sage
+                color = colorResource(R.color.sage)
             )
         }
         Button(
             onClick = { },
-            colors = ButtonDefaults.buttonColors(containerColor = DarkGreen),
+            colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.dark_green)),
             shape = RoundedCornerShape(8.dp),
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
         ) {
@@ -158,7 +159,7 @@ fun CourseSectionCard(
             Icon(
                 imageVector = section.icon,
                 contentDescription = null,
-                tint = DarkGreen,
+                tint = colorResource(R.color.dark_green),
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
@@ -166,7 +167,7 @@ fun CourseSectionCard(
                 text = section.title,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
-                color = DarkGreen
+                color = colorResource(R.color.dark_green)
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -180,7 +181,7 @@ fun CourseSectionCard(
                 section.students.forEachIndexed { index, student ->
                     ReviewStudentItem(student)
                     if (index < section.students.size - 1) {
-                        HorizontalDivider(color = Sage.copy(alpha = 0.2f), thickness = 0.5.dp)
+                        HorizontalDivider(color = colorResource(R.color.sage).copy(alpha = 0.2f), thickness = 0.5.dp)
                     }
                 }
             }
@@ -237,7 +238,7 @@ fun ReviewsScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        containerColor = Cream,
+        containerColor = colorResource(R.color.cream),
         bottomBar = { FixedBottomBar(navController, "reviews") }
     ) { padding ->
         LazyColumn(

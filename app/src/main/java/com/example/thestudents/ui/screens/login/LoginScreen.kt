@@ -17,11 +17,11 @@ import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 import com.example.thestudents.ui.screens.login.components.AppButton
 import com.example.thestudents.ui.screens.login.components.ContinueWithDivider
-import com.example.thestudents.ui.screens.login.components.DiamondDivider
+import com.example.thestudents.ui.utils.DiamondDivider
 import com.example.thestudents.ui.screens.login.components.FormularioRegistro
 import com.example.thestudents.ui.screens.login.components.LogoApp
 import com.example.thestudents.ui.screens.login.components.MensajeBienvenida
-import com.example.thestudents.ui.screens.login.components.SSOLoginButton
+import com.example.thestudents.ui.utils.ButtonWithLogo
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 
@@ -78,7 +78,14 @@ fun BodyLoginScreen(
 
         ContinueWithDivider()
 
-        SSOLoginButton(onClick = onSSOClick)
+        ButtonWithLogo(
+            text = "Cuenta institucional (SSO)",
+            iconRes = R.drawable.logosinfondo,
+            onClick = onSSOClick,
+            borderColor = colorResource(R.color.medium_green),
+            contentColor = colorResource(R.color.dark_green),
+            modifier = Modifier.height(56.dp)
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 

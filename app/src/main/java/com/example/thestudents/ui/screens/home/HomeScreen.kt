@@ -8,10 +8,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.thestudents.R
 import com.example.thestudents.ui.utils.FixedBottomBar
-import com.example.thestudents.ui.theme.Cream
 
 @Composable
 fun HomeScreen(
@@ -20,7 +21,7 @@ fun HomeScreen(
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        containerColor = Cream,
+        containerColor = colorResource(R.color.cream),
         bottomBar = { FixedBottomBar(navController, "home") }
     ) { padding ->
         Box(
