@@ -40,82 +40,89 @@ fun BodyLoginScreen(
     onForgotPasswordClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
+    Box(
         modifier = modifier
-            .fillMaxSize()
-            .background(colorResource(R.color.cream))
-            .padding(horizontal = 32.dp, vertical = 24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        LogoApp()
-        
-        Spacer(modifier = Modifier.height(8.dp))
-        
-        MensajeBienvenida()
-        
-        DiamondDivider(modifier = Modifier.padding(horizontal = 48.dp))
-        
-        Text(
-            text = stringResource(R.string.inicia_sesion_para_continuar),
-            color = colorResource(R.color.medium_green).copy(alpha = 0.7f),
-            fontSize = 14.sp,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        FormularioRegistro(
-            email = email,
-            onEmailChange = onEmailChange,
-            password = password,
-            onPasswordChange = onPasswordChange,
-            onForgotPasswordClick = onForgotPasswordClick
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        ButtonWithoutIcon(
-            textoBoton = stringResource(R.string.ingresar_mayuscula),
-            onClick = onLoginClick,
-            fontSize = 16.sp,
+    ){
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp)
-        )
+                .fillMaxSize()
+                .background(colorResource(R.color.cream))
+                .align(Alignment.Center)
+                .padding(horizontal = 32.dp, vertical = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
 
-        Spacer(modifier = Modifier.height(24.dp))
+        ) {
+            LogoApp()
 
-        ContinueWithDivider()
+            Spacer(modifier = Modifier.height(8.dp))
 
-        ButtonWithIcon(
-            text = stringResource(R.string.cuenta_institucional_sso),
-            icon = Icons.Default.Home,
-            onClick = onSSOClick,
-            borderColor = colorResource(R.color.medium_green),
-            contentColor = colorResource(R.color.dark_green),
-            modifier = Modifier.height(56.dp)
-        )
+            MensajeBienvenida()
 
-        Spacer(modifier = Modifier.height(32.dp))
+            DiamondDivider(modifier = Modifier.padding(horizontal = 48.dp))
 
-        Row {
             Text(
-                text = stringResource(R.string.no_tienes_una_cuenta),
+                text = stringResource(R.string.inicia_sesion_para_continuar),
+                color = colorResource(R.color.medium_green).copy(alpha = 0.7f),
                 fontSize = 14.sp,
-                color = colorResource(R.color.medium_green)
+                textAlign = TextAlign.Center
             )
-            Text(
-                text = stringResource(R.string.crear_cuenta),
-                modifier = Modifier.clickable { onCreateAccountClick() },
-                color = colorResource(R.color.dark_green),
-                fontWeight = FontWeight.Bold,
-                textDecoration = TextDecoration.Underline,
-                fontSize = 14.sp
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            FormularioRegistro(
+                email = email,
+                onEmailChange = onEmailChange,
+                password = password,
+                onPasswordChange = onPasswordChange,
+                onForgotPasswordClick = onForgotPasswordClick
             )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            ButtonWithoutIcon(
+                textoBoton = stringResource(R.string.ingresar_mayuscula),
+                onClick = onLoginClick,
+                fontSize = 16.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            ContinueWithDivider()
+
+            ButtonWithIcon(
+                text = stringResource(R.string.cuenta_institucional_sso),
+                icon = Icons.Default.Home,
+                onClick = onSSOClick,
+                borderColor = colorResource(R.color.medium_green),
+                contentColor = colorResource(R.color.dark_green),
+                modifier = Modifier.height(56.dp)
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Row {
+                Text(
+                    text = stringResource(R.string.no_tienes_una_cuenta),
+                    fontSize = 14.sp,
+                    color = colorResource(R.color.medium_green)
+                )
+                Text(
+                    text = stringResource(R.string.crear_cuenta),
+                    modifier = Modifier.clickable { onCreateAccountClick() },
+                    color = colorResource(R.color.dark_green),
+                    fontWeight = FontWeight.Bold,
+                    textDecoration = TextDecoration.Underline,
+                    fontSize = 14.sp
+                )
+            }
         }
     }
-}
+    }
+
+
 
 @Composable
 @Preview(showBackground = true)

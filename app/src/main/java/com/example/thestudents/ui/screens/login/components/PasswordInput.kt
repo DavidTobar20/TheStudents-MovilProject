@@ -7,6 +7,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -25,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,7 +47,15 @@ fun PasswordInput(
             fontSize = 14.sp,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        OutlinedTextField(
+        }
+        var passwordVisible by remember { mutableStateOf(false) }
+        var icono = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+
+        var description = if (passwordVisible) stringResource(R.string.ocultar_contrase_a) else stringResource(
+            R.string.mostrar_contrase_a
+        )
+
+    OutlinedTextField(
             value = password,
             onValueChange = onPasswordChange,
             placeholder = {
@@ -65,13 +76,12 @@ fun PasswordInput(
                 focusedContainerColor = Color.White,
                 unfocusedContainerColor = Color.White
             ),
-            visualTransformation = PasswordVisualTransformation(),
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                IconButton(onClick ={}) {
+                IconButton(onClick ={passwordVisible = !passwordVisible}) {
                     Icon(
-                        painterResource(R.drawable.hide ),
-                        contentDescription = stringResource(R.string.mostrar_password)
-
+                        imageVector = icono,
+                        contentDescription = description
                     )
                 }
             },
@@ -79,7 +89,7 @@ fun PasswordInput(
             singleLine = true
         )
     }
-}
+
 
 @Preview(showBackground = true)
 @Composable
