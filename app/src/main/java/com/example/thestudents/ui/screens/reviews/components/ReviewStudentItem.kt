@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 import com.example.thestudents.data.Student
+import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.utils.ButtonWithoutIcon
 import com.example.thestudents.ui.utils.ProfileIcon
 
@@ -64,18 +65,6 @@ fun ReviewStudentItem(
 @Composable
 fun ReviewStudentItemPreview() {
     ReviewStudentItem(
-        Student(
-            id = "mj",
-            name = "María Jiménez",
-            email = "maria@u.edu.co",
-            program = "Ingeniería",
-            semester = 4,
-            bio = "",
-            rating = 5f,
-            reviewsCount = 10,
-            initials = "MJ",
-            profileColor = Color(0xFF4C8C64),
-            period = "2025-2"
-        )
+        student = localStudentProvider.students[3]
     )
 }

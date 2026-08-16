@@ -1,11 +1,13 @@
 package com.example.thestudents.data
 
+import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
+
 
 data class Student(
     val id: String,
     val name: String,
-    val email: String,
+    val username: String,
     val program: String,
     val semester: Int,
     val bio: String,
@@ -13,6 +15,6 @@ data class Student(
     val reviewsCount: Int,
     val initials: String,
     val profileColor: Color,
-    val period: String = "",
-    val profileImageRes: Int? = null // Atributo para la imagen de perfil
+    val period: String = "", // Periodo académico (ej: 2025-2)
+    @DrawableRes val profileImageRes: Int? = null
 )

@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 import com.example.thestudents.data.CourseSection
 import com.example.thestudents.data.Student
+import com.example.thestudents.data.local.localStudentProvider
 
 @Composable
 fun CourseSectionCard(
@@ -69,32 +70,8 @@ fun CourseSectionCardPreview() {
             title = "Estructuras de Datos (ISIS1206)",
             icon = Icons.Default.Storage,
             students = listOf(
-                Student(
-                    "mj",
-                    "María Jiménez",
-                    "maria@u.edu.co",
-                    "Ingeniería",
-                    4,
-                    "",
-                    5f,
-                    10,
-                    "MJ",
-                    Color(0xFF4C8C64),
-                    "2025-2"
-                ),
-                Student(
-                    "lm",
-                    "Laura Martínez",
-                    "laura@u.edu.co",
-                    "Ingeniería",
-                    4,
-                    "",
-                    5f,
-                    10,
-                    "LM",
-                    Color(0xFF7B5CAB),
-                    "2025-2"
-                )
+                localStudentProvider.students[3],
+                localStudentProvider.students[4]
             )
         )
     )

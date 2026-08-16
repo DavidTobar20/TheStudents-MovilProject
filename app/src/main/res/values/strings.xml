@@ -27,4 +27,7 @@
     <string name="sugerencias_para_ti_mayuscula">SUGERENCIAS PARA TI</string>
     <string name="ejemplo_email">nombre@universidad.edu.co</string>
     <string name="mostrar_password">Mostrar password</string>
+    <string name="ocultar_contrasena">Ocultar contraseña</string>
+    <string name="mostrar_contrasena">Mostrar contraseña</string>
+    <string name="la_contrase_a_debe_tener_al_menos_8_caracteres">La contraseña debe tener al menos 8 caracteres</string>
 </resources>

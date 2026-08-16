@@ -15,11 +15,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
+import com.example.thestudents.data.Review
+import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ProfileIcon
 
 @Composable
 fun ReviewItem(
+    review: Review,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -29,8 +32,8 @@ fun ReviewItem(
     ) {
         Row(verticalAlignment = Alignment.Top) {
             ProfileIcon(
-                initials = "DR",
-                profileImageRes = null,
+                initials = review.authorInitials,
+                profileImageRes = review.authorImageId,
                 backgroundColor = colorResource(R.color.dark_green),
                 contentColor = Color.White,
                 fontSize = 14.sp,
@@ -40,21 +43,21 @@ fun ReviewItem(
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "Daniel Ruiz",
+                        text = review.authorName,
                         fontWeight = FontWeight.Bold,
                         color = colorResource(R.color.dark_green),
                         fontSize = 15.sp
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "FIS220, 2025-2  ·  Hace 3 días",
+                        text = "${review.courseAndPeriod}  ·  ${review.time}",
                         color = colorResource(R.color.sage),
                         fontSize = 12.sp
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "“Muy responsable, aportó ideas clave en todas las etapas del proyecto.”",
+                    text = "“${review.content}”",
                     fontSize = 14.sp,
                     color = colorResource(R.color.medium_green).copy(alpha = 0.9f),
                     fontStyle = FontStyle.Italic
@@ -77,5 +80,5 @@ fun ReviewItem(
 @Preview(showBackground = true)
 @Composable
 fun ReviewItemPreview() {
-    ReviewItem()
+    ReviewItem(review = localReviewsProvider.allReviews[0])
 }
