@@ -51,8 +51,8 @@ fun PasswordInput(
         var passwordVisible by remember { mutableStateOf(false) }
         var icono = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
 
-        var description = if (passwordVisible) stringResource(R.string.ocultar_contrase_a) else stringResource(
-            R.string.mostrar_contrase_a
+        var description = if (passwordVisible) stringResource(R.string.ocultar_contrasena) else stringResource(
+            R.string.mostrar_contrasena
         )
 
     OutlinedTextField(
