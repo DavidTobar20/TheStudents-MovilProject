@@ -1,0 +1,46 @@
+package com.example.thestudents.ui.screens.login.components
+
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.thestudents.R
+
+@Composable
+fun ContinueWithDivider(
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier.padding(vertical = 16.dp)
+    ) {
+        HorizontalDivider(
+            modifier = Modifier.weight(1f),
+            color = colorResource(R.color.sage).copy(alpha = 0.5f)
+        )
+        Text(
+            text = stringResource(R.string.o_continua_con),
+            modifier = Modifier.padding(horizontal = 8.dp),
+            color = colorResource(R.color.medium_green),
+            fontSize = 12.sp
+        )
+        HorizontalDivider(
+            modifier = Modifier.weight(1f),
+            color = colorResource(R.color.sage).copy(alpha = 0.5f)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ContinueWithDividerPreview() {
+    ContinueWithDivider()
+}
