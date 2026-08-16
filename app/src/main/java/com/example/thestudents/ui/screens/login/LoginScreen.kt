@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -56,7 +57,7 @@ fun BodyLoginScreen(
         DiamondDivider(modifier = Modifier.padding(horizontal = 48.dp))
         
         Text(
-            text = "Inicia sesión para continuar",
+            text = stringResource(R.string.inicia_sesion_para_continuar),
             color = colorResource(R.color.medium_green).copy(alpha = 0.7f),
             fontSize = 14.sp,
             textAlign = TextAlign.Center
@@ -75,10 +76,11 @@ fun BodyLoginScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         ButtonWithoutIcon(
-            textoBoton = "INGRESAR",
+            textoBoton = stringResource(R.string.ingresar_mayuscula),
             onClick = onLoginClick,
             fontSize = 16.sp,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .height(56.dp)
         )
 
@@ -87,7 +89,7 @@ fun BodyLoginScreen(
         ContinueWithDivider()
 
         ButtonWithIcon(
-            text = "Cuenta institucional (SSO)",
+            text = stringResource(R.string.cuenta_institucional_sso),
             icon = Icons.Default.Home,
             onClick = onSSOClick,
             borderColor = colorResource(R.color.medium_green),
@@ -98,9 +100,13 @@ fun BodyLoginScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         Row {
-            Text(text = "¿No tienes una cuenta? ", fontSize = 14.sp, color = colorResource(R.color.medium_green))
             Text(
-                text = "Crear cuenta",
+                text = stringResource(R.string.no_tienes_una_cuenta),
+                fontSize = 14.sp,
+                color = colorResource(R.color.medium_green)
+            )
+            Text(
+                text = stringResource(R.string.crear_cuenta),
                 modifier = Modifier.clickable { onCreateAccountClick() },
                 color = colorResource(R.color.dark_green),
                 fontWeight = FontWeight.Bold,

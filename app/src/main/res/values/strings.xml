@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">TheStudents</string>
+    <string name="o_continua_con">o continúa con</string>
+    <string name="correo_institucional">Correo institucional</string>
+    <string name="olvidaste_tu_contrasena">¿Olvidaste tu contraseña?</string>
+    <string name="the_students_mayuscula">THE STUDENTS</string>
+    <string name="contrasena">Contraseña</string>
+    <string name="ingresa_tu_contrasena">Ingresa tu contraseña</string>
+    <string name="inicia_sesion_para_continuar">Inicia sesión para continuar</string>
+    <string name="ingresar_mayuscula">INGRESAR</string>
+    <string name="cuenta_institucional_sso">Cuenta institucional (SSO)</string>
+    <string name="no_tienes_una_cuenta">"¿No tienes una cuenta? "</string>
+    <string name="crear_cuenta">Crear cuenta</string>
+    <string name="perfil">Perfil</string>
+    <string name="recibidas">Recibidas</string>
+    <string name="escritas">Escritas</string>
+    <string name="seguidores_mayuscula">SEGUIDORES</string>
+    <string name="siguiendo_mayuscula">SIGUIENDO</string>
+    <string name="resenas_mayuscula">RESEÑAS</string>
+    <string name="editar_perfil">Editar perfil</string>
+    <string name="resenar">Reseñar</string>
+    <string name="resenar_companeros">RESEÑAR COMPAÑEROS</string>
+    <string name="personas_con_quienes_has_compartido_clase">Personas con quienes has compartido clase</string>
+    <string name="buscar_estudiantes">BUSCAR ESTUDIANTES</string>
+    <string name="buscar_por_nombre_o_carrera">Buscar por nombre o carrera...</string>
+    <string name="seguir_mayuscula">SEGUIR</string>
+    <string name="sugerencias_para_ti_mayuscula">SUGERENCIAS PARA TI</string>
 </resources>

@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,13 +26,17 @@ fun StudentCard(
     modifier: Modifier = Modifier,
 ) {
     Surface(
-        modifier = modifier.fillMaxWidth().padding(vertical = 8.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
         color = Color.White,
         shape = RoundedCornerShape(16.dp),
         shadowElevation = 2.dp
     ) {
         Row(
-            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             ProfileIcon(
@@ -68,7 +73,7 @@ fun StudentCard(
             }
 
             ButtonWithoutIcon(
-                textoBoton = "SEGUIR",
+                textoBoton = stringResource(R.string.seguir_mayuscula),
                 onClick = {},
                 fontSize = 11.sp,
                 contentPadding = PaddingValues(horizontal = 18.dp, vertical = 8.dp)

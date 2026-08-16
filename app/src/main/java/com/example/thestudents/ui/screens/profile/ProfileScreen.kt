@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -40,12 +41,13 @@ fun BodyProfile(
         item { UserInfoSection(student = student) }
         item { StatsSection(student = student) }
         item { ButtonWithIcon(
-            text = "Editar perfil",
+            text = stringResource(R.string.editar_perfil),
             icon = Icons.Outlined.Edit,
             onClick = {},
             borderColor = colorResource(R.color.dark_green),
             contentColor = colorResource(R.color.dark_green),
-            modifier = Modifier.height(48.dp)
+            modifier = Modifier
+                .height(48.dp)
                 .padding(horizontal = 24.dp)
         ) }
         item { RatingChartSection() }

@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -25,7 +26,7 @@ fun HeaderReviews(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "RESEÑAR COMPAÑEROS",
+            text = stringResource(R.string.resenar_companeros),
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Serif,
@@ -34,7 +35,7 @@ fun HeaderReviews(modifier: Modifier = Modifier) {
             textAlign = TextAlign.Center
         )
         Text(
-            text = "Personas con quienes has compartido clase",
+            text = stringResource(R.string.personas_con_quienes_has_compartido_clase),
             fontSize = 14.sp,
             color = colorResource(R.color.medium_green).copy(alpha = 0.7f),
             modifier = Modifier.padding(top = 4.dp),

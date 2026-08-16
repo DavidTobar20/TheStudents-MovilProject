@@ -5,6 +5,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.thestudents.R
@@ -22,13 +23,13 @@ fun ProfileTabs(
             horizontalArrangement = Arrangement.Start
         ) {
             ProfileTabItem(
-                text = "Recibidas",
+                text = stringResource(R.string.recibidas),
                 isSelected = selectedTab == 0,
                 onClick = { selectedTab = 0 }
             )
             Spacer(modifier = Modifier.width(16.dp))
             ProfileTabItem(
-                text = "Escritas",
+                text = stringResource(R.string.escritas),
                 isSelected = selectedTab == 1,
                 onClick = { selectedTab = 1 }
             )

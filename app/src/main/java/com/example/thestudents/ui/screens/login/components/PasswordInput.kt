@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -35,7 +36,7 @@ fun PasswordInput(
 ) {
     Column(modifier = modifier) {
         Text(
-            text = "Contraseña",
+            text = stringResource(R.string.contrasena),
             color = colorResource(R.color.dark_green),
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
@@ -44,8 +45,16 @@ fun PasswordInput(
         OutlinedTextField(
             value = password,
             onValueChange = onPasswordChange,
-            placeholder = { Text("Ingresa tu contraseña", color = colorResource(R.color.sage)) },
-            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = colorResource(R.color.dark_green)) },
+            placeholder = {
+                Text(
+                    stringResource(R.string.ingresa_tu_contrasena),
+                    color = colorResource(R.color.sage)
+                )},
+            leadingIcon = {
+                Icon(Icons.Default.Lock,
+                    contentDescription = null,
+                    tint = colorResource(R.color.dark_green)
+                ) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(

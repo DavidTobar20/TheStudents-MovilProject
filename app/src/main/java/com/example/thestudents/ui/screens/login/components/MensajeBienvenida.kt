@@ -4,6 +4,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -14,7 +15,7 @@ import com.example.thestudents.R
 @Composable
 fun MensajeBienvenida(modifier: Modifier = Modifier) {
     Text(
-        text = "THE STUDENTS",
+        text = stringResource(R.string.the_students_mayuscula),
         modifier = modifier,
         fontSize = 24.sp,
         fontWeight = FontWeight.Bold,

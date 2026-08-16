@@ -14,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,7 +41,7 @@ fun FormularioRegistro (
         PasswordInput(password = password, onPasswordChange = onPasswordChange)
 
         Text(
-            text = "¿Olvidaste tu contraseña?",
+            text = stringResource(R.string.olvidaste_tu_contrasena),
             color = colorResource(R.color.dark_green),
             fontSize = 12.sp,
             textDecoration = TextDecoration.Underline,

@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,14 +26,16 @@ fun HeaderSearch(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "BUSCAR ESTUDIANTES",
+            text = stringResource(R.string.buscar_estudiantes),
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Serif,
             color = colorResource(R.color.dark_green),
             letterSpacing = 1.sp
         )
-        DiamondDivider(modifier = Modifier.padding(vertical = 16.dp).width(200.dp))
+        DiamondDivider(modifier = Modifier
+            .padding(vertical = 16.dp)
+            .width(200.dp))
     }
 }
 

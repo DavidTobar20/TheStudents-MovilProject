@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,7 +43,7 @@ fun ProfileHeader(
             )
         }
         Text(
-            text = "Perfil",
+            text = stringResource(R.string.perfil),
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = colorResource(R.color.dark_green),

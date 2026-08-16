@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,7 +45,7 @@ fun BodySearch(
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "SUGERENCIAS PARA TI",
+            text = stringResource(R.string.sugerencias_para_ti_mayuscula),
             modifier = Modifier.fillMaxWidth(),
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
