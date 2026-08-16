@@ -26,6 +26,7 @@ fun ButtonWithoutIcon(
     fontSize: TextUnit,
     contentPadding: PaddingValues = PaddingValues()
 ) {
+
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(

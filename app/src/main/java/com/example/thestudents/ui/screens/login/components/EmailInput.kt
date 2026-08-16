@@ -27,11 +27,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 
+
 @Composable
 fun EmailInput(
     modifier: Modifier = Modifier,
-    email: String,
-    onEmailChange: (String) -> Unit
+    email: String, // Estado hoisted (elevado)
+    onEmailChange: (String) -> Unit // Evento hoisted
 ) {
     Column(modifier = modifier) {
         Text(

@@ -1,5 +1,8 @@
 package com.example.thestudents.ui.screens.login.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -7,6 +10,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -20,22 +25,35 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 
+/**
+ * PasswordInput (Stateless para datos, Stateful para UI interna)
+ */
 @Composable
 fun PasswordInput(
     modifier: Modifier = Modifier,
     password: String,
     onPasswordChange: (String) -> Unit
 ) {
+    var passwordVisible by remember { mutableStateOf(false) }
+    
+    // Lógica de error estética: Solo mostrar si el usuario ha empezado a escribir
+    val isError = password.isNotEmpty() && password.length < 6
+    
+    val icono = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+    val description = if (passwordVisible) stringResource(R.string.ocultar_contrasena) else stringResource(
+        R.string.mostrar_contrasena
+    )
+
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.contrasena),
@@ -44,40 +62,62 @@ fun PasswordInput(
             fontSize = 14.sp,
             modifier = Modifier.padding(bottom = 8.dp)
         )
+
         OutlinedTextField(
             value = password,
             onValueChange = onPasswordChange,
+            isError = isError, // El borde cambia a rojo automáticamente
             placeholder = {
                 Text(
                     stringResource(R.string.ingresa_tu_contrasena),
                     color = colorResource(R.color.sage)
-                )},
+                )
+            },
             leadingIcon = {
-                Icon(Icons.Default.Lock,
+                Icon(
+                    Icons.Default.Lock,
                     contentDescription = null,
-                    tint = colorResource(R.color.dark_green)
-                ) },
+                    tint = if (isError) Color.Red else colorResource(R.color.dark_green)
+                )
+            },
+            trailingIcon = {
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(
+                        imageVector = icono,
+                        contentDescription = description,
+                        tint = if (isError) Color.Red else colorResource(R.color.dark_green)
+                    )
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = colorResource(R.color.sage),
                 unfocusedBorderColor = colorResource(R.color.sage).copy(alpha = 0.5f),
                 focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White
+                unfocusedContainerColor = Color.White,
+                errorBorderColor = Color.Red,
+                errorLeadingIconColor = Color.Red,
+                errorTrailingIconColor = Color.Red
             ),
-            visualTransformation = PasswordVisualTransformation(),
-            trailingIcon = {
-                IconButton(onClick ={}) {
-                    Icon(
-                        painterResource(R.drawable.hide ),
-                        contentDescription = stringResource(R.string.mostrar_password)
-
-                    )
-                }
-            },
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             singleLine = true
         )
+
+        // Mensaje de error con animación suave
+        AnimatedVisibility(
+            visible = isError,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            Text(
+                text = stringResource(R.string.la_contrase_a_debe_tener_al_menos_8_caracteres),
+                color = Color.Red,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+            )
+        }
     }
 }
 
