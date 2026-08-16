@@ -65,7 +65,7 @@ fun FixedBottomBar(
                 // Espacio exacto para que el botón central no tape nada
                 Spacer(modifier = Modifier.size(64.dp))
 
-                NavItem(Icons.Default.Edit, "Publicar", currentRoute == "reviews") {
+                NavItem(Icons.Default.Edit, "Notificación", currentRoute == "reviews") {
                     navController.navigate("reviews") {
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
                         launchSingleTop = true
@@ -90,7 +90,7 @@ fun FixedBottomBar(
                 .size(64.dp)
                 .offset(y = (-32).dp), // Elevado exactamente la mitad para un look circular perfecto
             onClick = {
-                navController.navigate("home") {
+                navController.navigate("reviews") {
                     popUpTo(navController.graph.startDestinationId) { saveState = true }
                     launchSingleTop = true
                     restoreState = true
