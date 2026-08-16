@@ -51,6 +51,7 @@ fun FormularioRegistro (
                 .padding(top = 8.dp)
                 .clickable { onForgotPasswordClick() }
         )
+
     }
 }
 

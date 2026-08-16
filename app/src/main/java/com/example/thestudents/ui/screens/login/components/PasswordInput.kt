@@ -1,5 +1,8 @@
 package com.example.thestudents.ui.screens.login.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,19 +37,17 @@ import com.example.thestudents.R
 
 /**
  * PasswordInput (Stateless para datos, Stateful para UI interna)
- *
- * 1. El ESTADO DE DATOS (password) está elevado porque el padre necesita validarlo.
- * 2. El ESTADO DE UI (passwordVisible) es interno porque al padre no le interesa
- *    saber si el usuario está viendo los puntitos o el texto, es un detalle visual.
  */
 @Composable
 fun PasswordInput(
     modifier: Modifier = Modifier,
-    password: String, // Elevado (Hoisted)
-    onPasswordChange: (String) -> Unit // Elevado (Hoisted)
+    password: String,
+    onPasswordChange: (String) -> Unit
 ) {
-    // Estado interno: Solo afecta a cómo se ve este componente, no al negocio de la app.
     var passwordVisible by remember { mutableStateOf(false) }
+    
+    // Lógica de error estética: Solo mostrar si el usuario ha empezado a escribir
+    val isError = password.isNotEmpty() && password.length < 6
     
     val icono = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
     val description = if (passwordVisible) stringResource(R.string.ocultar_contrasena) else stringResource(
@@ -65,6 +66,7 @@ fun PasswordInput(
         OutlinedTextField(
             value = password,
             onValueChange = onPasswordChange,
+            isError = isError, // El borde cambia a rojo automáticamente
             placeholder = {
                 Text(
                     stringResource(R.string.ingresa_tu_contrasena),
@@ -75,14 +77,15 @@ fun PasswordInput(
                 Icon(
                     Icons.Default.Lock,
                     contentDescription = null,
-                    tint = colorResource(R.color.dark_green)
+                    tint = if (isError) Color.Red else colorResource(R.color.dark_green)
                 )
             },
             trailingIcon = {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(
                         imageVector = icono,
-                        contentDescription = description
+                        contentDescription = description,
+                        tint = if (isError) Color.Red else colorResource(R.color.dark_green)
                     )
                 }
             },
@@ -92,12 +95,29 @@ fun PasswordInput(
                 focusedBorderColor = colorResource(R.color.sage),
                 unfocusedBorderColor = colorResource(R.color.sage).copy(alpha = 0.5f),
                 focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White
+                unfocusedContainerColor = Color.White,
+                errorBorderColor = Color.Red,
+                errorLeadingIconColor = Color.Red,
+                errorTrailingIconColor = Color.Red
             ),
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             singleLine = true
         )
+
+        // Mensaje de error con animación suave
+        AnimatedVisibility(
+            visible = isError,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            Text(
+                text = stringResource(R.string.la_contrase_a_debe_tener_al_menos_8_caracteres),
+                color = Color.Red,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+            )
+        }
     }
 }
 
