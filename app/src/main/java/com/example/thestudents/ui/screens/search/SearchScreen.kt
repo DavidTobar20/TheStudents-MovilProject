@@ -21,7 +21,7 @@ import com.example.thestudents.ui.utils.FixedBottomBar
 import com.example.thestudents.ui.screens.search.components.HeaderSearch
 import com.example.thestudents.ui.screens.search.components.SearchBar
 import com.example.thestudents.ui.screens.search.components.StudentCard
-import com.example.thestudents.model.Student
+import com.example.thestudents.data.Student
 
 // 5. PANTALLA COMPLETA
 @Composable

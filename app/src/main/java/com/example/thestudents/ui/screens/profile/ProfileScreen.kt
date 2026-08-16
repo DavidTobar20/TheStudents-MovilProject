@@ -15,7 +15,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
 import com.example.thestudents.ui.utils.FixedBottomBar
-import com.example.thestudents.model.Student
+import com.example.thestudents.data.Student
 import com.example.thestudents.ui.screens.profile.components.ProfileHeader
 import com.example.thestudents.ui.screens.profile.components.ProfileTabs
 import com.example.thestudents.ui.screens.profile.components.RatingChartSection

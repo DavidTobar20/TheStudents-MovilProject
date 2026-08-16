@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
-import com.example.thestudents.model.Student
+import com.example.thestudents.data.Student
 import com.example.thestudents.ui.utils.ButtonWithoutIcon
 import com.example.thestudents.ui.utils.ProfileIcon
 
