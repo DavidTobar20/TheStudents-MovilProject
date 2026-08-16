@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 import com.example.thestudents.data.Student
+import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ProfileIcon
 
@@ -51,7 +52,7 @@ fun UserInfoSection(
                     fontFamily = FontFamily.Serif
                 )
                 Text(
-                    text = student.email.split("@")[0].let { "@$it" },
+                    text = student.username,
                     fontSize = 14.sp,
                     color = colorResource(R.color.medium_green).copy(alpha = 0.6f)
                 )
@@ -96,18 +97,7 @@ fun UserInfoSection(
 fun UserInfoSectionPreview() {
     TheStudentsTheme {
         UserInfoSection(
-            student = Student(
-                id = "1",
-                name = "Juan Pablo Mejía",
-                email = "juan.pablo.m@u.edu.co",
-                program = "Ingeniería de Sistemas",
-                semester = 7,
-                bio = "Me gusta trabajar en equipo y aprender de proyectos reales. Abierto a grupos de estudio.",
-                rating = 4.8f,
-                reviewsCount = 21,
-                initials = "JP",
-                profileColor = colorResource(R.color.light_tan)
-            )
+            student = localStudentProvider.currentUser
         )
     }
 }

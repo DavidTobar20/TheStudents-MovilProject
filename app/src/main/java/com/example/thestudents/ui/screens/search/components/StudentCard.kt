@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 import com.example.thestudents.data.Student
+import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.utils.ButtonWithoutIcon
 import com.example.thestudents.ui.utils.ProfileIcon
 
@@ -86,17 +87,6 @@ fun StudentCard(
 @Composable
 fun StudentCardPreview() {
     StudentCard(
-        Student(
-            id = "1",
-            initials = "VT",
-            name = "Valentina Torres",
-            program = "Psicología",
-            reviewsCount = 28,
-            rating = 5f,
-            profileColor = Color(0xFF7B5CAB),
-            email = "valentina@u.edu.co",
-            semester = 5,
-            bio = "Estudiante de psicología"
-        )
+        student = localStudentProvider.students[4]
     )
 }
