@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">TheStudents</string>
     <string name="o_continua_con">o continúa con</string>
     <string name="correo_institucional">Correo institucional</string>
@@ -22,7 +22,8 @@
     <string name="resenar_companeros">RESEÑAR COMPAÑEROS</string>
     <string name="personas_con_quienes_has_compartido_clase">Personas con quienes has compartido clase</string>
     <string name="buscar_estudiantes">BUSCAR ESTUDIANTES</string>
-    <string name="buscar_por_nombre_o_carrera">Buscar por nombre o carrera...</string>
+    <string name="buscar_por_nombre_o_carrera" tools:ignore="TypographyEllipsis">Buscar por nombre o carrera...</string>
     <string name="seguir_mayuscula">SEGUIR</string>
     <string name="sugerencias_para_ti_mayuscula">SUGERENCIAS PARA TI</string>
+    <string name="ejemplo_email">nombre@universidad.edu.co</string>
 </resources>

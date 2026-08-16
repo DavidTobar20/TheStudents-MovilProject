@@ -44,7 +44,7 @@ fun EmailInput(
         OutlinedTextField(
             value = email,
             onValueChange = onEmailChange,
-            placeholder = { Text("nombre@universidad.edu.co", color = colorResource(R.color.sage)) },
+            placeholder = { Text(stringResource(R.string.ejemplo_email), color = colorResource(R.color.sage)) },
             leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = colorResource(R.color.dark_green)) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
