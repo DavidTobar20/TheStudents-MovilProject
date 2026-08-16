@@ -22,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,12 +32,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 
+/**
+ * PasswordInput (Stateless para datos, Stateful para UI interna)
+ *
+ * 1. El ESTADO DE DATOS (password) está elevado porque el padre necesita validarlo.
+ * 2. El ESTADO DE UI (passwordVisible) es interno porque al padre no le interesa
+ *    saber si el usuario está viendo los puntitos o el texto, es un detalle visual.
+ */
 @Composable
 fun PasswordInput(
     modifier: Modifier = Modifier,
-    password: String,
-    onPasswordChange: (String) -> Unit
+    password: String, // Elevado (Hoisted)
+    onPasswordChange: (String) -> Unit // Elevado (Hoisted)
 ) {
+    // Estado interno: Solo afecta a cómo se ve este componente, no al negocio de la app.
+    var passwordVisible by remember { mutableStateOf(false) }
+    
+    val icono = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+    val description = if (passwordVisible) stringResource(R.string.ocultar_contrasena) else stringResource(
+        R.string.mostrar_contrasena
+    )
+
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.contrasena),
@@ -47,27 +61,31 @@ fun PasswordInput(
             fontSize = 14.sp,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        }
-        var passwordVisible by remember { mutableStateOf(false) }
-        var icono = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
 
-        var description = if (passwordVisible) stringResource(R.string.ocultar_contrasena) else stringResource(
-            R.string.mostrar_contrasena
-        )
-
-    OutlinedTextField(
+        OutlinedTextField(
             value = password,
             onValueChange = onPasswordChange,
             placeholder = {
                 Text(
                     stringResource(R.string.ingresa_tu_contrasena),
                     color = colorResource(R.color.sage)
-                )},
+                )
+            },
             leadingIcon = {
-                Icon(Icons.Default.Lock,
+                Icon(
+                    Icons.Default.Lock,
                     contentDescription = null,
                     tint = colorResource(R.color.dark_green)
-                ) },
+                )
+            },
+            trailingIcon = {
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(
+                        imageVector = icono,
+                        contentDescription = description
+                    )
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
@@ -77,19 +95,11 @@ fun PasswordInput(
                 unfocusedContainerColor = Color.White
             ),
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                IconButton(onClick ={passwordVisible = !passwordVisible}) {
-                    Icon(
-                        imageVector = icono,
-                        contentDescription = description
-                    )
-                }
-            },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             singleLine = true
         )
     }
-
+}
 
 @Preview(showBackground = true)
 @Composable

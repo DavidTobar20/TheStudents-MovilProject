@@ -53,11 +53,8 @@ fun BodyLoginScreen(
 
         ) {
             LogoApp()
-
             Spacer(modifier = Modifier.height(8.dp))
-
             MensajeBienvenida()
-
             DiamondDivider(modifier = Modifier.padding(horizontal = 48.dp))
 
             Text(
@@ -69,6 +66,7 @@ fun BodyLoginScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
+            // Pasamos el estado hacia abajo
             FormularioRegistro(
                 email = email,
                 onEmailChange = onEmailChange,
@@ -89,7 +87,6 @@ fun BodyLoginScreen(
             )
 
             Spacer(modifier = Modifier.height(24.dp))
-
             ContinueWithDivider()
 
             ButtonWithIcon(
@@ -120,8 +117,7 @@ fun BodyLoginScreen(
             }
         }
     }
-    }
-
+}
 
 
 @Composable
@@ -143,6 +139,12 @@ fun BodyLoginScreenPreview() {
     }
 }
 
+/**
+ * LOGIN SCREEN (Stateful - Con estado)
+ * 
+ * Este es el "Padre"  Aquí es donde se declaran las
+ * variables que controlan toda la pantalla.
+ */
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
@@ -151,6 +153,7 @@ fun LoginScreen(
     onCreateAccountClick: () -> Unit = {},
     onForgotPasswordClick: () -> Unit = {}
 ) {
+    // Declaración del estado (State Hoisting: el estado vive aquí)
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -167,8 +170,11 @@ fun LoginScreen(
     )
 }
 
+
 @Composable
 @Preview(showBackground = true)
 fun LoginScreenPreview() {
-    LoginScreen()
+    TheStudentsTheme {
+        LoginScreen()
+    }
 }

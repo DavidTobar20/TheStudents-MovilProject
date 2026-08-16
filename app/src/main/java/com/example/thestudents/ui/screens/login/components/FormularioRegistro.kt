@@ -21,22 +21,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 
-
 @Composable
 fun FormularioRegistro (
     modifier: Modifier = Modifier,
-    email: String,
+    email: String, // Valor recibido del padre
     password: String,
-    onEmailChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit, // Callback para notificar cambios
     onPasswordChange: (String) -> Unit,
     onForgotPasswordClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier
     ) {
+
         EmailInput(email = email, onEmailChange = onEmailChange)
 
         Spacer(modifier = Modifier.height(20.dp))
+
 
         PasswordInput(password = password, onPasswordChange = onPasswordChange)
 
@@ -56,6 +57,7 @@ fun FormularioRegistro (
 @Preview(showBackground = true)
 @Composable
 fun FormularioRegistroPreview() {
+    // En los Preview, creamos el estado localmente para poder visualizar el componente
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     FormularioRegistro(
