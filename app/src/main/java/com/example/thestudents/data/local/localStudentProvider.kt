@@ -18,7 +18,7 @@ object localStudentProvider {
             initials = "JP",
             profileColor = Color(0xFFF0EAE1),
             period = "2024-2",
-            profileImageRes = R.drawable.logosinfondo
+            profileImage = R.drawable.logosinfondo
         ),
         Student(
             id = "2",

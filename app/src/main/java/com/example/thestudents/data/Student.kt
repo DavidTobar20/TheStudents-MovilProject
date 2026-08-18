@@ -15,6 +15,6 @@ data class Student(
     val reviewsCount: Int,
     val initials: String,
     val profileColor: Color,
-    val period: String = "", // Periodo académico (ej: 2025-2)
-    @DrawableRes val profileImageRes: Int? = null
+    val period: String,
+    @DrawableRes val profileImage: Int? = null
 )
