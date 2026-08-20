@@ -30,6 +30,7 @@
     <string name="ocultar_contrasena">Ocultar contraseña</string>
     <string name="mostrar_contrasena">Mostrar contraseña</string>
     <string name="la_contrase_a_debe_tener_al_menos_8_caracteres">La contraseña debe tener al menos 8 caracteres</string>
+    <string name="resena">Reseña</string>
 
     <!-- Notificaciones -->
     <string name="notificaciones">Notificaciones</string>

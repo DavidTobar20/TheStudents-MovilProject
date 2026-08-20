@@ -36,7 +36,7 @@ fun UserInfoSection(
         Row(verticalAlignment = Alignment.CenterVertically) {
             ProfileIcon(
                 initials = student.initials,
-                profileImageRes = student.profileImageRes,
+                profileImage = student.profileImage,
                 modifier = Modifier.size(80.dp),
                 backgroundColor = colorResource(R.color.light_tan),
                 contentColor = colorResource(R.color.dark_green),
