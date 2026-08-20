@@ -58,4 +58,7 @@
     <string name="notificaciones_resenas">Notificaciones de nuevas reseñas</string>
     <string name="descripcion_notificaciones">Recibe alertas cuando alguien te reseñe</string>
     <string name="guardar_cambios_mayuscula">GUARDAR CAMBIOS</string>
+    <string name="inicio">Inicio</string>
+    <string name="explorar">Explorar</string>
+    <string name="comentarios">COMENTARIOS (%1$d)</string>
 </resources>
