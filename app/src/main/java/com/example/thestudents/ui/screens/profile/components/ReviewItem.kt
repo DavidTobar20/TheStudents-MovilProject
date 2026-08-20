@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.profile.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreHoriz
@@ -22,11 +23,13 @@ import com.example.thestudents.ui.utils.ProfileIcon
 @Composable
 fun ReviewItem(
     review: Review,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .clickable { onClick() }
             .padding(24.dp)
     ) {
         Row(verticalAlignment = Alignment.Top) {
