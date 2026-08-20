@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import com.example.thestudents.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -77,7 +78,7 @@ fun BodyCommentsReviewScreen(
 
             // 2. Título fijo
             Text(
-                text = "COMENTARIOS (${review.comments.size})",
+                text = stringResource(R.string.comentarios, review.comments.size),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Gray,
@@ -145,7 +146,7 @@ fun CommentsReviewScreen(
         BodyCommentsReviewScreen(
             initialCommentator = "LS",
             review = review,
-            onBackClick = {},
+            onBackClick = { navController.popBackStack() },
             isLiked = false,
             isDisliked = false,
             onLikeClick = {},
