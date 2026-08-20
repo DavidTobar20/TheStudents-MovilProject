@@ -30,6 +30,7 @@ import com.example.thestudents.ui.utils.ButtonWithIcon
 fun BodyProfile(
     student: Student,
     onBackClick: () -> Unit,
+    onEditProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -44,7 +45,7 @@ fun BodyProfile(
         item { ButtonWithIcon(
             text = stringResource(R.string.editar_perfil),
             icon = Icons.Outlined.Edit,
-            onClick = {},
+            onClick = onEditProfileClick,
             borderColor = colorResource(R.color.dark_green),
             contentColor = colorResource(R.color.dark_green),
             modifier = Modifier
@@ -61,7 +62,7 @@ fun BodyProfile(
 @Preview(showBackground = true)
 @Composable
 fun BodyProfilePreview() {
-    BodyProfile(student = localStudentProvider.currentUser, onBackClick = {})
+    BodyProfile(student = localStudentProvider.currentUser, onBackClick = {}, onEditProfileClick = {})
 }
 
 @Composable
@@ -79,6 +80,7 @@ fun ProfileScreen(
         BodyProfile(
             student = currentUser,
             onBackClick = { navController.popBackStack() },
+            onEditProfileClick = { navController.navigate("edit_profile") },
             contentPadding = padding
         )
     }
