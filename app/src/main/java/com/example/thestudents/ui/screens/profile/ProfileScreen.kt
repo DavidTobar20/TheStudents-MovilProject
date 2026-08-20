@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
 import com.example.thestudents.ui.utils.FixedBottomBar
 import com.example.thestudents.data.Student
+import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.screens.profile.components.ProfileHeader
 import com.example.thestudents.ui.screens.profile.components.ProfileTabs
@@ -31,6 +32,7 @@ fun BodyProfile(
     student: Student,
     onBackClick: () -> Unit,
     onEditProfileClick: () -> Unit,
+    onReviewClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -54,15 +56,30 @@ fun BodyProfile(
         ) }
         item { RatingChartSection() }
         item { ProfileTabs() }
-        item { ReviewItem(review = com.example.thestudents.data.local.localReviewsProvider.allReviews[0]) }
-        item { ReviewItem(review = com.example.thestudents.data.local.localReviewsProvider.allReviews[1]) }
+        item { 
+            ReviewItem(
+                review = localReviewsProvider.allReviews[0],
+                onClick = { onReviewClick(0) }
+            ) 
+        }
+        item { 
+            ReviewItem(
+                review = localReviewsProvider.allReviews[1],
+                onClick = { onReviewClick(1) }
+            ) 
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun BodyProfilePreview() {
-    BodyProfile(student = localStudentProvider.currentUser, onBackClick = {}, onEditProfileClick = {})
+    BodyProfile(
+        student = localStudentProvider.currentUser, 
+        onBackClick = {}, 
+        onEditProfileClick = {},
+        onReviewClick = {}
+    )
 }
 
 @Composable
@@ -81,6 +98,7 @@ fun ProfileScreen(
             student = currentUser,
             onBackClick = { navController.popBackStack() },
             onEditProfileClick = { navController.navigate("edit_profile") },
+            onReviewClick = { index -> navController.navigate("comments_review/$index") },
             contentPadding = padding
         )
     }
