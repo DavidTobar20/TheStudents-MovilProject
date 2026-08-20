@@ -30,6 +30,19 @@
     <string name="ocultar_contrasena">Ocultar contraseña</string>
     <string name="mostrar_contrasena">Mostrar contraseña</string>
     <string name="la_contrase_a_debe_tener_al_menos_8_caracteres">La contraseña debe tener al menos 8 caracteres</string>
+
+    <!-- Notificaciones -->
+    <string name="notificaciones">Notificaciones</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="rechazar">Rechazar</string>
+    <string name="ver_resena_completa">Ver reseña completa</string>
+    <string name="ver_comentario">Ver comentario</string>
+    <string name="calificado_en">te ha calificado en</string>
+    <string name="le_dio_me_gusta">le dio \"Me Gusta\" a tu reseña sobre</string>
+    <string name="solicitud_seguimiento">te envió una solicitud de seguimiento</string>
+    <string name="nuevo_comentario_en">Nuevo comentario de compañero en</string>
+    <string name="hace_tiempo">Hace %1$s</string>
+    <string name="estrellas">%1$d estrellas</string>
     <string name="cancelar">Cancelar</string>
     <string name="guardar">Guardar</string>
     <string name="cambiar_foto">Cambiar foto de perfil</string>
