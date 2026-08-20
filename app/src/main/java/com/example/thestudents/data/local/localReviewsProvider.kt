@@ -5,28 +5,40 @@ import com.example.thestudents.data.Review
 object localReviewsProvider {
     val allReviews = listOf(
         Review(
-            authorName = "Daniel Ruiz",
-            authorInitials = "DR",
-            courseAndPeriod = "FIS220, 2025-2",
+            reviewer = localStudentProvider.students[0],
+            nameReviewed = "Luisa Mendoza",
+            classReviewed = "MATE120",
+            periodReviewed = "2025-3",
             content = "Muy responsable, aportó ideas clave en todas las etapas del proyecto.",
             time = "Hace 3 días",
-            likes = 5
+            likes = 5,
+            disLikes = 0,
+            rating = "4.5",
+            comments = localCommentsProvider.allComments
         ),
         Review(
-            authorName = "Valeria Gómez",
-            authorInitials = "VG",
-            courseAndPeriod = "MAT101, 2024-1",
+            reviewer = localStudentProvider.students[1],
+            nameReviewed = "Luisa Mendoza",
+            classReviewed = "MATE110",
+            periodReviewed = "2026-1",
             content = "Excelente compañera, explica muy bien los temas complejos y es muy puntual.",
             time = "Hace 1 semana",
-            likes = 12
+            likes = 12,
+            disLikes = 0,
+            rating = null,
+            comments = localCommentsProvider.allComments.subList(0,1)
         ),
         Review(
-            authorName = "Mateo Salazar",
-            authorInitials = "MS",
-            courseAndPeriod = "PROG302, 2024-2",
+            reviewer = localStudentProvider.students[2],
+            nameReviewed = "Luisa Mendoza",
+            classReviewed = "FIS103",
+            periodReviewed = "2024-3",
             content = "Gran capacidad de liderazgo en el trabajo en equipo. Siempre está dispuesta a colaborar.",
             time = "Hace 2 meses",
-            likes = 3
+            likes = 3,
+            disLikes = 0,
+            rating = "3",
+            comments = emptyList()
         )
     )
 }

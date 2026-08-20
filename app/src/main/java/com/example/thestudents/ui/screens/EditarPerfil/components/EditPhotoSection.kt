@@ -50,7 +50,7 @@ fun EditPhotoSection(
         ) {
             ProfileIcon(
                 initials = initials,
-                profileImageRes = profileImageRes,
+                profileImage = profileImageRes,
                 backgroundColor = colorResource(R.color.light_tan),
                 contentColor = colorResource(R.color.dark_green),
                 fontSize = 36.sp,
@@ -90,7 +90,7 @@ fun EditPhotoSectionPreview() {
     val student = localStudentProvider.currentUser
     EditPhotoSection(
         initials = student.initials,
-        profileImageRes = student.profileImageRes,
+        profileImageRes = student.profileImage,
         onEditClick = {}
     )
 }

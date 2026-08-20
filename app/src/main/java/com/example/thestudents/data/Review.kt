@@ -1,15 +1,14 @@
 package com.example.thestudents.data
 
-import androidx.annotation.DrawableRes
-
-
 data class Review(
-    @DrawableRes val authorImageId: Int? = null,
-    val authorName: String,
-    val authorInitials: String, // Para el icono si no hay imagen
-    val courseAndPeriod: String, // Actúa como el 'username' o subtítulo
+    val reviewer: Student,
+    val nameReviewed: String,
+    val classReviewed: String,
+    val periodReviewed: String,
     val content: String,
     val time: String,
-    val likes: Int = 0,
-    val comments: Int = 0
+    val likes: Int,
+    val disLikes: Int,
+    val rating: String?,
+    val comments: List<Comment>
 )

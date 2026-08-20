@@ -7,3 +7,5 @@ data class CourseSection(
     val icon: ImageVector,
     val students: List<Student>
 )
+
+

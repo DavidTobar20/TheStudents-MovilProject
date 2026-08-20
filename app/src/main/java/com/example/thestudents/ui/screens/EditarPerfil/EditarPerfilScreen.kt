@@ -79,7 +79,7 @@ fun BodyEditarPerfil(
                 item {
                     EditPhotoSection(
                         initials = student.initials,
-                        profileImageRes = student.profileImageRes,
+                        profileImageRes = student.profileImage,
                         onEditClick = { /* Acción para cambiar foto */ }
                     )
                 }

@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.profile.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreHoriz
@@ -17,23 +18,24 @@ import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.local.localReviewsProvider
-import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ProfileIcon
 
 @Composable
 fun ReviewItem(
     review: Review,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .clickable { onClick() }
             .padding(24.dp)
     ) {
         Row(verticalAlignment = Alignment.Top) {
             ProfileIcon(
-                initials = review.authorInitials,
-                profileImageRes = review.authorImageId,
+                initials = review.reviewer.initials,
+                profileImage = review.reviewer.profileImage,
                 backgroundColor = colorResource(R.color.dark_green),
                 contentColor = Color.White,
                 fontSize = 14.sp,
@@ -43,16 +45,16 @@ fun ReviewItem(
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = review.authorName,
+                        text = review.reviewer.name,
                         fontWeight = FontWeight.Bold,
                         color = colorResource(R.color.dark_green),
                         fontSize = 15.sp
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "${review.courseAndPeriod}  ·  ${review.time}",
+                        text = "${review.classReviewed}, ${review.periodReviewed}  ·  ${review.time}",
                         color = colorResource(R.color.sage),
-                        fontSize = 12.sp
+                        fontSize = 10.sp
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
