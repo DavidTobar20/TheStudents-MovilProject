@@ -19,6 +19,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
 
+import androidx.compose.ui.res.stringResource
+
 @Composable
 fun FixedBottomBar(
     navController: NavController,
@@ -47,14 +49,14 @@ fun FixedBottomBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                NavItem(Icons.Default.Home, "Inicio", currentRoute == "home") {
+                NavItem(Icons.Default.Home, stringResource(R.string.inicio), currentRoute == "home") {
                     navController.navigate("home") {
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
                         launchSingleTop = true
                         restoreState = true
                     }
                 }
-                NavItem(Icons.Default.Search, "Explorar", currentRoute == "search") {
+                NavItem(Icons.Default.Search, stringResource(R.string.explorar), currentRoute == "search") {
                     navController.navigate("search") {
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
                         launchSingleTop = true
@@ -65,14 +67,14 @@ fun FixedBottomBar(
                 // Espacio exacto para que el botón central no tape nada
                 Spacer(modifier = Modifier.size(64.dp))
 
-                NavItem(Icons.Default.Edit, "Notificación", currentRoute == "reviews") {
-                    navController.navigate("reviews") {
+                NavItem(Icons.Default.Notifications, stringResource(R.string.notificaciones), currentRoute == "notifications") {
+                    navController.navigate("notifications") {
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
                         launchSingleTop = true
                         restoreState = true
                     }
                 }
-                NavItem(Icons.Default.Person, "Perfil", currentRoute == "profile") {
+                NavItem(Icons.Default.Person, stringResource(R.string.perfil), currentRoute == "profile") {
                     navController.navigate("profile") {
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
                         launchSingleTop = true
