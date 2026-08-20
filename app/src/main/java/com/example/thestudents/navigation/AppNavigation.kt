@@ -11,6 +11,7 @@ import com.example.thestudents.ui.screens.login.LoginScreen
 import com.example.thestudents.ui.screens.profile.ProfileScreen
 import com.example.thestudents.ui.screens.reviews.ReviewsScreen
 import com.example.thestudents.ui.screens.search.SearchScreen
+import com.example.thestudents.ui.screens.EditarPerfil.EditarPerfilScreen
 
 @Composable
 fun AppNavigation(modifier: Modifier = Modifier) {
@@ -30,5 +31,6 @@ fun AppNavigation(modifier: Modifier = Modifier) {
         composable("search") { SearchScreen(navController = navController) }
         composable("profile") { ProfileScreen(navController = navController) }
         composable("reviews") { ReviewsScreen(navController = navController) }
+        composable("edit_profile") { EditarPerfilScreen(navController = navController) }
     }
 }

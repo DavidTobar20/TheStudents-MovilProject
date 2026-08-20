@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
 import com.example.thestudents.ui.utils.FixedBottomBar
 import com.example.thestudents.data.Student
+import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.screens.profile.components.ProfileHeader
 import com.example.thestudents.ui.screens.profile.components.ProfileTabs
 import com.example.thestudents.ui.screens.profile.components.RatingChartSection
@@ -29,6 +30,7 @@ import com.example.thestudents.ui.utils.ButtonWithIcon
 fun BodyProfile(
     student: Student,
     onBackClick: () -> Unit,
+    onEditProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -43,7 +45,7 @@ fun BodyProfile(
         item { ButtonWithIcon(
             text = stringResource(R.string.editar_perfil),
             icon = Icons.Outlined.Edit,
-            onClick = {},
+            onClick = onEditProfileClick,
             borderColor = colorResource(R.color.dark_green),
             contentColor = colorResource(R.color.dark_green),
             modifier = Modifier
@@ -52,27 +54,15 @@ fun BodyProfile(
         ) }
         item { RatingChartSection() }
         item { ProfileTabs() }
-        item { ReviewItem() }
-        item { ReviewItem() }
+        item { ReviewItem(review = com.example.thestudents.data.local.localReviewsProvider.allReviews[0]) }
+        item { ReviewItem(review = com.example.thestudents.data.local.localReviewsProvider.allReviews[1]) }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun BodyProfilePreview() {
-    val mockStudent = Student(
-        id = "1",
-        name = "Juan Pablo Mejía",
-        email = "juan.pablo.m@u.edu.co",
-        program = "Ingeniería de Sistemas",
-        semester = 7,
-        bio = "Me gusta trabajar en equipo y aprender de proyectos reales.",
-        rating = 4.8f,
-        reviewsCount = 21,
-        initials = "JP",
-        profileColor = colorResource(R.color.light_tan)
-    )
-    BodyProfile(student = mockStudent, onBackClick = {})
+    BodyProfile(student = localStudentProvider.currentUser, onBackClick = {}, onEditProfileClick = {})
 }
 
 @Composable
@@ -80,19 +70,7 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController()
 ) {
-    val currentUser = Student(
-        id = "1",
-        name = "Juan Pablo Mejía",
-        email = "juan.pablo.m@u.edu.co",
-        program = "Ingeniería de Sistemas",
-        semester = 7,
-        bio = "Me gusta trabajar en equipo y aprender de proyectos reales. Abierto a grupos de estudio.",
-        rating = 4.8f,
-        reviewsCount = 21,
-        initials = "JP",
-        profileColor = colorResource(R.color.light_tan),
-        profileImageRes = R.drawable.logosinfondo // Ejemplo de imagen, puedes cambiarla luego
-    )
+    val currentUser = localStudentProvider.currentUser
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -102,6 +80,7 @@ fun ProfileScreen(
         BodyProfile(
             student = currentUser,
             onBackClick = { navController.popBackStack() },
+            onEditProfileClick = { navController.navigate("edit_profile") },
             contentPadding = padding
         )
     }
