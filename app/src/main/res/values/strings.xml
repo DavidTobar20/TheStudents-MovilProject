@@ -41,7 +41,6 @@
     <string name="calificado_en">te ha calificado en</string>
     <string name="le_dio_me_gusta">le dio \"Me Gusta\" a tu reseña sobre</string>
     <string name="solicitud_seguimiento">te envió una solicitud de seguimiento</string>
-    <string name="nuevo_comentario_en">Nuevo comentario de compañero en</string>
     <string name="hace_tiempo">Hace %1$s</string>
     <string name="estrellas">%1$d estrellas</string>
     <string name="cancelar">Cancelar</string>
@@ -61,4 +60,60 @@
     <string name="inicio">Inicio</string>
     <string name="explorar">Explorar</string>
     <string name="comentarios">COMENTARIOS (%1$d)</string>
+    <string name="sin_notificaciones">No tienes notificaciones por ahora.</string>
+    <string name="repite_tu_contrase_a">Repite tu contraseña</string>
+    <string name="confirma_tu_contrase_a">Confirma tu contraseña</string>
+    <string name="crea_una_contrase_a_segura">Crea una contraseña segura</string>
+    <string name="crea_tu_contrase_a">Crea tu contraseña</string>
+    <string name="nombre_universidad_edu_co">nombre@universidad.edu.co</string>
+    <string name="ingresa_tus_apellidos_completos">Ingresa tus apellidos completos</string>
+    <string name="apellidos">Apellidos</string>
+    <string name="ingresa_tus_nombres_completos">Ingresa tus nombres completos</string>
+    <string name="nombres">Nombres</string>
+    <!-- Descripciones de contenido (accesibilidad) -->
+    <string name="volver">Volver</string>
+    <string name="atras">Atrás</string>
+    <string name="opciones">Opciones</string>
+    <string name="enviar_comentario">Enviar comentario</string>
+    <string name="imagen_de_perfil">Imagen de perfil</string>
+    <string name="logo_the_students">Logo The Students</string>
+
+    <!-- Registro -->
+    <string name="crear_nueva_cuenta">Crear nueva cuenta</string>
+    <string name="registrate_beneficios">Regístrate para acceder a los beneficios de tu cuenta institucional.</string>
+    <string name="ya_tienes_una_cuenta">"¿Ya tienes una cuenta? "</string>
+    <string name="inicia_sesion">Inicia sesión</string>
+    <string name="o_registrate_con">" o regístrate con "</string>
+    <string name="acepto_los">"Acepto los "</string>
+    <string name="terminos_de_servicio">Términos de Servicio</string>
+    <string name="y_la">" y la "</string>
+    <string name="politica_de_privacidad">Política de Privacidad</string>
+
+    <!-- Comentarios y reseñas -->
+    <string name="escribe_un_comentario" tools:ignore="TypographyEllipsis">Escribe un comentario...</string>
+    <string name="sobre_persona">"sobre "</string>
+    <string name="usuario_y_tiempo">%1$s · %2$s</string>
+    <string name="resena_curso_y_fecha">%1$s, %2$s  ·  %3$s</string>
+    <string name="contenido_citado">“%1$s”</string>
+
+    <!-- Perfil y edición -->
+    <string name="programa_y_semestre">%1$s · Sem. %2$d</string>
+    <string name="semestre_numero">Semestre %1$d</string>
+    <string name="contador_caracteres">%1$d/%2$d</string>
+
+    <!-- Notificaciones -->
+    <string name="materia_con_codigo">Materia: %1$s (%2$s)</string>
+    <string name="nuevo_comentario_detalle">Nuevo comentario de compañero en \"%1$s\". Snippet: \"%2$s\"</string>
+
+    <!-- Inicio -->
+    <string name="home_screen">Home Screen</string>
+
+    <plurals name="programa_y_resenas">
+        <item quantity="one">%1$s · %2$d reseña</item>
+        <item quantity="other">%1$s · %2$d reseñas</item>
+    </plurals>
+    <plurals name="comentario_con_estrellas">
+        <item quantity="one">. \"%1$s\" (con %2$d estrella)</item>
+        <item quantity="other">. \"%1$s\" (con %2$d estrellas)</item>
+    </plurals>
 </resources>

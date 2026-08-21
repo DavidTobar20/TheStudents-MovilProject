@@ -10,11 +10,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.thestudents.R
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
@@ -52,14 +54,19 @@ fun ReviewItem(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "${review.classReviewed}, ${review.periodReviewed}  ·  ${review.time}",
+                        text = stringResource(
+                            R.string.resena_curso_y_fecha,
+                            review.classReviewed,
+                            review.periodReviewed,
+                            review.time
+                        ),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 10.sp
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "“${review.content}”",
+                    text = stringResource(R.string.contenido_citado, review.content),
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.9f),
                     fontStyle = FontStyle.Italic

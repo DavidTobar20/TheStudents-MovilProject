@@ -36,7 +36,7 @@ fun CommentsTopAppBar(
             IconButton(onClick = onBackClick) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Volver"
+                    contentDescription = stringResource(R.string.volver)
                 )
             }
         }

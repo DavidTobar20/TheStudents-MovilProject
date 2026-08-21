@@ -39,7 +39,7 @@ fun ProfileHeader(
         IconButton(onClick = onBackClick) {
             Icon(
                 imageVector = Icons.Default.ChevronLeft,
-                contentDescription = "Atrás",
+                contentDescription = stringResource(R.string.atras),
                 tint = MaterialTheme.colorScheme.primary
             )
         }
@@ -52,7 +52,7 @@ fun ProfileHeader(
         IconButton(onClick = { /* Menú */ }) {
             Icon(
                 imageVector = Icons.Default.MoreHoriz,
-                contentDescription = "Opciones",
+                contentDescription = stringResource(R.string.opciones),
                 tint = MaterialTheme.colorScheme.primary
             )
         }

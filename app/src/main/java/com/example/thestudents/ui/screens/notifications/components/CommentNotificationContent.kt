@@ -31,12 +31,12 @@ fun CommentNotificationContent(
             style = MaterialTheme.typography.bodyMedium
         )
         Text(
-            text = "Materia: $subject ($courseCode)",
+            text = stringResource(R.string.materia_con_codigo, subject, courseCode),
             color = MaterialTheme.extended.rating,
             style = MaterialTheme.typography.bodySmall
         )
         Text(
-            text = "${stringResource(R.string.nuevo_comentario_en)} \"$subject\". Snippet: \"$snippet\"",
+            text = stringResource(R.string.nuevo_comentario_detalle, subject, snippet),
             style = MaterialTheme.typography.bodyMedium
         )
         TextButton(onClick = onViewDetailClick, contentPadding = PaddingValues(0.dp)) {

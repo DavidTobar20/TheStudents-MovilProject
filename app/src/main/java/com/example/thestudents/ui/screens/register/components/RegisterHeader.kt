@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,13 +30,13 @@ fun RegisterHeader(modifier: Modifier = Modifier) {
         // Logo
         Image(
             painter = painterResource(id = R.drawable.logosinfondo),
-            contentDescription = "Logo The Students",
+            contentDescription = stringResource(R.string.logo_the_students),
             modifier = Modifier.size(120.dp),
             contentScale = ContentScale.Fit
         )
         
         Text(
-            text = "THE STUDENTS",
+            text = stringResource(R.string.the_students_mayuscula),
             style = MaterialTheme.typography.headlineSmall.copy(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
@@ -53,7 +54,7 @@ fun RegisterHeader(modifier: Modifier = Modifier) {
         )
 
         Text(
-            text = "Crear nueva cuenta",
+            text = stringResource(R.string.crear_nueva_cuenta),
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.primary
@@ -62,7 +63,7 @@ fun RegisterHeader(modifier: Modifier = Modifier) {
         )
 
         Text(
-            text = "Regístrate para acceder a los beneficios de tu cuenta institucional.",
+            text = stringResource(R.string.registrate_beneficios),
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
                 textAlign = TextAlign.Center

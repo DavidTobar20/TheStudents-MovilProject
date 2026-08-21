@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.thestudents.R
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
@@ -41,7 +43,7 @@ fun TermsAndConditions(
         )
         
         val annotatedString = buildAnnotatedString {
-            append("Acepto los ")
+            append(stringResource(R.string.acepto_los))
             
             val linkStyles = TextLinkStyles(
                 style = SpanStyle(
@@ -60,10 +62,10 @@ fun TermsAndConditions(
                     }
                 )
             ) {
-                append("Términos de Servicio")
+                append(stringResource(R.string.terminos_de_servicio))
             }
             
-            append(" y la ")
+            append(stringResource(R.string.y_la))
             
             withLink(
                 LinkAnnotation.Clickable(
@@ -74,7 +76,7 @@ fun TermsAndConditions(
                     }
                 )
             ) {
-                append("Política de Privacidad")
+                append(stringResource(R.string.politica_de_privacidad))
             }
             
             append(".")

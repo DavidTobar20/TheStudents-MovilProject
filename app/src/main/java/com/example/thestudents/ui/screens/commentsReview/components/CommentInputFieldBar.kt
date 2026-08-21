@@ -24,9 +24,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.thestudents.R
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ProfileIcon
 
@@ -76,7 +78,7 @@ fun CommentInputFieldBar(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Send,
-                    contentDescription = "Enviar comentario",
+                    contentDescription = stringResource(R.string.enviar_comentario),
                     tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(19.dp)
                 )

@@ -56,7 +56,7 @@ fun EditBioSection(
                 )
                 
                 Text(
-                    text = "${bio.length}/$maxLength",
+                    text = stringResource(R.string.contador_caracteres, bio.length, maxLength),
                     fontSize = 12.sp,
                     color = MaterialTheme.extended.rating,
                     fontWeight = FontWeight.Medium

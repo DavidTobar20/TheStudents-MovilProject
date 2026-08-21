@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -37,7 +38,11 @@ import com.example.thestudents.R
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 /**
- * PasswordInput (Stateless para datos, Stateful para UI interna)
+ * Campo de contrasena.
+ *
+ * La contrasena esta elevada a quien lo usa. El interruptor de "ver contrasena" se queda aqui a
+ * proposito: es un detalle visual que ningun llamador necesita leer ni controlar. Se usa
+ * rememberSaveable para que no se reinicie al girar la pantalla.
  */
 @Composable
 fun PasswordInput(
@@ -45,7 +50,7 @@ fun PasswordInput(
     password: String,
     onPasswordChange: (String) -> Unit
 ) {
-    var passwordVisible by remember { mutableStateOf(false) }
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
     
     // Lógica de error estética: Solo mostrar si el usuario ha empezado a escribir
     val isError = password.isNotEmpty() && password.length < 6

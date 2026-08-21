@@ -12,8 +12,10 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.ui.screens.register.components.*
 import com.example.thestudents.ui.theme.TheStudentsTheme
+import com.example.thestudents.R
+
 
 @Composable
 fun RegisterScreen(
@@ -28,16 +32,18 @@ fun RegisterScreen(
     onSsoClick: () -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
-    // State management (State Hoisting)
-    var names by remember { mutableStateOf("") }
-    var lastNames by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
+    // El estado vive aquí y baja al contenido (state hoisting).
+    // Los campos de texto normales se guardan ante un giro de pantalla; las contraseñas no, para
+    // no dejarlas en texto plano dentro del estado guardado de la instancia.
+    var names by rememberSaveable { mutableStateOf("") }
+    var lastNames by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     
-    var isPasswordVisible by remember { mutableStateOf(false) }
-    var isConfirmPasswordVisible by remember { mutableStateOf(false) }
-    var termsAccepted by remember { mutableStateOf(false) }
+    var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
+    var isConfirmPasswordVisible by rememberSaveable { mutableStateOf(false) }
+    var termsAccepted by rememberSaveable { mutableStateOf(false) }
 
     RegisterBody(
         names = names,
@@ -102,8 +108,8 @@ fun RegisterBody(
                 RegisterTextField(
                     value = names,
                     onValueChange = onNamesChange,
-                    label = "Nombres",
-                    placeholder = "Ingresa tus nombres completos",
+                    label = stringResource(R.string.nombres),
+                    placeholder = stringResource(R.string.ingresa_tus_nombres_completos),
                     leadingIcon = Icons.Default.Person
                 )
 
@@ -112,8 +118,8 @@ fun RegisterBody(
                 RegisterTextField(
                     value = lastNames,
                     onValueChange = onLastNamesChange,
-                    label = "Apellidos",
-                    placeholder = "Ingresa tus apellidos completos",
+                    label = stringResource(R.string.apellidos),
+                    placeholder = stringResource(R.string.ingresa_tus_apellidos_completos),
                     leadingIcon = Icons.Default.Person
                 )
 
@@ -122,8 +128,8 @@ fun RegisterBody(
                 RegisterTextField(
                     value = email,
                     onValueChange = onEmailChange,
-                    label = "Correo institucional",
-                    placeholder = "nombre@universidad.edu.co",
+                    label = stringResource(R.string.correo_institucional),
+                    placeholder = stringResource(R.string.nombre_universidad_edu_co),
                     leadingIcon = Icons.Default.Email,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
@@ -133,8 +139,8 @@ fun RegisterBody(
                 RegisterTextField(
                     value = password,
                     onValueChange = onPasswordChange,
-                    label = "Crea tu contraseña",
-                    placeholder = "Crea una contraseña segura",
+                    label = stringResource(R.string.crea_tu_contrase_a),
+                    placeholder = stringResource(R.string.crea_una_contrase_a_segura),
                     leadingIcon = Icons.Default.Lock,
                     isPasswordField = true,
                     isPasswordVisible = isPasswordVisible,
@@ -146,8 +152,8 @@ fun RegisterBody(
                 RegisterTextField(
                     value = confirmPassword,
                     onValueChange = onConfirmPasswordChange,
-                    label = "Confirma tu contraseña",
-                    placeholder = "Repite tu contraseña",
+                    label = stringResource(R.string.confirma_tu_contrase_a),
+                    placeholder = stringResource(R.string.repite_tu_contrase_a),
                     leadingIcon = Icons.Default.Lock,
                     isPasswordField = true,
                     isPasswordVisible = isConfirmPasswordVisible,
@@ -177,7 +183,7 @@ fun RegisterBody(
                     )
                 ) {
                     Text(
-                        text = "CREAR CUENTA",
+                        text = stringResource(R.string.crear_cuenta),
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSecondary

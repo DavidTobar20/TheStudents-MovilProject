@@ -1,11 +1,22 @@
 package com.example.thestudents.ui.utils
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -16,15 +27,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
+import com.example.thestudents.navigation.Routes
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
+/**
+ * Barra de navegacion inferior.
+ *
+ * Recibe la ruta activa y una funcion para navegar en vez del NavController, asi que no depende
+ * de la navegacion: se puede previsualizar y probar pasandole lambdas vacias.
+ */
 @Composable
 fun FixedBottomBar(
-    navController: NavController,
-    currentRoute: String?,
+    selectedRoute: String?,
+    onNavigate: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -33,7 +49,6 @@ fun FixedBottomBar(
             .wrapContentHeight(),
         contentAlignment = Alignment.BottomCenter
     ) {
-        // Fondo de la barra - Aumentamos altura y ajustamos padding
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -45,65 +60,55 @@ fun FixedBottomBar(
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(bottom = 8.dp), // Padding para alejar el texto del borde inferior
+                    .padding(bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                NavItem(Icons.Default.Home, stringResource(R.string.inicio), currentRoute == "home") {
-                    navController.navigate("home") {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-                NavItem(Icons.Default.Search, stringResource(R.string.explorar), currentRoute == "search") {
-                    navController.navigate("search") {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-                
-                // Espacio exacto para que el botón central no tape nada
-                Spacer(modifier = Modifier.size(64.dp))
+                NavItem(
+                    icon = Icons.Default.Home,
+                    label = stringResource(R.string.inicio),
+                    selected = selectedRoute == Routes.HOME,
+                    onClick = { onNavigate(Routes.HOME) }
+                )
+                NavItem(
+                    icon = Icons.Default.Search,
+                    label = stringResource(R.string.explorar),
+                    selected = selectedRoute == Routes.SEARCH,
+                    onClick = { onNavigate(Routes.SEARCH) }
+                )
 
-                NavItem(Icons.Default.Notifications, stringResource(R.string.notificaciones), currentRoute == "notifications") {
-                    navController.navigate("notifications") {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-                NavItem(Icons.Default.Person, stringResource(R.string.perfil), currentRoute == "profile") {
-                    navController.navigate("profile") {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
+                // Hueco reservado para que el boton central no tape ningun item.
+                Box(modifier = Modifier.size(64.dp))
+
+                NavItem(
+                    icon = Icons.Default.Notifications,
+                    label = stringResource(R.string.notificaciones),
+                    selected = selectedRoute == Routes.NOTIFICATIONS,
+                    onClick = { onNavigate(Routes.NOTIFICATIONS) }
+                )
+                NavItem(
+                    icon = Icons.Default.Person,
+                    label = stringResource(R.string.perfil),
+                    selected = selectedRoute == Routes.PROFILE,
+                    onClick = { onNavigate(Routes.PROFILE) }
+                )
             }
         }
 
-        // Botón central flotante - Ajustado para que no se corte y luzca perfecto
+        // Boton central elevado media altura sobre la barra.
         Surface(
-            shape = CircleShape, 
-            color = MaterialTheme.colorScheme.primary, 
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .size(64.dp)
-                .offset(y = (-32).dp), // Elevado exactamente la mitad para un look circular perfecto
-            onClick = {
-                navController.navigate("reviews") {
-                    popUpTo(navController.graph.startDestinationId) { saveState = true }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            },
+                .offset(y = (-32).dp),
+            onClick = { onNavigate(Routes.REVIEWS) },
             shadowElevation = 8.dp
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Image(
                     painter = painterResource(R.drawable.logosinfondo),
-                    contentDescription = "Inicio rápido",
+                    contentDescription = stringResource(R.string.resenar),
                     modifier = Modifier.size(42.dp),
                     contentScale = ContentScale.Fit
                 )
@@ -117,7 +122,7 @@ fun FixedBottomBar(
 fun FixedBottomBarPreview() {
     TheStudentsTheme {
         Surface {
-            FixedBottomBar(rememberNavController(), "home")
+            FixedBottomBar(selectedRoute = Routes.HOME, onNavigate = {})
         }
     }
 }

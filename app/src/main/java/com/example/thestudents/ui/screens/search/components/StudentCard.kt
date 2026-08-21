@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,7 +60,12 @@ fun StudentCard(
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = "${student.program} · ${student.reviewsCount} reseñas",
+                    text = pluralStringResource(
+                        R.plurals.programa_y_resenas,
+                        student.reviewsCount,
+                        student.program,
+                        student.reviewsCount
+                    ),
                     fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f)
                 )

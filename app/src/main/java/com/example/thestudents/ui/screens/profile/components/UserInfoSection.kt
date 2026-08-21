@@ -11,10 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.thestudents.R
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
@@ -70,7 +72,7 @@ fun UserInfoSection(
                 Icon(Icons.Default.School, null, Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "${student.program} · Sem. ${student.semester}",
+                    text = stringResource(R.string.programa_y_semestre, student.program, student.semester),
                     fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Medium

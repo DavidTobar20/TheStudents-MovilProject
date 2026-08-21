@@ -1,13 +1,22 @@
 package com.example.thestudents.ui.screens.search
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.*
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -15,8 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localStudentProvider
@@ -24,21 +31,20 @@ import com.example.thestudents.ui.screens.search.components.HeaderSearch
 import com.example.thestudents.ui.screens.search.components.SearchBar
 import com.example.thestudents.ui.screens.search.components.StudentCard
 import com.example.thestudents.ui.theme.TheStudentsTheme
-import com.example.thestudents.ui.utils.FixedBottomBar
 
-// 5. PANTALLA COMPLETA
+/**
+ * Contenido de la pantalla de busqueda. Sin estado propio: recibe el texto y avisa de sus cambios.
+ */
 @Composable
 fun BodySearch(
     query: String,
     onQueryChange: (String) -> Unit,
     students: List<Student>,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(contentPadding)
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -58,7 +64,7 @@ fun BodySearch(
 
         Spacer(modifier = Modifier.height(8.dp))
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(students) { student -> StudentCard(student) }
+            items(students, key = { it.id }) { student -> StudentCard(student) }
         }
     }
 }
@@ -69,7 +75,7 @@ fun BodySearch(
 fun BodySearchPreview() {
     TheStudentsTheme {
         Surface {
-            var query by remember { mutableStateOf("") }
+            var query by rememberSaveable { mutableStateOf("") }
             BodySearch(
                 query = query,
                 onQueryChange = { query = it },
@@ -79,26 +85,22 @@ fun BodySearchPreview() {
     }
 }
 
+/**
+ * Pantalla de busqueda. Es la duena del texto buscado; el contenido no guarda nada.
+ */
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
-    navController: NavController = rememberNavController()
+    students: List<Student> = localStudentProvider.students
 ) {
-    var query by remember { mutableStateOf("") }
-    val students = localStudentProvider.students
+    var query by rememberSaveable { mutableStateOf("") }
 
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background,
-        bottomBar = { FixedBottomBar(navController, "search") }
-    ) { padding ->
-        BodySearch(
-            query = query,
-            onQueryChange = { query = it },
-            students = students,
-            contentPadding = padding
-        )
-    }
+    BodySearch(
+        query = query,
+        onQueryChange = { query = it },
+        students = students,
+        modifier = modifier
+    )
 }
 
 @Preview(name = "Claro", showBackground = true, showSystemUi = true)
