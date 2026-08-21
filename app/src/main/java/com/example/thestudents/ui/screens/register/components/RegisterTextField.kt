@@ -28,7 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -109,8 +108,7 @@ fun RegisterTextFieldDarkPreview() {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = label,
-            style = TextStyle(
-                fontSize = 14.sp,
+            style = MaterialTheme.typography.bodyMedium.copy(
                 fontWeight = FontWeight.Bold,
                 color = colorResource(id = R.color.dark_green)
             ),
@@ -125,7 +123,7 @@ fun RegisterTextFieldDarkPreview() {
             placeholder = {
                 Text(
                     text = placeholder,
-                    style = TextStyle(fontSize = 14.sp, color = Color.Gray)
+                    style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray)
                 )
             },
             leadingIcon = {

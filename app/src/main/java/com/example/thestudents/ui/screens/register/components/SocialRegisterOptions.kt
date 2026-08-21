@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,7 +36,7 @@ fun SocialRegisterOptions(
             Text(
                 text = " o regístrate con ",
                 modifier = Modifier.padding(horizontal = 8.dp),
-                style = TextStyle(fontSize = 12.sp, color = colorResource(id = R.color.dark_green).copy(alpha = 0.5f))
+                style = MaterialTheme.typography.bodySmall.copy(color = colorResource(id = R.color.dark_green).copy(alpha = 0.5f))
             )
             HorizontalDivider(modifier = Modifier.weight(1f), color = colorResource(id = R.color.tan))
         }
@@ -61,7 +60,7 @@ fun SocialRegisterOptions(
             Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = "Cuenta institucional (SSO)",
-                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Medium)
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Medium)
             )
         }
     }
