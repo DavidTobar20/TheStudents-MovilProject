@@ -1,13 +1,14 @@
 package com.example.thestudents.ui.screens.reviews.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -30,14 +31,14 @@ fun HeaderReviews(modifier: Modifier = Modifier) {
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Serif,
-            color = colorResource(R.color.dark_green),
+            color = MaterialTheme.colorScheme.primary,
             letterSpacing = 1.sp,
             textAlign = TextAlign.Center
         )
         Text(
             text = stringResource(R.string.personas_con_quienes_has_compartido_clase),
             fontSize = 14.sp,
-            color = colorResource(R.color.medium_green).copy(alpha = 0.7f),
+            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.7f),
             modifier = Modifier.padding(top = 4.dp),
             textAlign = TextAlign.Center
         )
@@ -48,5 +49,15 @@ fun HeaderReviews(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun HeaderReviewsPreview() {
-    HeaderReviews()
+    TheStudentsTheme {
+        HeaderReviews()
+    }
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun HeaderReviewsDarkPreview() {
+    TheStudentsTheme {
+        HeaderReviews()
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.profile.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,11 +10,11 @@ import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -39,21 +40,21 @@ fun ProfileHeader(
             Icon(
                 imageVector = Icons.Default.ChevronLeft,
                 contentDescription = "Atrás",
-                tint = colorResource(R.color.dark_green)
+                tint = MaterialTheme.colorScheme.primary
             )
         }
         Text(
             text = stringResource(R.string.perfil),
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
-            color = colorResource(R.color.dark_green),
+            color = MaterialTheme.colorScheme.primary,
             fontFamily = FontFamily.Serif
         )
         IconButton(onClick = { /* Menú */ }) {
             Icon(
                 imageVector = Icons.Default.MoreHoriz,
                 contentDescription = "Opciones",
-                tint = colorResource(R.color.dark_green)
+                tint = MaterialTheme.colorScheme.primary
             )
         }
     }
@@ -62,5 +63,15 @@ fun ProfileHeader(
 @Preview(showBackground = true)
 @Composable
 fun ProfileHeaderPreview() {
-    ProfileHeader(onBackClick = {})
+    TheStudentsTheme {
+        ProfileHeader(onBackClick = {})
+    }
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun ProfileHeaderDarkPreview() {
+    TheStudentsTheme {
+        ProfileHeader(onBackClick = {})
+    }
 }

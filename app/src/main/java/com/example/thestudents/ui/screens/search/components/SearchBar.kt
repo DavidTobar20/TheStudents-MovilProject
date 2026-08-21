@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.search.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -8,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,22 +28,22 @@ fun SearchBar(
         placeholder = {
             Text(
                 text = stringResource(R.string.buscar_por_nombre_o_carrera),
-                color = colorResource(R.color.sage)
+                color = MaterialTheme.colorScheme.outline
             )
         },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = null,
-                tint = colorResource(R.color.sage)
+                tint = MaterialTheme.colorScheme.outline
             )
         },
         shape = RoundedCornerShape(12.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = colorResource(R.color.sage).copy(alpha = 0.5f),
-            unfocusedBorderColor = colorResource(R.color.sage).copy(alpha = 0.5f),
-            focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White,
+            focusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
         ),
         singleLine = true
     )
@@ -52,5 +52,15 @@ fun SearchBar(
 @Preview(showBackground = true)
 @Composable
 fun SearchBarPreview() {
-    SearchBar(query = "", onQueryChange = {})
+    TheStudentsTheme {
+        SearchBar(query = "", onQueryChange = {})
+    }
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun SearchBarDarkPreview() {
+    TheStudentsTheme {
+        SearchBar(query = "", onQueryChange = {})
+    }
 }

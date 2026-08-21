@@ -7,23 +7,16 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.thestudents.R
 import com.example.thestudents.ui.utils.FixedBottomBar
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localStudentProvider
-import com.example.thestudents.ui.screens.profile.components.ProfileHeader
-import com.example.thestudents.ui.screens.profile.components.ProfileTabs
-import com.example.thestudents.ui.screens.profile.components.RatingChartSection
-import com.example.thestudents.ui.screens.profile.components.ReviewItem
-import com.example.thestudents.ui.screens.profile.components.StatsSection
-import com.example.thestudents.ui.screens.profile.components.UserInfoSection
+import com.example.thestudents.ui.screens.profile.components.*
 import com.example.thestudents.ui.utils.ButtonWithIcon
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 
 @Composable
@@ -42,11 +35,11 @@ fun BodyProfile(
         item { UserInfoSection(student = student) }
         item { StatsSection(student = student) }
         item { ButtonWithIcon(
-            text = stringResource(R.string.editar_perfil),
+            text = "EDITAR PERFIL",
             icon = Icons.Outlined.Edit,
             onClick = {},
-            borderColor = colorResource(R.color.dark_green),
-            contentColor = colorResource(R.color.dark_green),
+            borderColor = MaterialTheme.colorScheme.primary,
+            contentColor = if (androidx.compose.foundation.isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .height(48.dp)
                 .padding(horizontal = 24.dp)
@@ -73,7 +66,7 @@ fun ProfileScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        containerColor = colorResource(R.color.cream),
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = { FixedBottomBar(navController, "profile") }
     ) { padding ->
         BodyProfile(
@@ -84,8 +77,18 @@ fun ProfileScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun FullProfileScreenPreview() {
-    ProfileScreen()
+    TheStudentsTheme(darkTheme = false) {
+        ProfileScreen()
+    }
+}
+
+@Preview(showBackground = true, name = "Dark Mode", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun FullProfileScreenDarkPreview() {
+    TheStudentsTheme(darkTheme = true) {
+        ProfileScreen()
+    }
 }

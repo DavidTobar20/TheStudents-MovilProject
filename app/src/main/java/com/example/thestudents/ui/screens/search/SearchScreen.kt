@@ -8,7 +8,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +22,7 @@ import com.example.thestudents.ui.screens.search.components.SearchBar
 import com.example.thestudents.ui.screens.search.components.StudentCard
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 // 5. PANTALLA COMPLETA
 @Composable
@@ -50,7 +50,7 @@ fun BodySearch(
             modifier = Modifier.fillMaxWidth(),
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
-            color = colorResource(R.color.medium_green).copy(alpha = 0.7f),
+            color = MaterialTheme.colorScheme.primary,
             letterSpacing = 1.sp
         )
 
@@ -82,7 +82,7 @@ fun SearchScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        containerColor = colorResource(R.color.cream),
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = { FixedBottomBar(navController, "search") }
     ) { padding ->
         BodySearch(
@@ -94,8 +94,18 @@ fun SearchScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun FullSearchScreenPreview() {
-    SearchScreen()
+    TheStudentsTheme(darkTheme = false) {
+        SearchScreen()
+    }
+}
+
+@Preview(showBackground = true, name = "Dark Mode", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun FullSearchScreenDarkPreview() {
+    TheStudentsTheme(darkTheme = true) {
+        SearchScreen()
+    }
 }

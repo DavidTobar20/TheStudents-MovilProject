@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.search.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -9,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.ui.theme.Gold
+import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ButtonWithoutIcon
 import com.example.thestudents.ui.utils.ProfileIcon
 
@@ -30,7 +32,7 @@ fun StudentCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(16.dp),
         shadowElevation = 2.dp
     ) {
@@ -54,12 +56,12 @@ fun StudentCard(
                     text = student.name,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
-                    color = colorResource(R.color.dark_green)
+                    color = MaterialTheme.colorScheme.primary
                 )
                 Text(
                     text = "${student.program} · ${student.reviewsCount} reseñas",
                     fontSize = 13.sp,
-                    color = colorResource(R.color.medium_green).copy(alpha = 0.6f)
+                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f)
                 )
                 Row(modifier = Modifier.padding(top = 4.dp)) {
                     repeat(5) { index ->
@@ -67,7 +69,7 @@ fun StudentCard(
                             imageVector = Icons.Default.Star,
                             contentDescription = null,
                             modifier = Modifier.size(16.dp),
-                            tint = if (index < student.rating.toInt()) colorResource(R.color.gold) else colorResource(R.color.sage).copy(alpha = 0.3f)
+                            tint = if (index < student.rating.toInt()) Gold else MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
                         )
                     }
                 }
@@ -86,7 +88,19 @@ fun StudentCard(
 @Preview(showBackground = true)
 @Composable
 fun StudentCardPreview() {
-    StudentCard(
-        student = localStudentProvider.students[4]
-    )
+    TheStudentsTheme {
+        StudentCard(
+            student = localStudentProvider.students[4]
+        )
+    }
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun StudentCardDarkPreview() {
+    TheStudentsTheme {
+        StudentCard(
+            student = localStudentProvider.students[4]
+        )
+    }
 }

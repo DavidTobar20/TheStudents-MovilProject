@@ -1,11 +1,12 @@
 package com.example.thestudents.ui.screens.profile.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
@@ -26,12 +27,12 @@ fun StatItem(
             text = count,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = colorResource(R.color.dark_green)
+            color = MaterialTheme.colorScheme.primary
         )
         Text(
             text = label,
             fontSize = 11.sp,
-            color = colorResource(R.color.medium_green).copy(alpha = 0.6f),
+            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f),
             fontWeight = FontWeight.Bold
         )
     }
@@ -40,5 +41,15 @@ fun StatItem(
 @Preview(showBackground = true)
 @Composable
 fun StatItemPreview() {
-    StatItem(count = "128", label = "SEGUIDORES")
+    TheStudentsTheme {
+        StatItem(count = "128", label = "SEGUIDORES")
+    }
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun StatItemDarkPreview() {
+    TheStudentsTheme {
+        StatItem(count = "128", label = "SEGUIDORES")
+    }
 }

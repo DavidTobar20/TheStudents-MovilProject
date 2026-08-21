@@ -12,13 +12,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun ButtonWithIcon(
@@ -55,29 +55,66 @@ fun ButtonWithIcon(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun ButtonWithIconPreviewSSO() {
-    ButtonWithIcon(
-        text = "Cuenta institucional (SSO)",
-        icon = Icons.Default.Home,
-        onClick = {},
-        borderColor = colorResource(R.color.medium_green),
-        contentColor = colorResource(R.color.dark_green),
-        modifier = Modifier.height(56.dp)
-    )
+    TheStudentsTheme(darkTheme = false) {
+        ButtonWithIcon(
+            text = "Cuenta institucional (SSO)",
+            icon = Icons.Default.Home,
+            onClick = {},
+            borderColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.height(56.dp)
+        )
+    }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Dark Mode", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun ButtonWithIconDarkPreviewSSO() {
+    TheStudentsTheme(darkTheme = true) {
+        ButtonWithIcon(
+            text = "Cuenta institucional (SSO)",
+            icon = Icons.Default.Home,
+            onClick = {},
+            borderColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.height(56.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun ButtonWithIconPreviewEditProfile() {
-    ButtonWithIcon(
-        text = "Editar perfil",
-        icon = Icons.Outlined.Edit,
-        onClick = {},
-        borderColor = colorResource(R.color.dark_green),
-        contentColor = colorResource(R.color.dark_green),
-        modifier = Modifier.height(48.dp)
-            .padding(horizontal = 24.dp)
-    )
+    TheStudentsTheme(darkTheme = false) {
+        ButtonWithIcon(
+            text = "Editar perfil",
+            icon = Icons.Outlined.Edit,
+            onClick = {},
+            borderColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .height(48.dp)
+                .padding(horizontal = 24.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Dark Mode", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun ButtonWithIconDarkPreviewEditProfile() {
+    TheStudentsTheme(darkTheme = true) {
+        ButtonWithIcon(
+            text = "Editar perfil",
+            icon = Icons.Outlined.Edit,
+            onClick = {},
+            borderColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier
+                .height(48.dp)
+                .padding(horizontal = 24.dp)
+        )
+    }
 }

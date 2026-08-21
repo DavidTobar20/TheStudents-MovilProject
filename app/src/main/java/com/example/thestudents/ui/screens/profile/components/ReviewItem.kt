@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.profile.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreHoriz
@@ -8,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,7 +34,7 @@ fun ReviewItem(
             ProfileIcon(
                 initials = review.authorInitials,
                 profileImageRes = review.authorImageId,
-                backgroundColor = colorResource(R.color.dark_green),
+                backgroundColor = MaterialTheme.colorScheme.primary,
                 contentColor = Color.White,
                 fontSize = 14.sp,
                 modifier = Modifier.size(40.dp)
@@ -45,13 +45,13 @@ fun ReviewItem(
                     Text(
                         text = review.authorName,
                         fontWeight = FontWeight.Bold,
-                        color = colorResource(R.color.dark_green),
+                        color = MaterialTheme.colorScheme.primary,
                         fontSize = 15.sp
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "${review.courseAndPeriod}  ·  ${review.time}",
-                        color = colorResource(R.color.sage),
+                        color = MaterialTheme.colorScheme.outline,
                         fontSize = 12.sp
                     )
                 }
@@ -59,7 +59,7 @@ fun ReviewItem(
                 Text(
                     text = "“${review.content}”",
                     fontSize = 14.sp,
-                    color = colorResource(R.color.medium_green).copy(alpha = 0.9f),
+                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.9f),
                     fontStyle = FontStyle.Italic
                 )
             }
@@ -70,7 +70,7 @@ fun ReviewItem(
                 Icon(
                     imageVector = Icons.Default.MoreHoriz,
                     contentDescription = null,
-                    tint = colorResource(R.color.sage)
+                    tint = MaterialTheme.colorScheme.outline
                 )
             }
         }
@@ -80,5 +80,15 @@ fun ReviewItem(
 @Preview(showBackground = true)
 @Composable
 fun ReviewItemPreview() {
-    ReviewItem(review = localReviewsProvider.allReviews[0])
+    TheStudentsTheme {
+        ReviewItem(review = localReviewsProvider.allReviews[0])
+    }
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun ReviewItemDarkPreview() {
+    TheStudentsTheme {
+        ReviewItem(review = localReviewsProvider.allReviews[0])
+    }
 }
