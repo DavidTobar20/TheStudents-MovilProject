@@ -74,12 +74,16 @@ fun SelectableIconButton(
 @Composable
 fun SelectableIconButtonPreviewLike() {
     var isSelected by remember { mutableStateOf(false) }
+    var count by remember { mutableStateOf(10) }
     SelectableIconButton(
         icon = Icons.Filled.ThumbUp,
         count = 10,
         isSelected = isSelected,
         selectedColor = Color.Black,
-        onClick = {isSelected = !isSelected},
+        onClick = {
+            isSelected = !isSelected
+            count += if (isSelected) 1 else -1
+        },
         modifier = Modifier.padding(10.dp)
     )
 }
@@ -88,12 +92,16 @@ fun SelectableIconButtonPreviewLike() {
 @Composable
 fun SelectableIconButtonPreviewDisLike() {
     var isSelected by remember { mutableStateOf(false) }
+    var count by remember { mutableStateOf(10) }
     SelectableIconButton(
         icon = Icons.Filled.ThumbDown,
-        count = 10,
+        count = count,
         isSelected = isSelected,
         selectedColor = Color.Red,
-        onClick = {isSelected=!isSelected},
+        onClick = {
+            isSelected = !isSelected
+            count += if (isSelected) 1 else -1
+        },
         modifier = Modifier.padding(10.dp)
     )
 }

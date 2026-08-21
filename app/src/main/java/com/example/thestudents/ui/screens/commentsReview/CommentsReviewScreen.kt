@@ -7,6 +7,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -57,7 +61,7 @@ fun BodyCommentsReviewScreen(
                 contentColorProfileIconCommentator = MaterialTheme.colorScheme.onPrimary,
             )
         },
-        containerColor = colorResource(R.color.sage),
+        containerColor = colorResource(R.color.light_tan),
         modifier = modifier
     ) { paddingValues ->
         Column(
@@ -112,16 +116,23 @@ fun BodyCommentsReviewScreen(
 @Preview(showBackground = true)
 @Composable
 fun BodyCommentsReviewScreenPreview() {
+    var commentInputText by remember { mutableStateOf("") }
+    var isLiked by remember { mutableStateOf(false) }
+    var isDisliked by remember { mutableStateOf(false) }
     BodyCommentsReviewScreen(
         initialCommentator = "LS",
         review = localReviewsProvider.allReviews[0],
         onBackClick = {},
-        isLiked = false,
-        isDisliked = false,
-        onLikeClick = {},
-        onDislikeClick = {},
-        commentInputText = "",
-        onCommentTextChange = {},
+        isLiked = isLiked,
+        isDisliked = isDisliked,
+        onLikeClick = {
+            isLiked = !isLiked
+        },
+        onDislikeClick = {
+            isDisliked = !isDisliked
+        },
+        commentInputText = commentInputText,
+        onCommentTextChange = {commentInputText = it},
         onSendCommentClick = {}
     )
 }
