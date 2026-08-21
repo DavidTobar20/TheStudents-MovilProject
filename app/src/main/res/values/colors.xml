@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+<!--
+    Estos colores NO son los tokens de la app: la paleta vive en ui/theme/Color.kt.
 
-    <color name="dark_green">#FF1B3935</color>
-    <color name="medium_green">#FF376052</color>
-    <color name="sage">#FFB2B7AC</color>
-    <color name="cream">#FFFBF7F2</color>
-    <color name="tan">#FFD3C3A7</color>
-    <color name="light_tan">#FFF0EAE1</color>
-    <color name="gold">#FFD4AF37</color>
+    El unico consumidor de este archivo es el tema XML de la ventana (themes.xml),
+    que Android necesita antes de que Compose arranque para pintar el fondo del
+    arranque en frio. Cada valor es un espejo de su token en Color.kt; si cambia
+    alla, cambia aqui.
+-->
+<resources>
+    <!-- Espejo de Green20 / Green80 (primary claro / oscuro) -->
+    <color name="window_primary_light">#FF173531</color>
+    <color name="window_primary_dark">#FFABCDC8</color>
+
+    <!-- Espejo de Cream98 / Forest6 (background claro / oscuro) -->
+    <color name="window_background_light">#FFFEF9F2</color>
+    <color name="window_background_dark">#FF081614</color>
+
+    <!-- Espejo de Green100 / Green20 (onPrimary claro / oscuro) -->
+    <color name="window_on_primary_light">#FFFFFFFF</color>
+    <color name="window_on_primary_dark">#FF173531</color>
 </resources>

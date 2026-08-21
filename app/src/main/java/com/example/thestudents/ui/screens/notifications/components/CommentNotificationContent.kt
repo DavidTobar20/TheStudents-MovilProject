@@ -7,13 +7,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.thestudents.R
 import com.example.thestudents.ui.theme.TheStudentsTheme
+import com.example.thestudents.ui.theme.extended
 
 @Composable
 fun CommentNotificationContent(
@@ -32,7 +32,7 @@ fun CommentNotificationContent(
         )
         Text(
             text = "Materia: $subject ($courseCode)",
-            color = colorResource(R.color.gold),
+            color = MaterialTheme.extended.rating,
             style = MaterialTheme.typography.bodySmall
         )
         Text(
@@ -42,7 +42,7 @@ fun CommentNotificationContent(
         TextButton(onClick = onViewDetailClick, contentPadding = PaddingValues(0.dp)) {
             Text(
                 text = stringResource(R.string.ver_comentario),
-                color = colorResource(R.color.medium_green),
+                color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )

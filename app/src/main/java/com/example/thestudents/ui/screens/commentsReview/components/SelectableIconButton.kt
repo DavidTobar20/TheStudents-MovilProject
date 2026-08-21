@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ThumbDown
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun SelectableIconButton(
@@ -43,11 +45,11 @@ fun SelectableIconButton(
             .clip(RoundedCornerShape(8.dp))
             .border(
                 width = 1.dp,
-                color = if (isSelected) selectedColor else Color.Gray,
+                color = if (isSelected) selectedColor else MaterialTheme.colorScheme.outline,
                 shape = RoundedCornerShape(8.dp)
             )
             .clickable(onClick = onClick),
-        color = Color.White
+        color = MaterialTheme.colorScheme.surfaceContainerLowest
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp),
@@ -58,13 +60,13 @@ fun SelectableIconButton(
                 imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier.size(14.dp),
-                tint = if (isSelected) selectedColor else Color.Gray
+                tint = if (isSelected) selectedColor else MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.width(6.dp))
             Text(
                 text = count.toString(),
                 fontSize = 13.sp,
-                color = if (isSelected) selectedColor else Color.Gray
+                color = if (isSelected) selectedColor else MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -73,35 +75,43 @@ fun SelectableIconButton(
 @Preview (showBackground = true)
 @Composable
 fun SelectableIconButtonPreviewLike() {
-    var isSelected by remember { mutableStateOf(false) }
-    var count by remember { mutableStateOf(10) }
-    SelectableIconButton(
-        icon = Icons.Filled.ThumbUp,
-        count = 10,
-        isSelected = isSelected,
-        selectedColor = Color.Black,
-        onClick = {
-            isSelected = !isSelected
-            count += if (isSelected) 1 else -1
-        },
-        modifier = Modifier.padding(10.dp)
-    )
+    TheStudentsTheme {
+        Surface {
+            var isSelected by remember { mutableStateOf(false) }
+            var count by remember { mutableStateOf(10) }
+            SelectableIconButton(
+                icon = Icons.Filled.ThumbUp,
+                count = 10,
+                isSelected = isSelected,
+                selectedColor = MaterialTheme.colorScheme.onSurface,
+                onClick = {
+                    isSelected = !isSelected
+                    count += if (isSelected) 1 else -1
+                },
+                modifier = Modifier.padding(10.dp)
+            )
+        }
+    }
 }
 
 @Preview (showBackground = true)
 @Composable
 fun SelectableIconButtonPreviewDisLike() {
-    var isSelected by remember { mutableStateOf(false) }
-    var count by remember { mutableStateOf(10) }
-    SelectableIconButton(
-        icon = Icons.Filled.ThumbDown,
-        count = count,
-        isSelected = isSelected,
-        selectedColor = Color.Red,
-        onClick = {
-            isSelected = !isSelected
-            count += if (isSelected) 1 else -1
-        },
-        modifier = Modifier.padding(10.dp)
-    )
+    TheStudentsTheme {
+        Surface {
+            var isSelected by remember { mutableStateOf(false) }
+            var count by remember { mutableStateOf(10) }
+            SelectableIconButton(
+                icon = Icons.Filled.ThumbDown,
+                count = count,
+                isSelected = isSelected,
+                selectedColor = MaterialTheme.colorScheme.error,
+                onClick = {
+                    isSelected = !isSelected
+                    count += if (isSelected) 1 else -1
+                },
+                modifier = Modifier.padding(10.dp)
+            )
+        }
+    }
 }

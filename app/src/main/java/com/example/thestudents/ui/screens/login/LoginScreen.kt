@@ -1,15 +1,17 @@
 package com.example.thestudents.ui.screens.login
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -18,14 +20,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
-import com.example.thestudents.ui.utils.ButtonWithoutIcon
 import com.example.thestudents.ui.screens.login.components.ContinueWithDivider
-import com.example.thestudents.ui.utils.DiamondDivider
 import com.example.thestudents.ui.screens.login.components.FormularioRegistro
 import com.example.thestudents.ui.screens.login.components.LogoApp
 import com.example.thestudents.ui.screens.login.components.MensajeBienvenida
-import com.example.thestudents.ui.utils.ButtonWithIcon
 import com.example.thestudents.ui.theme.TheStudentsTheme
+import com.example.thestudents.ui.utils.ButtonWithIcon
+import com.example.thestudents.ui.utils.ButtonWithoutIcon
+import com.example.thestudents.ui.utils.DiamondDivider
 
 
 @Composable
@@ -40,17 +42,16 @@ fun BodyLoginScreen(
     onForgotPasswordClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = modifier
-    ){
+    Scaffold(
+        modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.background
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(colorResource(R.color.cream))
-                .align(Alignment.Center)
+                .padding(innerPadding)
                 .padding(horizontal = 32.dp, vertical = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             LogoApp()
             Spacer(modifier = Modifier.height(8.dp))
@@ -59,7 +60,7 @@ fun BodyLoginScreen(
 
             Text(
                 text = stringResource(R.string.inicia_sesion_para_continuar),
-                color = colorResource(R.color.medium_green).copy(alpha = 0.7f),
+                color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.7f),
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center
             )
@@ -93,8 +94,8 @@ fun BodyLoginScreen(
                 text = stringResource(R.string.cuenta_institucional_sso),
                 icon = Icons.Default.Home,
                 onClick = onSSOClick,
-                borderColor = colorResource(R.color.medium_green),
-                contentColor = colorResource(R.color.dark_green),
+                borderColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.height(56.dp)
             )
 
@@ -104,12 +105,12 @@ fun BodyLoginScreen(
                 Text(
                     text = stringResource(R.string.no_tienes_una_cuenta),
                     fontSize = 14.sp,
-                    color = colorResource(R.color.medium_green)
+                    color = MaterialTheme.colorScheme.secondary
                 )
                 Text(
                     text = stringResource(R.string.crear_cuenta),
                     modifier = Modifier.clickable { onCreateAccountClick() },
-                    color = colorResource(R.color.dark_green),
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold,
                     textDecoration = TextDecoration.Underline,
                     fontSize = 14.sp
@@ -121,7 +122,8 @@ fun BodyLoginScreen(
 
 
 @Composable
-@Preview(showBackground = true)
+@Preview(name = "Claro", showBackground = true)
+@Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 fun BodyLoginScreenPreview() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -173,7 +175,8 @@ fun LoginScreen(
 
 
 @Composable
-@Preview(showBackground = true)
+@Preview(name = "Claro", showBackground = true)
+@Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 fun LoginScreenPreview() {
     TheStudentsTheme {
         LoginScreen()

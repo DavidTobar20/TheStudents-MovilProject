@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.notifications
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,12 +9,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -48,7 +49,7 @@ fun BodyNotifications(
             Text(
                 text = "No tienes notificaciones por ahora.",
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     } else {
@@ -70,7 +71,8 @@ fun BodyNotifications(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Claro", showBackground = true)
+@Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun BodyNotificationsPreview() {
     TheStudentsTheme {
@@ -92,7 +94,7 @@ fun NotificationsScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        containerColor = colorResource(R.color.cream),
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             NotificationsTopBar()
         },
@@ -120,7 +122,7 @@ fun NotificationsTopBar() {
                     text = stringResource(R.string.notificaciones),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = colorResource(R.color.dark_green)
+                    color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.width(8.dp))
 
@@ -138,7 +140,7 @@ fun NotificationBadge(count: Int) {
         Icon(
             imageVector = Icons.Outlined.Notifications,
             contentDescription = null,
-            tint = colorResource(R.color.dark_green),
+            tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(32.dp)
         )
             }
@@ -146,7 +148,8 @@ fun NotificationBadge(count: Int) {
 
 
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(name = "Claro", showBackground = true, showSystemUi = true)
+@Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, showSystemUi = true)
 @Composable
 fun NotificationsScreenPreview() {
     TheStudentsTheme {

@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -21,7 +20,6 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.thestudents.R
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
@@ -39,7 +37,7 @@ fun TermsAndConditions(
         Checkbox(
             checked = termsAccepted,
             onCheckedChange = onTermsAcceptedChange,
-            colors = CheckboxDefaults.colors(checkedColor = colorResource(id = R.color.medium_green))
+            colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.secondary)
         )
         
         val annotatedString = buildAnnotatedString {
@@ -47,7 +45,7 @@ fun TermsAndConditions(
             
             val linkStyles = TextLinkStyles(
                 style = SpanStyle(
-                    color = colorResource(id = R.color.medium_green),
+                    color = MaterialTheme.colorScheme.secondary,
                     textDecoration = TextDecoration.Underline,
                     fontWeight = FontWeight.Medium
                 )
@@ -84,7 +82,7 @@ fun TermsAndConditions(
 
         Text(
             text = annotatedString,
-            style = MaterialTheme.typography.bodySmall.copy(color = colorResource(id = R.color.dark_green))
+            style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.primary)
         )
     }
 }

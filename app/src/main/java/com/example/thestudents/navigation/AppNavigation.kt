@@ -9,15 +9,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.thestudents.data.local.localReviewsProvider
-import com.example.thestudents.ui.screens.home.HomeScreen
-import com.example.thestudents.ui.screens.login.LoginScreen
-import com.example.thestudents.ui.screens.profile.ProfileScreen
-import com.example.thestudents.ui.screens.reviews.ReviewsScreen
-import com.example.thestudents.ui.screens.search.SearchScreen
 import com.example.thestudents.ui.screens.EditarPerfil.EditarPerfilScreen
 import com.example.thestudents.ui.screens.commentsReview.CommentsReviewScreen
+import com.example.thestudents.ui.screens.home.HomeScreen
+import com.example.thestudents.ui.screens.login.LoginScreen
 import com.example.thestudents.ui.screens.notifications.NotificationsScreen
+import com.example.thestudents.ui.screens.profile.ProfileScreen
 import com.example.thestudents.ui.screens.register.RegisterScreen
+import com.example.thestudents.ui.screens.reviews.ReviewsScreen
+import com.example.thestudents.ui.screens.search.SearchScreen
 
 @Composable
 fun AppNavigation(modifier: Modifier = Modifier) {

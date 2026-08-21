@@ -1,10 +1,12 @@
 package com.example.thestudents.ui.screens.commentsReview
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,22 +14,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import com.example.thestudents.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.thestudents.R
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.ui.screens.commentsReview.components.CommentInputFieldBar
 import com.example.thestudents.ui.screens.commentsReview.components.CommentItem
 import com.example.thestudents.ui.screens.commentsReview.components.CommentsTopAppBar
 import com.example.thestudents.ui.screens.commentsReview.components.ReviewCard
+import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.FixedBottomBar
 
 @Composable
@@ -61,7 +62,7 @@ fun BodyCommentsReviewScreen(
                 contentColorProfileIconCommentator = MaterialTheme.colorScheme.onPrimary,
             )
         },
-        containerColor = colorResource(R.color.light_tan),
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
         modifier = modifier
     ) { paddingValues ->
         Column(
@@ -85,7 +86,7 @@ fun BodyCommentsReviewScreen(
                 text = stringResource(R.string.comentarios, review.comments.size),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 10.dp, bottom = 12.dp)
             )
 
@@ -113,28 +114,33 @@ fun BodyCommentsReviewScreen(
 }
 
 
-@Preview(showBackground = true)
+@Preview(name = "Claro", showBackground = true)
+@Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun BodyCommentsReviewScreenPreview() {
-    var commentInputText by remember { mutableStateOf("") }
-    var isLiked by remember { mutableStateOf(false) }
-    var isDisliked by remember { mutableStateOf(false) }
-    BodyCommentsReviewScreen(
-        initialCommentator = "LS",
-        review = localReviewsProvider.allReviews[0],
-        onBackClick = {},
-        isDisliked = isDisliked,
-        isLiked = isLiked,
-        onLikeClick = {
-            isLiked = !isLiked
-        },
-        onDislikeClick = {
-            isDisliked = !isDisliked
-        },
-        commentInputText = commentInputText,
-        onCommentTextChange = {commentInputText = it},
-        onSendCommentClick = {}
-    )
+    TheStudentsTheme {
+        Surface {
+            var commentInputText by remember { mutableStateOf("") }
+            var isLiked by remember { mutableStateOf(false) }
+            var isDisliked by remember { mutableStateOf(false) }
+            BodyCommentsReviewScreen(
+                initialCommentator = "LS",
+                review = localReviewsProvider.allReviews[0],
+                onBackClick = {},
+                isDisliked = isDisliked,
+                isLiked = isLiked,
+                onLikeClick = {
+                    isLiked = !isLiked
+                },
+                onDislikeClick = {
+                    isDisliked = !isDisliked
+                },
+                commentInputText = commentInputText,
+                onCommentTextChange = {commentInputText = it},
+                onSendCommentClick = {}
+            )
+        }
+    }
 }
 
 
@@ -150,7 +156,7 @@ fun CommentsReviewScreen(
     var isDisliked by remember { mutableStateOf(false) }
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        containerColor = colorResource(R.color.cream),
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             FixedBottomBar(
                 navController,
@@ -178,10 +184,15 @@ fun CommentsReviewScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Claro", showBackground = true)
+@Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun CommentsReviewScreenPreview() {
-    CommentsReviewScreen(
-        review = localReviewsProvider.allReviews[0]
-    )
+    TheStudentsTheme {
+        Surface {
+            CommentsReviewScreen(
+                review = localReviewsProvider.allReviews[0]
+            )
+        }
+    }
 }

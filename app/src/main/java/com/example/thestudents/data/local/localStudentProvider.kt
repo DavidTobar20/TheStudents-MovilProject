@@ -1,8 +1,12 @@
 package com.example.thestudents.data.local
 
-import androidx.compose.ui.graphics.Color
 import com.example.thestudents.R
 import com.example.thestudents.data.Student
+import com.example.thestudents.ui.theme.Avatar2
+import com.example.thestudents.ui.theme.Avatar3
+import com.example.thestudents.ui.theme.Avatar4
+import com.example.thestudents.ui.theme.Avatar5
+import com.example.thestudents.ui.theme.Avatar7
 
 object localStudentProvider {
     val students = listOf(
@@ -16,7 +20,7 @@ object localStudentProvider {
             rating = 4.8f,
             reviewsCount = 21,
             initials = "JP",
-            profileColor = Color(0xFFF0EAE1),
+            profileColor = Avatar5,
             period = "2024-2",
             profileImage = R.drawable.logosinfondo
         ),
@@ -30,7 +34,7 @@ object localStudentProvider {
             rating = 4.9f,
             reviewsCount = 15,
             initials = "VG",
-            profileColor = Color(0xFFD3C3A7),
+            profileColor = Avatar2,
             period = "2025-1"
         ),
         Student(
@@ -43,7 +47,7 @@ object localStudentProvider {
             rating = 4.5f,
             reviewsCount = 10,
             initials = "DR",
-            profileColor = Color(0xFFB2B7AC),
+            profileColor = Avatar3,
             period = "2025-2"
         ),
         Student(
@@ -56,7 +60,7 @@ object localStudentProvider {
             rating = 5.0f,
             reviewsCount = 10,
             initials = "MJ",
-            profileColor = Color(0xFF4C8C64),
+            profileColor = Avatar4,
             period = "2025-2"
         ),
         Student(
@@ -69,7 +73,7 @@ object localStudentProvider {
             rating = 5.0f,
             reviewsCount = 28,
             initials = "VT",
-            profileColor = Color(0xFF7B5CAB),
+            profileColor = Avatar7,
             period = "2024-2"
         )
     )

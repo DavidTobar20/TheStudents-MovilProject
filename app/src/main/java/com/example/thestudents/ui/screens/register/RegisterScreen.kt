@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.register
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,16 +10,15 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.thestudents.R
 import com.example.thestudents.ui.screens.register.components.*
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
@@ -87,7 +87,7 @@ fun RegisterBody(
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
-        color = colorResource(id = R.color.light_tan)
+        color = MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
         LazyColumn(
             modifier = Modifier
@@ -172,15 +172,15 @@ fun RegisterBody(
                         .height(56.dp),
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(id = R.color.medium_green),
-                        disabledContainerColor = colorResource(id = R.color.medium_green).copy(alpha = 0.5f)
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f)
                     )
                 ) {
                     Text(
                         text = "CREAR CUENTA",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
-                            color = colorResource(id = R.color.white)
+                            color = MaterialTheme.colorScheme.onSecondary
                         )
                     )
                 }
@@ -195,7 +195,8 @@ fun RegisterBody(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Claro", showBackground = true)
+@Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun RegisterScreenPreview() {
     TheStudentsTheme {

@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,11 +24,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.thestudents.R
+import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ProfileIcon
 
 @Composable
@@ -42,7 +42,7 @@ fun CommentInputFieldBar(
     contentColorProfileIconCommentator: Color
 ) {
     Surface(
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surfaceContainer,
         modifier = modifier.fillMaxWidth()
     ) {
         Row(
@@ -70,14 +70,14 @@ fun CommentInputFieldBar(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .background(color = colorResource(R.color.sage))
+                    .background(color = MaterialTheme.colorScheme.primary)
                     .clickable(onClick = onSendClick),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Send,
                     contentDescription = "Enviar comentario",
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(19.dp)
                 )
             }
@@ -90,14 +90,18 @@ fun CommentInputFieldBar(
 @Preview (showBackground = true)
 @Composable
 fun CommentInputFieldBarPreview(){
-    var commentText by remember { mutableStateOf("") }
-    CommentInputFieldBar(
-        commentText = commentText,
-        onCommentChange = {commentText = it},
-        onSendClick = {},
-        initialCommentator = "JP",
-        profileImageCommentator = null,
-        backgroundColorProfileIconCommentator = Color.Gray,
-        contentColorProfileIconCommentator = Color.White
-    )
+    TheStudentsTheme {
+        Surface {
+            var commentText by remember { mutableStateOf("") }
+            CommentInputFieldBar(
+                commentText = commentText,
+                onCommentChange = {commentText = it},
+                onSendClick = {},
+                initialCommentator = "JP",
+                profileImageCommentator = null,
+                backgroundColorProfileIconCommentator = MaterialTheme.colorScheme.secondaryContainer,
+                contentColorProfileIconCommentator = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+        }
+    }
 }

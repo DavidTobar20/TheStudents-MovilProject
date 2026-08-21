@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,7 +38,7 @@ fun RegisterHeader(modifier: Modifier = Modifier) {
             text = "THE STUDENTS",
             style = MaterialTheme.typography.headlineSmall.copy(
                 fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.dark_green),
+                color = MaterialTheme.colorScheme.primary,
                 letterSpacing = 2.sp
             ),
             textAlign = TextAlign.Center
@@ -50,14 +49,14 @@ fun RegisterHeader(modifier: Modifier = Modifier) {
                 .width(80.dp)
                 .padding(vertical = 8.dp),
             thickness = 1.5.dp,
-            color = colorResource(id = R.color.tan)
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Text(
             text = "Crear nueva cuenta",
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
-                color = colorResource(id = R.color.dark_green)
+                color = MaterialTheme.colorScheme.primary
             ),
             modifier = Modifier.padding(top = 16.dp)
         )
@@ -65,7 +64,7 @@ fun RegisterHeader(modifier: Modifier = Modifier) {
         Text(
             text = "Regístrate para acceder a los beneficios de tu cuenta institucional.",
             style = MaterialTheme.typography.bodyMedium.copy(
-                color = colorResource(id = R.color.dark_green).copy(alpha = 0.7f),
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
                 textAlign = TextAlign.Center
             ),
             modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)

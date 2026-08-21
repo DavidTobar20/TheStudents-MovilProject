@@ -4,11 +4,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,7 +28,7 @@ fun HeaderSearch(modifier: Modifier = Modifier) {
             text = stringResource(R.string.buscar_estudiantes),
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
-            color = colorResource(R.color.dark_green),
+            color = MaterialTheme.colorScheme.primary,
             letterSpacing = 1.sp
         )
         DiamondDivider(modifier = Modifier

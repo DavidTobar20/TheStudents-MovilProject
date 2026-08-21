@@ -6,18 +6,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.thestudents.R
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun NavItem(
@@ -38,14 +39,14 @@ fun NavItem(
         Icon(
             icon,
             contentDescription = label,
-            tint = if (selected) colorResource(R.color.dark_green) else colorResource(R.color.medium_green),
+            tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(24.dp)
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
             text = label,
             fontSize = 11.sp,
-            color = if (selected) colorResource(R.color.dark_green) else colorResource(R.color.medium_green),
+            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
             fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
             maxLines = 1
         )
@@ -55,10 +56,14 @@ fun NavItem(
 @Preview(showBackground = true)
 @Composable
 fun NavItemPreview() {
-    NavItem(
-        icon = Icons.Default.Home,
-        label = "Inicio",
-        selected = true,
-        onClick = {}
-    )
+    TheStudentsTheme {
+        Surface {
+            NavItem(
+                icon = Icons.Default.Home,
+                label = "Inicio",
+                selected = true,
+                onClick = {}
+            )
+        }
+    }
 }

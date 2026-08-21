@@ -6,20 +6,20 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
-
-import androidx.compose.ui.res.stringResource
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun FixedBottomBar(
@@ -38,7 +38,7 @@ fun FixedBottomBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(90.dp),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.surfaceContainer,
             tonalElevation = 8.dp,
             shadowElevation = 16.dp
         ) {
@@ -87,7 +87,7 @@ fun FixedBottomBar(
         // Botón central flotante - Ajustado para que no se corte y luzca perfecto
         Surface(
             shape = CircleShape, 
-            color = colorResource(R.color.dark_green), 
+            color = MaterialTheme.colorScheme.primary, 
             modifier = Modifier
                 .size(64.dp)
                 .offset(y = (-32).dp), // Elevado exactamente la mitad para un look circular perfecto
@@ -115,5 +115,9 @@ fun FixedBottomBar(
 @Preview(showBackground = true)
 @Composable
 fun FixedBottomBarPreview() {
-    FixedBottomBar(rememberNavController(), "home")
+    TheStudentsTheme {
+        Surface {
+            FixedBottomBar(rememberNavController(), "home")
+        }
+    }
 }

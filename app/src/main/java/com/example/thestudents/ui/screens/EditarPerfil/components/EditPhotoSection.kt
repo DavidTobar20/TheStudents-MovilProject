@@ -15,19 +15,20 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ProfileIcon
 
 @Composable
@@ -51,8 +52,8 @@ fun EditPhotoSection(
             ProfileIcon(
                 initials = initials,
                 profileImage = profileImageRes,
-                backgroundColor = colorResource(R.color.light_tan),
-                contentColor = colorResource(R.color.dark_green),
+                backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                contentColor = MaterialTheme.colorScheme.primary,
                 fontSize = 36.sp,
                 modifier = Modifier.fillMaxSize()
             )
@@ -62,13 +63,13 @@ fun EditPhotoSection(
                     .align(Alignment.BottomEnd)
                     .offset(x = 0.dp, y = 0.dp)
                     .clip(CircleShape)
-                    .background(colorResource(R.color.tan))
+                    .background(MaterialTheme.colorScheme.primary)
                     .padding(6.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.CameraAlt,
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(14.dp)
                 )
             }
@@ -79,7 +80,7 @@ fun EditPhotoSection(
         Text(
             text = stringResource(R.string.cambiar_foto),
             fontSize = 13.sp,
-            color = colorResource(R.color.medium_green).copy(alpha = 0.6f)
+            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f)
         )
     }
 }
@@ -87,10 +88,14 @@ fun EditPhotoSection(
 @Preview(showBackground = true)
 @Composable
 fun EditPhotoSectionPreview() {
-    val student = localStudentProvider.currentUser
-    EditPhotoSection(
-        initials = student.initials,
-        profileImageRes = student.profileImage,
-        onEditClick = {}
-    )
+    TheStudentsTheme {
+        Surface {
+            val student = localStudentProvider.currentUser
+            EditPhotoSection(
+                initials = student.initials,
+                profileImageRes = student.profileImage,
+                onEditClick = {}
+            )
+        }
+    }
 }

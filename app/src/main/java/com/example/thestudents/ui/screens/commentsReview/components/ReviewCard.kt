@@ -14,6 +14,8 @@ import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.local.localReviewsProvider
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun ReviewCard(
@@ -45,7 +47,7 @@ fun ReviewCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
@@ -71,14 +73,14 @@ fun ReviewCard(
                         withStyle(
                             style = SpanStyle(
                                 fontWeight = FontWeight.Bold,
-                                color = Color.Black
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         ) {
                             append(review.nameReviewed)
                         }
                     },
                     fontSize = 13.sp,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 InfoTag(text = review.classReviewed)
@@ -88,11 +90,11 @@ fun ReviewCard(
             Text(
                 text = review.content,
                 fontSize = 14.sp,
-                color = Color(0xFF2C2C2C),
+                color = MaterialTheme.colorScheme.onSurface,
                 lineHeight = 20.sp
             )
             Spacer(modifier = Modifier.height(14.dp))
-            HorizontalDivider(color = Color.Black, thickness = 1.dp)
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant, thickness = 1.dp)
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -102,14 +104,14 @@ fun ReviewCard(
                     icon = Icons.Outlined.ThumbUp,
                     count = review.likes,
                     isSelected = isLiked,
-                    selectedColor = Color.Black,
+                    selectedColor = MaterialTheme.colorScheme.onSurface,
                     onClick = onLikeClick
                 )
                 SelectableIconButton(
                     icon = Icons.Outlined.ThumbDown,
                     count = review.disLikes,
                     isSelected = isDisliked,
-                    selectedColor = Color.Red,
+                    selectedColor = MaterialTheme.colorScheme.error,
                     onClick = onDislikeClick
                 )
             }
@@ -120,13 +122,17 @@ fun ReviewCard(
 @Preview(showBackground = true)
 @Composable
 fun ReviewCardPreview() {
-    var isLiked by remember { mutableStateOf(false) }
-    var isDisliked by remember { mutableStateOf(false) }
-    ReviewCard(
-        review = localReviewsProvider.allReviews[1],
-        isLiked = isLiked,
-        isDisliked = isDisliked,
-        onLikeClick = {isLiked=!isLiked},
-        onDislikeClick = {isDisliked=!isDisliked}
-    )
+    TheStudentsTheme {
+        Surface {
+            var isLiked by remember { mutableStateOf(false) }
+            var isDisliked by remember { mutableStateOf(false) }
+            ReviewCard(
+                review = localReviewsProvider.allReviews[1],
+                isLiked = isLiked,
+                isDisliked = isDisliked,
+                onLikeClick = {isLiked=!isLiked},
+                onDislikeClick = {isDisliked=!isDisliked}
+            )
+        }
+    }
 }
