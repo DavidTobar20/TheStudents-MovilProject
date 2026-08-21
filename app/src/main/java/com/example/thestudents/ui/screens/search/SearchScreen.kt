@@ -91,8 +91,9 @@ fun BodySearchPreview() {
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
-    students: List<Student> = localStudentProvider.students
+
 ) {
+    var students  = localStudentProvider.students
     var query by rememberSaveable { mutableStateOf("") }
 
     BodySearch(

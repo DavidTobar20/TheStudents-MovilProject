@@ -110,11 +110,11 @@ fun ProfileScreen(
     onEditProfileClick: () -> Unit,
     onReviewClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    student: Student = localStudentProvider.currentUser,
-    reviews: List<Review> = localReviewsProvider.allReviews
+
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(ProfileTab.RECEIVED) }
-
+    var student = localStudentProvider.currentUser
+    var reviews = localReviewsProvider.allReviews
     BodyProfile(
         student = student,
         reviews = reviews,

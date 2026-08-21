@@ -137,11 +137,12 @@ fun BodyNotificationsEmptyPreview() {
 @Composable
 fun NotificationsScreen(
     modifier: Modifier = Modifier,
-    notifications: List<Notification> = localNotificationProvider.allNotifications,
     onAcceptClick: (Int) -> Unit = {},
     onRejectClick: (Int) -> Unit = {},
     onViewDetailClick: (Int) -> Unit = {}
-) {
+)
+{
+    var notifications  = localNotificationProvider.allNotifications
     BodyNotifications(
         notifications = notifications,
         onAcceptClick = onAcceptClick,

@@ -152,17 +152,17 @@ fun BodyCommentsReviewScreenPreview() {
  */
 @Composable
 fun CommentsReviewScreen(
-    review: Review,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    initialCommentator: String = localStudentProvider.currentUser.initials
+
 ) {
     var commentInputText by rememberSaveable { mutableStateOf("") }
     var isLiked by rememberSaveable { mutableStateOf(false) }
     var isDisliked by rememberSaveable { mutableStateOf(false) }
     var likedComments by rememberSaveable { mutableStateOf(emptySet<Int>()) }
     var dislikedComments by rememberSaveable { mutableStateOf(emptySet<Int>()) }
-
+    var initialCommentator = localStudentProvider.currentUser.initials
+    var review = localReviewsProvider.allReviews[0]
     BodyCommentsReviewScreen(
         initialCommentator = initialCommentator,
         review = review,
@@ -205,7 +205,6 @@ fun CommentsReviewScreenPreview() {
     TheStudentsTheme {
         Surface {
             CommentsReviewScreen(
-                review = localReviewsProvider.allReviews[0],
                 onBackClick = {}
             )
         }

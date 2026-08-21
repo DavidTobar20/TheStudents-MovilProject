@@ -101,7 +101,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
 
     composable(Routes.NOTIFICATIONS) { NotificationsScreen() }
 
-    composable(Routes.REVIEWS) { ReviewsScreen(sections = localCourseSectionProvider.sections) }
+    composable(Routes.REVIEWS) { ReviewsScreen() }
 
     composable(Routes.PROFILE) {
         ProfileScreen(
@@ -128,7 +128,6 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         }
 
         CommentsReviewScreen(
-            review = review,
             onBackClick = { navController.popBackStack() }
         )
     }

@@ -58,8 +58,9 @@ fun BodyReviewsPreview() {
 @Composable
 fun ReviewsScreen(
     modifier: Modifier = Modifier,
-    sections: List<CourseSection> = localCourseSectionProvider.sections
+
 ) {
+    var sections = localCourseSectionProvider.sections
     BodyReviews(
         sections = sections,
         modifier = modifier
