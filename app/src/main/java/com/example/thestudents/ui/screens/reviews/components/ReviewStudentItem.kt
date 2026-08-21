@@ -32,7 +32,7 @@ fun ReviewStudentItem(
     ) {
         ProfileIcon(
             initials = student.initials,
-            profileImageRes = student.profileImageRes,
+            profileImage = student.profileImage,
             backgroundColor = student.profileColor,
             contentColor = Color.White,
             fontSize = 18.sp,

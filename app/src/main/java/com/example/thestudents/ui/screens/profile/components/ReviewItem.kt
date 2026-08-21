@@ -1,6 +1,10 @@
 package com.example.thestudents.ui.screens.profile.components
 
+<<<<<<< HEAD
 import android.content.res.Configuration
+=======
+import androidx.compose.foundation.clickable
+>>>>>>> origin/dark-mode
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreHoriz
@@ -17,24 +21,31 @@ import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.local.localReviewsProvider
-import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ProfileIcon
 
 @Composable
 fun ReviewItem(
     review: Review,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .clickable { onClick() }
             .padding(24.dp)
     ) {
         Row(verticalAlignment = Alignment.Top) {
             ProfileIcon(
+<<<<<<< HEAD
                 initials = review.authorInitials,
                 profileImageRes = review.authorImageId,
                 backgroundColor = MaterialTheme.colorScheme.primary,
+=======
+                initials = review.reviewer.initials,
+                profileImage = review.reviewer.profileImage,
+                backgroundColor = colorResource(R.color.dark_green),
+>>>>>>> origin/dark-mode
                 contentColor = Color.White,
                 fontSize = 14.sp,
                 modifier = Modifier.size(40.dp)
@@ -43,16 +54,22 @@ fun ReviewItem(
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = review.authorName,
+                        text = review.reviewer.name,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 15.sp
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
+<<<<<<< HEAD
                         text = "${review.courseAndPeriod}  ·  ${review.time}",
                         color = MaterialTheme.colorScheme.outline,
                         fontSize = 12.sp
+=======
+                        text = "${review.classReviewed}, ${review.periodReviewed}  ·  ${review.time}",
+                        color = colorResource(R.color.sage),
+                        fontSize = 10.sp
+>>>>>>> origin/dark-mode
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
