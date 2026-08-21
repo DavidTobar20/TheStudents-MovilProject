@@ -9,15 +9,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 import androidx.compose.ui.res.stringResource
 
@@ -38,7 +37,7 @@ fun FixedBottomBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(90.dp),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.surface,
             tonalElevation = 8.dp,
             shadowElevation = 16.dp
         ) {
@@ -87,7 +86,7 @@ fun FixedBottomBar(
         // Botón central flotante - Ajustado para que no se corte y luzca perfecto
         Surface(
             shape = CircleShape, 
-            color = colorResource(R.color.dark_green), 
+            color = MaterialTheme.colorScheme.primary, 
             modifier = Modifier
                 .size(64.dp)
                 .offset(y = (-32).dp), // Elevado exactamente la mitad para un look circular perfecto
@@ -112,8 +111,18 @@ fun FixedBottomBar(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun FixedBottomBarPreview() {
-    FixedBottomBar(rememberNavController(), "home")
+    TheStudentsTheme(darkTheme = false) {
+        FixedBottomBar(rememberNavController(), "home")
+    }
+}
+
+@Preview(showBackground = true, name = "Dark Mode", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun FixedBottomBarDarkPreview() {
+    TheStudentsTheme(darkTheme = true) {
+        FixedBottomBar(rememberNavController(), "home")
+    }
 }

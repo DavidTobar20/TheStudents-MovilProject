@@ -9,17 +9,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.thestudents.R
 import com.example.thestudents.data.CourseSection
 import com.example.thestudents.ui.utils.FixedBottomBar
 import com.example.thestudents.ui.screens.reviews.components.HeaderReviews
 import com.example.thestudents.ui.screens.reviews.components.CourseSectionCard
 import com.example.thestudents.data.Student
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun BodyReviews(
@@ -93,7 +92,7 @@ fun ReviewsScreen(
     )
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        containerColor = colorResource(R.color.cream),
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = { FixedBottomBar(navController, "reviews") }
     ) { padding ->
         BodyReviews(
@@ -103,8 +102,18 @@ fun ReviewsScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, name = "Light Mode")
 @Composable
 fun ReviewsScreenPreview() {
-    ReviewsScreen()
+    TheStudentsTheme(darkTheme = false) {
+        ReviewsScreen()
+    }
+}
+
+@Preview(showBackground = true, name = "Dark Mode", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun ReviewsScreenDarkPreview() {
+    TheStudentsTheme(darkTheme = true) {
+        ReviewsScreen()
+    }
 }

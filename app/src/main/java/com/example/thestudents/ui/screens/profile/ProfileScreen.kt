@@ -16,7 +16,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
 import com.example.thestudents.ui.utils.FixedBottomBar
 import com.example.thestudents.data.Student
-import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.screens.profile.components.ProfileHeader
 import com.example.thestudents.ui.screens.profile.components.ProfileTabs
@@ -31,8 +30,6 @@ import com.example.thestudents.ui.utils.ButtonWithIcon
 fun BodyProfile(
     student: Student,
     onBackClick: () -> Unit,
-    onEditProfileClick: () -> Unit,
-    onReviewClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -47,7 +44,7 @@ fun BodyProfile(
         item { ButtonWithIcon(
             text = stringResource(R.string.editar_perfil),
             icon = Icons.Outlined.Edit,
-            onClick = onEditProfileClick,
+            onClick = {},
             borderColor = colorResource(R.color.dark_green),
             contentColor = colorResource(R.color.dark_green),
             modifier = Modifier
@@ -56,30 +53,15 @@ fun BodyProfile(
         ) }
         item { RatingChartSection() }
         item { ProfileTabs() }
-        item { 
-            ReviewItem(
-                review = localReviewsProvider.allReviews[0],
-                onClick = { onReviewClick(0) }
-            ) 
-        }
-        item { 
-            ReviewItem(
-                review = localReviewsProvider.allReviews[1],
-                onClick = { onReviewClick(1) }
-            ) 
-        }
+        item { ReviewItem(review = com.example.thestudents.data.local.localReviewsProvider.allReviews[0]) }
+        item { ReviewItem(review = com.example.thestudents.data.local.localReviewsProvider.allReviews[1]) }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun BodyProfilePreview() {
-    BodyProfile(
-        student = localStudentProvider.currentUser, 
-        onBackClick = {}, 
-        onEditProfileClick = {},
-        onReviewClick = {}
-    )
+    BodyProfile(student = localStudentProvider.currentUser, onBackClick = {})
 }
 
 @Composable
@@ -97,8 +79,6 @@ fun ProfileScreen(
         BodyProfile(
             student = currentUser,
             onBackClick = { navController.popBackStack() },
-            onEditProfileClick = { navController.navigate("edit_profile") },
-            onReviewClick = { index -> navController.navigate("comments_review/$index") },
             contentPadding = padding
         )
     }

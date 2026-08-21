@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.login.components
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -24,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -34,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 /**
  * PasswordInput (Stateless para datos, Stateful para UI interna)
@@ -57,7 +59,7 @@ fun PasswordInput(
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.contrasena),
-            color = colorResource(R.color.dark_green),
+            color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
             modifier = Modifier.padding(bottom = 8.dp)
@@ -70,14 +72,14 @@ fun PasswordInput(
             placeholder = {
                 Text(
                     stringResource(R.string.ingresa_tu_contrasena),
-                    color = colorResource(R.color.sage)
+                    color = MaterialTheme.colorScheme.outline
                 )
             },
             leadingIcon = {
                 Icon(
                     Icons.Default.Lock,
                     contentDescription = null,
-                    tint = if (isError) Color.Red else colorResource(R.color.dark_green)
+                    tint = if (isError) Color.Red else MaterialTheme.colorScheme.primary
                 )
             },
             trailingIcon = {
@@ -85,17 +87,17 @@ fun PasswordInput(
                     Icon(
                         imageVector = icono,
                         contentDescription = description,
-                        tint = if (isError) Color.Red else colorResource(R.color.dark_green)
+                        tint = if (isError) Color.Red else MaterialTheme.colorScheme.primary
                     )
                 }
             },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = colorResource(R.color.sage),
-                unfocusedBorderColor = colorResource(R.color.sage).copy(alpha = 0.5f),
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White,
+                focusedBorderColor = MaterialTheme.colorScheme.outline,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 errorBorderColor = Color.Red,
                 errorLeadingIconColor = Color.Red,
                 errorTrailingIconColor = Color.Red
@@ -124,9 +126,23 @@ fun PasswordInput(
 @Preview(showBackground = true)
 @Composable
 fun PasswordInputPreview() {
-    var password by remember { mutableStateOf("") }
-    PasswordInput(
-        password = password,
-        onPasswordChange = { password = it }
-    )
+    TheStudentsTheme {
+        var password by remember { mutableStateOf("") }
+        PasswordInput(
+            password = password,
+            onPasswordChange = { password = it }
+        )
+    }
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun PasswordInputDarkPreview() {
+    TheStudentsTheme {
+        var password by remember { mutableStateOf("") }
+        PasswordInput(
+            password = password,
+            onPasswordChange = { password = it }
+        )
+    }
 }

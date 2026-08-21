@@ -1,16 +1,18 @@
 package com.example.thestudents.ui.screens.profile.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,8 +39,8 @@ fun UserInfoSection(
                 initials = student.initials,
                 profileImage = student.profileImage,
                 modifier = Modifier.size(80.dp),
-                backgroundColor = colorResource(R.color.light_tan),
-                contentColor = colorResource(R.color.dark_green),
+                backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+                contentColor = MaterialTheme.colorScheme.primary,
                 fontSize = 32.sp
             )
             Spacer(modifier = Modifier.width(20.dp))
@@ -47,12 +49,13 @@ fun UserInfoSection(
                     text = student.name,
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
-                    color = colorResource(R.color.dark_green)
+                    color = MaterialTheme.colorScheme.primary,
+                    fontFamily = FontFamily.Serif
                 )
                 Text(
                     text = student.username,
                     fontSize = 14.sp,
-                    color = colorResource(R.color.medium_green).copy(alpha = 0.6f)
+                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f)
                 )
             }
         }
@@ -61,19 +64,19 @@ fun UserInfoSection(
         
         Surface(
             shape = RoundedCornerShape(20.dp),
-            color = colorResource(R.color.tan).copy(alpha = 0.2f),
+            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f),
             modifier = Modifier.wrapContentSize()
         ) {
             Row(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(Icons.Default.School, null, Modifier.size(16.dp), tint = colorResource(R.color.dark_green))
+                Icon(Icons.Default.School, null, Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "${student.program} · Sem. ${student.semester}",
                     fontSize = 13.sp,
-                    color = colorResource(R.color.dark_green),
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -84,7 +87,7 @@ fun UserInfoSection(
         Text(
             text = student.bio,
             fontSize = 14.sp,
-            color = colorResource(R.color.medium_green).copy(alpha = 0.8f),
+            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f),
             lineHeight = 20.sp
         )
     }
@@ -93,6 +96,16 @@ fun UserInfoSection(
 @Preview(showBackground = true)
 @Composable
 fun UserInfoSectionPreview() {
+    TheStudentsTheme {
+        UserInfoSection(
+            student = localStudentProvider.currentUser
+        )
+    }
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun UserInfoSectionDarkPreview() {
     TheStudentsTheme {
         UserInfoSection(
             student = localStudentProvider.currentUser

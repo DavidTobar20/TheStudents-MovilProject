@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -46,7 +45,7 @@ fun BodyLoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(colorResource(R.color.cream))
+                .background(MaterialTheme.colorScheme.background)
                 .align(Alignment.Center)
                 .padding(horizontal = 32.dp, vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -55,11 +54,13 @@ fun BodyLoginScreen(
             LogoApp()
             Spacer(modifier = Modifier.height(8.dp))
             MensajeBienvenida()
-            DiamondDivider(modifier = Modifier.padding(horizontal = 48.dp))
+            DiamondDivider(
+                modifier = Modifier.padding(horizontal = 48.dp)
+            )
 
             Text(
                 text = stringResource(R.string.inicia_sesion_para_continuar),
-                color = colorResource(R.color.medium_green).copy(alpha = 0.7f),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center
             )
@@ -93,8 +94,8 @@ fun BodyLoginScreen(
                 text = stringResource(R.string.cuenta_institucional_sso),
                 icon = Icons.Default.Home,
                 onClick = onSSOClick,
-                borderColor = colorResource(R.color.medium_green),
-                contentColor = colorResource(R.color.dark_green),
+                borderColor = MaterialTheme.colorScheme.primary,
+                contentColor = if (androidx.compose.foundation.isSystemInDarkTheme()) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
                 modifier = Modifier.height(56.dp)
             )
 
@@ -104,12 +105,12 @@ fun BodyLoginScreen(
                 Text(
                     text = stringResource(R.string.no_tienes_una_cuenta),
                     fontSize = 14.sp,
-                    color = colorResource(R.color.medium_green)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     text = stringResource(R.string.crear_cuenta),
                     modifier = Modifier.clickable { onCreateAccountClick() },
-                    color = colorResource(R.color.dark_green),
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold,
                     textDecoration = TextDecoration.Underline,
                     fontSize = 14.sp
@@ -121,11 +122,30 @@ fun BodyLoginScreen(
 
 
 @Composable
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Light Mode")
 fun BodyLoginScreenPreview() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    TheStudentsTheme {
+    TheStudentsTheme(darkTheme = false) {
+        BodyLoginScreen(
+            email = email,
+            onEmailChange = { email = it },
+            password = password,
+            onPasswordChange = { password = it },
+            onLoginClick = {},
+            onSSOClick = {},
+            onCreateAccountClick = {},
+            onForgotPasswordClick = {}
+        )
+    }
+}
+
+@Composable
+@Preview(showBackground = true, name = "Dark Mode", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+fun BodyLoginScreenDarkPreview() {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    TheStudentsTheme(darkTheme = true) {
         BodyLoginScreen(
             email = email,
             onEmailChange = { email = it },
@@ -173,9 +193,17 @@ fun LoginScreen(
 
 
 @Composable
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Light Mode")
 fun LoginScreenPreview() {
-    TheStudentsTheme {
+    TheStudentsTheme(darkTheme = false) {
+        LoginScreen()
+    }
+}
+
+@Composable
+@Preview(showBackground = true, name = "Dark Mode", uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+fun LoginScreenDarkPreview() {
+    TheStudentsTheme(darkTheme = true) {
         LoginScreen()
     }
 }
