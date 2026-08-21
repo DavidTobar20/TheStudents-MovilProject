@@ -123,8 +123,8 @@ fun BodyCommentsReviewScreenPreview() {
         initialCommentator = "LS",
         review = localReviewsProvider.allReviews[0],
         onBackClick = {},
-        isLiked = isLiked,
         isDisliked = isDisliked,
+        isLiked = isLiked,
         onLikeClick = {
             isLiked = !isLiked
         },
@@ -144,6 +144,10 @@ fun CommentsReviewScreen(
     navController: NavController = rememberNavController(),
     review: Review
 ) {
+
+    var commentInputText by remember { mutableStateOf("") }
+    var isLiked by remember { mutableStateOf(false) }
+    var isDisliked by remember { mutableStateOf(false) }
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = colorResource(R.color.cream),
@@ -158,12 +162,16 @@ fun CommentsReviewScreen(
             initialCommentator = "LS",
             review = review,
             onBackClick = { navController.popBackStack() },
-            isLiked = false,
-            isDisliked = false,
-            onLikeClick = {},
-            onDislikeClick = {},
-            commentInputText = "",
-            onCommentTextChange = {},
+            isLiked = isLiked,
+            isDisliked = isDisliked,
+            onLikeClick = {
+                isLiked = !isLiked
+            },
+            onDislikeClick = {
+                isDisliked = !isDisliked
+            },
+            commentInputText = commentInputText,
+            onCommentTextChange = {commentInputText=it},
             onSendCommentClick = {},
             modifier = Modifier.padding(padding)
         )
