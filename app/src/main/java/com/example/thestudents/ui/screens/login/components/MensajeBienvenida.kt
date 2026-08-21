@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,7 +18,6 @@ fun MensajeBienvenida(modifier: Modifier = Modifier) {
         modifier = modifier,
         fontSize = 24.sp,
         fontWeight = FontWeight.Bold,
-        fontFamily = FontFamily.Serif,
         color = colorResource(R.color.dark_green),
         letterSpacing = 4.sp,
         textAlign = TextAlign.Center

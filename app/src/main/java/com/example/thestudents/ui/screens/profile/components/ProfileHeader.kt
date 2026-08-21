@@ -46,8 +46,7 @@ fun ProfileHeader(
             text = stringResource(R.string.perfil),
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
-            color = colorResource(R.color.dark_green),
-            fontFamily = FontFamily.Serif
+            color = colorResource(R.color.dark_green)
         )
         IconButton(onClick = { /* Menú */ }) {
             Icon(

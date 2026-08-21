@@ -120,7 +120,6 @@ fun NotificationsTopBar() {
                     text = stringResource(R.string.notificaciones),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Serif,
                     color = colorResource(R.color.dark_green)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
