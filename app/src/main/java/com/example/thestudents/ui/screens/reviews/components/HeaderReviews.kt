@@ -29,7 +29,6 @@ fun HeaderReviews(modifier: Modifier = Modifier) {
             text = stringResource(R.string.resenar_companeros),
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Serif,
             color = colorResource(R.color.dark_green),
             letterSpacing = 1.sp,
             textAlign = TextAlign.Center

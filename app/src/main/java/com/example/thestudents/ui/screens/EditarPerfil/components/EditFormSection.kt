@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -138,8 +139,7 @@ private fun EditFieldItem(
                     .fillMaxWidth()
                     .padding(top = 4.dp),
                 readOnly = readOnly,
-                textStyle = TextStyle(
-                    fontSize = 16.sp,
+                textStyle = MaterialTheme.typography.bodyLarge.copy(
                     color = colorResource(R.color.dark_green)
                 ),
                 singleLine = true

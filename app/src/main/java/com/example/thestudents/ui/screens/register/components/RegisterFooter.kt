@@ -2,11 +2,11 @@ package com.example.thestudents.ui.screens.register.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,13 +28,12 @@ fun RegisterFooter(
     ) {
         Text(
             text = "¿Ya tienes una cuenta? ",
-            style = TextStyle(fontSize = 14.sp, color = colorResource(id = R.color.dark_green))
+            style = MaterialTheme.typography.bodyMedium.copy(color = colorResource(id = R.color.dark_green))
         )
         Text(
             text = "Inicia sesión",
             modifier = Modifier.clickable { onNavigateToLogin() },
-            style = TextStyle(
-                fontSize = 14.sp,
+            style = MaterialTheme.typography.bodyMedium.copy(
                 color = colorResource(id = R.color.medium_green),
                 fontWeight = FontWeight.Bold,
                 textDecoration = TextDecoration.Underline

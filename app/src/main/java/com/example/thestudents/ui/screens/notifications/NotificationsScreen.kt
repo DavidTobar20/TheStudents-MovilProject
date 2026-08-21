@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -122,7 +123,7 @@ fun NotificationsTopBar() {
                     color = colorResource(R.color.dark_green)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                NotificationBadge(count = 3)
+
             }
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -140,25 +141,10 @@ fun NotificationBadge(count: Int) {
             tint = colorResource(R.color.dark_green),
             modifier = Modifier.size(32.dp)
         )
-        if (count > 0) {
-            Box(
-                modifier = Modifier
-                    .size(18.dp)
-                    .clip(CircleShape)
-                    .background(Color.Red)
-                    .offset(x = 4.dp, y = (-4).dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = count.toString(),
-                    color = Color.White,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold
-                )
             }
         }
-    }
-}
+
+
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
