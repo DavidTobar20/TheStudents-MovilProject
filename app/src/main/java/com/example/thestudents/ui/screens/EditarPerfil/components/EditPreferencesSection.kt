@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -16,13 +17,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun EditPreferencesSection(
@@ -37,7 +38,7 @@ fun EditPreferencesSection(
             .fillMaxWidth()
             .padding(horizontal = 24.dp),
         shape = RoundedCornerShape(20.dp),
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surfaceContainerLowest,
         shadowElevation = 2.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -45,7 +46,7 @@ fun EditPreferencesSection(
                 text = stringResource(R.string.preferencias_mayuscula),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                color = colorResource(R.color.sage),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 letterSpacing = 0.5.sp
             )
             
@@ -60,7 +61,7 @@ fun EditPreferencesSection(
             
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 12.dp),
-                color = colorResource(R.color.sage).copy(alpha = 0.1f)
+                color = MaterialTheme.colorScheme.surfaceContainerHigh
             )
             
             PreferenceRow(
@@ -89,12 +90,12 @@ private fun PreferenceRow(
                 text = title,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = colorResource(R.color.dark_green)
+                color = MaterialTheme.colorScheme.primary
             )
             Text(
                 text = description,
                 fontSize = 12.sp,
-                color = colorResource(R.color.sage)
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
         
@@ -102,10 +103,10 @@ private fun PreferenceRow(
             checked = checked,
             onCheckedChange = onCheckedChange,
             colors = SwitchDefaults.colors(
-                checkedThumbColor = Color.White,
-                checkedTrackColor = colorResource(R.color.dark_green),
-                uncheckedThumbColor = Color.White,
-                uncheckedTrackColor = colorResource(R.color.sage).copy(alpha = 0.5f),
+                checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                checkedTrackColor = MaterialTheme.colorScheme.primary,
+                uncheckedThumbColor = MaterialTheme.colorScheme.outline,
+                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                 uncheckedBorderColor = Color.Transparent
             )
         )
@@ -115,10 +116,14 @@ private fun PreferenceRow(
 @Preview(showBackground = true)
 @Composable
 fun EditPreferencesSectionPreview() {
-    EditPreferencesSection(
-        showReviews = true,
-        onShowReviewsChange = {},
-        notificationsEnabled = true,
-        onNotificationsChange = {}
-    )
+    TheStudentsTheme {
+        Surface {
+            EditPreferencesSection(
+                showReviews = true,
+                onShowReviewsChange = {},
+                notificationsEnabled = true,
+                onNotificationsChange = {}
+            )
+        }
+    }
 }

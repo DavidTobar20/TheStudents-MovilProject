@@ -8,16 +8,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.thestudents.R
+import com.example.thestudents.ui.theme.TheStudentsTheme
+import com.example.thestudents.ui.theme.extended
 
 @Composable
 fun RatingBarItem(
@@ -34,7 +36,7 @@ fun RatingBarItem(
         Text(
             text = rating.toString(),
             fontSize = 12.sp,
-            color = colorResource(R.color.sage),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.width(12.dp)
         )
         Spacer(modifier = Modifier.width(12.dp))
@@ -44,8 +46,8 @@ fun RatingBarItem(
                 .weight(1f)
                 .height(6.dp)
                 .clip(CircleShape),
-            color = colorResource(R.color.gold),
-            trackColor = colorResource(R.color.light_tan)
+            color = MaterialTheme.extended.rating,
+            trackColor = MaterialTheme.colorScheme.surfaceContainerHigh
         )
     }
 }
@@ -53,5 +55,9 @@ fun RatingBarItem(
 @Preview(showBackground = true)
 @Composable
 fun RatingBarItemPreview() {
-    RatingBarItem(rating = 5, progress = 0.7f, modifier = Modifier.padding(16.dp))
+    TheStudentsTheme {
+        Surface {
+            RatingBarItem(rating = 5, progress = 0.7f, modifier = Modifier.padding(16.dp))
+        }
+    }
 }

@@ -7,18 +7,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.thestudents.R
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun ButtonWithIcon(
@@ -58,26 +59,34 @@ fun ButtonWithIcon(
 @Preview(showBackground = true)
 @Composable
 fun ButtonWithIconPreviewSSO() {
-    ButtonWithIcon(
-        text = "Cuenta institucional (SSO)",
-        icon = Icons.Default.Home,
-        onClick = {},
-        borderColor = colorResource(R.color.medium_green),
-        contentColor = colorResource(R.color.dark_green),
-        modifier = Modifier.height(56.dp)
-    )
+    TheStudentsTheme {
+        Surface {
+            ButtonWithIcon(
+                text = "Cuenta institucional (SSO)",
+                icon = Icons.Default.Home,
+                onClick = {},
+                borderColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.height(56.dp)
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ButtonWithIconPreviewEditProfile() {
-    ButtonWithIcon(
-        text = "Editar perfil",
-        icon = Icons.Outlined.Edit,
-        onClick = {},
-        borderColor = colorResource(R.color.dark_green),
-        contentColor = colorResource(R.color.dark_green),
-        modifier = Modifier.height(48.dp)
-            .padding(horizontal = 24.dp)
-    )
+    TheStudentsTheme {
+        Surface {
+            ButtonWithIcon(
+                text = "Editar perfil",
+                icon = Icons.Outlined.Edit,
+                onClick = {},
+                borderColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.height(48.dp)
+                    .padding(horizontal = 24.dp)
+            )
+        }
+    }
 }

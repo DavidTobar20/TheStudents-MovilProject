@@ -7,7 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -38,13 +38,13 @@ fun ReviewNotificationContent(
             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                 append(subject)
             }
-            append(". \"$comment\" (con $rating estrellas)")
+            append(pluralStringResource(R.plurals.comentario_con_estrellas, rating, comment, rating))
         }, style = MaterialTheme.typography.bodyMedium)
         
         TextButton(onClick = onViewDetailClick, contentPadding = PaddingValues(0.dp)) {
             Text(
                 text = stringResource(R.string.ver_resena_completa),
-                color = colorResource(R.color.medium_green),
+                color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )

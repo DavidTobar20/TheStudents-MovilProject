@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,13 +20,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun CommentInputField(
@@ -37,10 +38,10 @@ fun CommentInputField(
         modifier = modifier
             .height(40.dp)
             .clip(RoundedCornerShape(20.dp))
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surfaceContainerLowest)
             .border(
                 width = 1.dp,
-                color = colorResource(R.color.sage),
+                color = MaterialTheme.colorScheme.outline,
                 shape = RoundedCornerShape(20.5.dp)
             )
             .padding(horizontal = 16.dp),
@@ -48,8 +49,8 @@ fun CommentInputField(
     ) {
         if (commentText.isEmpty()) {
             Text(
-                text = "Escribe un comentario...",
-                color = colorResource(R.color.sage),
+                text = stringResource(R.string.escribe_un_comentario),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 14.sp
             )
         }
@@ -58,7 +59,7 @@ fun CommentInputField(
             value = commentText,
             onValueChange = onCommentChange,
             textStyle = MaterialTheme.typography.bodyMedium.copy(
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onSurface
             ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -70,10 +71,14 @@ fun CommentInputField(
 @Preview(showBackground = true)
 @Composable
 fun CommentInputFieldPreview(){
-    var commentText by remember { mutableStateOf("") }
-    CommentInputField(
-        commentText = commentText,
-        onCommentChange = {commentText = it}
-    )
+    TheStudentsTheme {
+        Surface {
+            var commentText by remember { mutableStateOf("") }
+            CommentInputField(
+                commentText = commentText,
+                onCommentChange = {commentText = it}
+            )
 
+        }
+    }
 }

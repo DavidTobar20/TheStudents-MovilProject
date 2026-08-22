@@ -9,11 +9,12 @@ import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -38,21 +39,21 @@ fun ProfileHeader(
         IconButton(onClick = onBackClick) {
             Icon(
                 imageVector = Icons.Default.ChevronLeft,
-                contentDescription = "Atrás",
-                tint = colorResource(R.color.dark_green)
+                contentDescription = stringResource(R.string.atras),
+                tint = MaterialTheme.colorScheme.primary
             )
         }
         Text(
             text = stringResource(R.string.perfil),
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
-            color = colorResource(R.color.dark_green)
+            color = MaterialTheme.colorScheme.primary
         )
         IconButton(onClick = { /* Menú */ }) {
             Icon(
                 imageVector = Icons.Default.MoreHoriz,
-                contentDescription = "Opciones",
-                tint = colorResource(R.color.dark_green)
+                contentDescription = stringResource(R.string.opciones),
+                tint = MaterialTheme.colorScheme.primary
             )
         }
     }
@@ -61,5 +62,9 @@ fun ProfileHeader(
 @Preview(showBackground = true)
 @Composable
 fun ProfileHeaderPreview() {
-    ProfileHeader(onBackClick = {})
+    TheStudentsTheme {
+        Surface {
+            ProfileHeader(onBackClick = {})
+        }
+    }
 }

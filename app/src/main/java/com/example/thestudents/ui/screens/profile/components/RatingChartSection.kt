@@ -4,12 +4,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun RatingChartSection(
@@ -19,7 +20,7 @@ fun RatingChartSection(
         modifier = modifier
             .fillMaxWidth()
             .padding(24.dp),
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surfaceContainerLowest,
         shape = RoundedCornerShape(16.dp),
         shadowElevation = 1.dp
     ) {
@@ -38,5 +39,9 @@ fun RatingChartSection(
 @Preview(showBackground = true)
 @Composable
 fun RatingChartSectionPreview() {
-    RatingChartSection()
+    TheStudentsTheme {
+        Surface {
+            RatingChartSection()
+        }
+    }
 }

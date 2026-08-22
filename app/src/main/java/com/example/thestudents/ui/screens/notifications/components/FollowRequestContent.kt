@@ -8,8 +8,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -40,7 +38,7 @@ fun FollowRequestContent(
         Row(modifier = Modifier.padding(top = 8.dp)) {
             Button(
                 onClick = onAcceptClick,
-                colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.dark_green)),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier.height(36.dp)
             ) {
@@ -49,11 +47,11 @@ fun FollowRequestContent(
             Spacer(modifier = Modifier.width(8.dp))
             Button(
                 onClick = onRejectClick,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEFEBE4)),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier.height(36.dp)
             ) {
-                Text(stringResource(R.string.rechazar), color = Color.Black)
+                Text(stringResource(R.string.rechazar), color = MaterialTheme.colorScheme.onSecondaryContainer)
             }
         }
     }

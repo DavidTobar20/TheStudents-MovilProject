@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,16 +30,16 @@ fun RegisterHeader(modifier: Modifier = Modifier) {
         // Logo
         Image(
             painter = painterResource(id = R.drawable.logosinfondo),
-            contentDescription = "Logo The Students",
+            contentDescription = stringResource(R.string.logo_the_students),
             modifier = Modifier.size(120.dp),
             contentScale = ContentScale.Fit
         )
         
         Text(
-            text = "THE STUDENTS",
+            text = stringResource(R.string.the_students_mayuscula),
             style = MaterialTheme.typography.headlineSmall.copy(
                 fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.dark_green),
+                color = MaterialTheme.colorScheme.primary,
                 letterSpacing = 2.sp
             ),
             textAlign = TextAlign.Center
@@ -50,22 +50,22 @@ fun RegisterHeader(modifier: Modifier = Modifier) {
                 .width(80.dp)
                 .padding(vertical = 8.dp),
             thickness = 1.5.dp,
-            color = colorResource(id = R.color.tan)
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Text(
-            text = "Crear nueva cuenta",
+            text = stringResource(R.string.crear_nueva_cuenta),
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
-                color = colorResource(id = R.color.dark_green)
+                color = MaterialTheme.colorScheme.primary
             ),
             modifier = Modifier.padding(top = 16.dp)
         )
 
         Text(
-            text = "Regístrate para acceder a los beneficios de tu cuenta institucional.",
+            text = stringResource(R.string.registrate_beneficios),
             style = MaterialTheme.typography.bodyMedium.copy(
-                color = colorResource(id = R.color.dark_green).copy(alpha = 0.7f),
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
                 textAlign = TextAlign.Center
             ),
             modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)

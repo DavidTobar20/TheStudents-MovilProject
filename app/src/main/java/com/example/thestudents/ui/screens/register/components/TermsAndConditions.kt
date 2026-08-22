@@ -10,7 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -39,15 +39,15 @@ fun TermsAndConditions(
         Checkbox(
             checked = termsAccepted,
             onCheckedChange = onTermsAcceptedChange,
-            colors = CheckboxDefaults.colors(checkedColor = colorResource(id = R.color.medium_green))
+            colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.secondary)
         )
         
         val annotatedString = buildAnnotatedString {
-            append("Acepto los ")
+            append(stringResource(R.string.acepto_los))
             
             val linkStyles = TextLinkStyles(
                 style = SpanStyle(
-                    color = colorResource(id = R.color.medium_green),
+                    color = MaterialTheme.colorScheme.secondary,
                     textDecoration = TextDecoration.Underline,
                     fontWeight = FontWeight.Medium
                 )
@@ -62,10 +62,10 @@ fun TermsAndConditions(
                     }
                 )
             ) {
-                append("Términos de Servicio")
+                append(stringResource(R.string.terminos_de_servicio))
             }
             
-            append(" y la ")
+            append(stringResource(R.string.y_la))
             
             withLink(
                 LinkAnnotation.Clickable(
@@ -76,7 +76,7 @@ fun TermsAndConditions(
                     }
                 )
             ) {
-                append("Política de Privacidad")
+                append(stringResource(R.string.politica_de_privacidad))
             }
             
             append(".")
@@ -84,7 +84,7 @@ fun TermsAndConditions(
 
         Text(
             text = annotatedString,
-            style = MaterialTheme.typography.bodySmall.copy(color = colorResource(id = R.color.dark_green))
+            style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.primary)
         )
     }
 }

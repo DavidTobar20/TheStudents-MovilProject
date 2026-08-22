@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.AlternateEmail
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,9 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -33,8 +32,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
-import androidx.compose.material.icons.filled.School
 import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun EditFormSection(
@@ -51,7 +50,7 @@ fun EditFormSection(
             .fillMaxWidth()
             .padding(horizontal = 24.dp),
         shape = RoundedCornerShape(20.dp),
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surfaceContainerLowest,
         shadowElevation = 2.dp
     ) {
         Column(modifier = Modifier.padding(vertical = 8.dp)) {
@@ -63,7 +62,7 @@ fun EditFormSection(
             )
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                color = colorResource(R.color.sage).copy(alpha = 0.1f)
+                color = MaterialTheme.colorScheme.surfaceContainerHigh
             )
             EditFieldItem(
                 label = stringResource(R.string.nombre_de_usuario_mayuscula),
@@ -73,7 +72,7 @@ fun EditFormSection(
             )
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                color = colorResource(R.color.sage).copy(alpha = 0.1f)
+                color = MaterialTheme.colorScheme.surfaceContainerHigh
             )
             EditFieldItem(
                 label = stringResource(R.string.carrera_programa_mayuscula),
@@ -85,7 +84,7 @@ fun EditFormSection(
             )
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                color = colorResource(R.color.sage).copy(alpha = 0.1f)
+                color = MaterialTheme.colorScheme.surfaceContainerHigh
             )
             EditFieldItem(
                 label = stringResource(R.string.semestre_mayuscula),
@@ -117,7 +116,7 @@ private fun EditFieldItem(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = colorResource(R.color.dark_green),
+            tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(24.dp)
         )
         
@@ -128,7 +127,7 @@ private fun EditFieldItem(
                 text = label,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
-                color = colorResource(R.color.sage),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 letterSpacing = 0.3.sp
             )
             
@@ -140,7 +139,7 @@ private fun EditFieldItem(
                     .padding(top = 4.dp),
                 readOnly = readOnly,
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
-                    color = colorResource(R.color.dark_green)
+                    color = MaterialTheme.colorScheme.primary
                 ),
                 singleLine = true
             )
@@ -150,7 +149,7 @@ private fun EditFieldItem(
             Icon(
                 imageVector = trailingIcon,
                 contentDescription = null,
-                tint = colorResource(R.color.sage),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -161,15 +160,19 @@ private fun EditFieldItem(
 @Preview(showBackground = true)
 @Composable
 fun EditFormSectionPreview() {
-    val student = localStudentProvider.currentUser
-    Column(modifier = Modifier.padding(16.dp)) {
-        EditFormSection(
-            name = student.name,
-            onNameChange = {},
-            username = student.username,
-            onUsernameChange = {},
-            program = student.program,
-            semester = "Semestre ${student.semester}"
-        )
+    TheStudentsTheme {
+        Surface {
+            val student = localStudentProvider.currentUser
+            Column(modifier = Modifier.padding(16.dp)) {
+                EditFormSection(
+                    name = student.name,
+                    onNameChange = {},
+                    username = student.username,
+                    onUsernameChange = {},
+                    program = student.program,
+                    semester = "Semestre ${student.semester}"
+                )
+            }
+        }
     }
 }

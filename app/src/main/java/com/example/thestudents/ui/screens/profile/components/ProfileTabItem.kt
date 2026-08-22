@@ -7,18 +7,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.thestudents.R
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun ProfileTabItem(
@@ -34,7 +34,7 @@ fun ProfileTabItem(
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text = text,
-                color = if (isSelected) colorResource(R.color.dark_green) else colorResource(R.color.sage),
+                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                 fontSize = 16.sp
             )
@@ -44,7 +44,7 @@ fun ProfileTabItem(
                     modifier = Modifier
                         .width(40.dp)
                         .height(2.dp)
-                        .background(colorResource(R.color.dark_green))
+                        .background(MaterialTheme.colorScheme.primary)
                 )
             }
         }
@@ -54,9 +54,13 @@ fun ProfileTabItem(
 @Preview(showBackground = true)
 @Composable
 fun ProfileTabItemPreview() {
-    ProfileTabItem(
-        text = "Escritas",
-        isSelected = true,
-        onClick = {}
-    )
+    TheStudentsTheme {
+        Surface {
+            ProfileTabItem(
+                text = "Escritas",
+                isSelected = true,
+                onClick = {}
+            )
+        }
+    }
 }

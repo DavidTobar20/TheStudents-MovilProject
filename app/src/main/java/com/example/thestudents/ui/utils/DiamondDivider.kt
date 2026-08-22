@@ -7,14 +7,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.thestudents.R
+import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun DiamondDivider(modifier: Modifier = Modifier) {
@@ -26,18 +27,18 @@ fun DiamondDivider(modifier: Modifier = Modifier) {
     ) {
         HorizontalDivider(
             modifier = Modifier.weight(1f),
-            color = colorResource(R.color.tan),
+            color = MaterialTheme.colorScheme.outlineVariant,
             thickness = 1.dp)
         Box(
             modifier = Modifier
                 .padding(horizontal = 8.dp)
                 .size(10.dp)
                 .rotate(45f)
-                .background(colorResource(R.color.tan))
+                .background(MaterialTheme.colorScheme.outlineVariant)
         )
         HorizontalDivider(
             modifier = Modifier.weight(1f),
-            color = colorResource(R.color.tan),
+            color = MaterialTheme.colorScheme.outlineVariant,
             thickness = 1.dp)
     }
 }
@@ -45,5 +46,9 @@ fun DiamondDivider(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun DiamondDividerPreview() {
-    DiamondDivider()
+    TheStudentsTheme {
+        Surface {
+            DiamondDivider()
+        }
+    }
 }

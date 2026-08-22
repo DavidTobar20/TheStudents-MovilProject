@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.ui.theme.TheStudentsTheme
+import com.example.thestudents.ui.theme.extended
 
 @Composable
 fun EditBioSection(
@@ -37,7 +38,7 @@ fun EditBioSection(
             .fillMaxWidth()
             .padding(horizontal = 24.dp),
         shape = RoundedCornerShape(20.dp),
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surfaceContainerLowest,
         shadowElevation = 2.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -50,14 +51,14 @@ fun EditBioSection(
                     text = stringResource(R.string.biografia_mayuscula),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = colorResource(R.color.sage),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     letterSpacing = 0.5.sp
                 )
                 
                 Text(
-                    text = "${bio.length}/$maxLength",
+                    text = stringResource(R.string.contador_caracteres, bio.length, maxLength),
                     fontSize = 12.sp,
-                    color = colorResource(R.color.gold),
+                    color = MaterialTheme.extended.rating,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -69,7 +70,7 @@ fun EditBioSection(
                     .fillMaxWidth()
                     .padding(top = 8.dp),
                 textStyle = MaterialTheme.typography.bodyMedium.copy(
-                    color = colorResource(R.color.medium_green).copy(alpha = 0.9f),
+                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.9f),
                     lineHeight = 20.sp
                 ),
                 colors = TextFieldDefaults.colors(
@@ -77,7 +78,7 @@ fun EditBioSection(
                     unfocusedContainerColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-                    cursorColor = colorResource(R.color.dark_green)
+                    cursorColor = MaterialTheme.colorScheme.primary
                 ),
                 minLines = 3
             )
@@ -88,8 +89,12 @@ fun EditBioSection(
 @Preview(showBackground = true)
 @Composable
 fun EditBioSectionPreview() {
-    EditBioSection(
-        bio = localStudentProvider.currentUser.bio,
-        onBioChange = {}
-    )
+    TheStudentsTheme {
+        Surface {
+            EditBioSection(
+                bio = localStudentProvider.currentUser.bio,
+                onBioChange = {}
+            )
+        }
+    }
 }
