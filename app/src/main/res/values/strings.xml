@@ -91,7 +91,8 @@
 
     <!-- Comentarios y reseñas -->
     <string name="escribe_un_comentario" tools:ignore="TypographyEllipsis">Escribe un comentario...</string>
-    <string name="sobre_persona">"sobre "</string>
+    <string name="reseno_a">reseñó a </string>
+    <string name="sobre_persona">sobre </string>
     <string name="usuario_y_tiempo">%1$s · %2$s</string>
     <string name="resena_curso_y_fecha">%1$s, %2$s  ·  %3$s</string>
     <string name="contenido_citado">“%1$s”</string>
@@ -107,6 +108,9 @@
 
     <!-- Inicio -->
     <string name="home_screen">Home Screen</string>
+    <string name="resenas_recientes">RESEÑAS RECIENTES</string>
+    <string name="materia">Materia</string>
+    <string name="rese_as_recientes">RESEÑAS RECIENTES</string>
 
     <plurals name="programa_y_resenas">
         <item quantity="one">%1$s · %2$d reseña</item>
