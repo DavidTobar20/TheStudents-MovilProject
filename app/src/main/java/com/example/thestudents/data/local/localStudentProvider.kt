@@ -79,4 +79,6 @@ object localStudentProvider {
     )
     
     val currentUser = students[0]
+
+    fun getStudentById(id: String): Student? = students.find { it.id == id }
 }

@@ -87,9 +87,10 @@ fun BodyProfilePreview() {
     TheStudentsTheme {
         Surface {
             var selectedTab by rememberSaveable { mutableStateOf(ProfileTab.RECEIVED) }
+            val student = localStudentProvider.currentUser
             BodyProfile(
-                student = localStudentProvider.currentUser,
-                reviews = localReviewsProvider.allReviews,
+                student = student,
+                reviews = localReviewsProvider.getReviewsForStudent(student.id),
                 selectedTab = selectedTab,
                 onTabSelected = { selectedTab = it },
                 onBackClick = {},
@@ -113,8 +114,8 @@ fun ProfileScreen(
 
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(ProfileTab.RECEIVED) }
-    var student = localStudentProvider.currentUser
-    var reviews = localReviewsProvider.allReviews
+    val student = localStudentProvider.currentUser
+    val reviews = localReviewsProvider.getReviewsForStudent(student.id)
     BodyProfile(
         student = student,
         reviews = reviews,

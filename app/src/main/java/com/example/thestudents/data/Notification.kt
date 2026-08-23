@@ -10,6 +10,7 @@ data class Notification(
     val userInitials: String,
     val type: NotificationType,
     val timeAgo: String,
+    val studentId: String? = null,
     // Campos opcionales según el tipo
     val subject: String? = null,
     val rating: Int? = null,
