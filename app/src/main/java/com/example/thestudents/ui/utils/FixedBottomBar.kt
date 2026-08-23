@@ -67,14 +67,14 @@ fun FixedBottomBar(
                 NavItem(
                     icon = Icons.Default.Home,
                     label = stringResource(R.string.inicio),
-                    selected = selectedRoute == Routes.HOME,
-                    onClick = { onNavigate(Routes.HOME) }
+                    selected = selectedRoute == Routes.Home.route,
+                    onClick = { onNavigate(Routes.Home.route) }
                 )
                 NavItem(
                     icon = Icons.Default.Search,
                     label = stringResource(R.string.explorar),
-                    selected = selectedRoute == Routes.SEARCH,
-                    onClick = { onNavigate(Routes.SEARCH) }
+                    selected = selectedRoute == Routes.Search.route,
+                    onClick = { onNavigate(Routes.Search.route) }
                 )
 
                 // Hueco reservado para que el boton central no tape ningun item.
@@ -83,14 +83,14 @@ fun FixedBottomBar(
                 NavItem(
                     icon = Icons.Default.Notifications,
                     label = stringResource(R.string.notificaciones),
-                    selected = selectedRoute == Routes.NOTIFICATIONS,
-                    onClick = { onNavigate(Routes.NOTIFICATIONS) }
+                    selected = selectedRoute == Routes.Notifications.route,
+                    onClick = { onNavigate(Routes.Notifications.route) }
                 )
                 NavItem(
                     icon = Icons.Default.Person,
                     label = stringResource(R.string.perfil),
-                    selected = selectedRoute == Routes.PROFILE,
-                    onClick = { onNavigate(Routes.PROFILE) }
+                    selected = selectedRoute == Routes.Profile.route,
+                    onClick = { onNavigate(Routes.Profile.route) }
                 )
             }
         }
@@ -102,7 +102,7 @@ fun FixedBottomBar(
             modifier = Modifier
                 .size(64.dp)
                 .offset(y = (-32).dp),
-            onClick = { onNavigate(Routes.REVIEWS) },
+            onClick = { onNavigate(Routes.Reviews.route) },
             shadowElevation = 8.dp
         ) {
             Box(contentAlignment = Alignment.Center) {
@@ -122,7 +122,7 @@ fun FixedBottomBar(
 fun FixedBottomBarPreview() {
     TheStudentsTheme {
         Surface {
-            FixedBottomBar(selectedRoute = Routes.HOME, onNavigate = {})
+            FixedBottomBar(selectedRoute = Routes.Home.route, onNavigate = {})
         }
     }
 }

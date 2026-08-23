@@ -40,6 +40,7 @@ fun BodySearch(
     query: String,
     onQueryChange: (String) -> Unit,
     students: List<Student>,
+    onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -64,7 +65,12 @@ fun BodySearch(
 
         Spacer(modifier = Modifier.height(8.dp))
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(students, key = { it.id }) { student -> StudentCard(student) }
+            items(students, key = { it.id }) { student -> 
+                StudentCard(
+                    student = student,
+                    onClick = { onStudentClick(student.id) }
+                ) 
+            }
         }
     }
 }
@@ -79,7 +85,8 @@ fun BodySearchPreview() {
             BodySearch(
                 query = query,
                 onQueryChange = { query = it },
-                students = localStudentProvider.students
+                students = localStudentProvider.students,
+                onStudentClick = {}
             )
         }
     }
@@ -90,8 +97,8 @@ fun BodySearchPreview() {
  */
 @Composable
 fun SearchScreen(
+    onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-
 ) {
     var students  = localStudentProvider.students
     var query by rememberSaveable { mutableStateOf("") }
@@ -100,6 +107,7 @@ fun SearchScreen(
         query = query,
         onQueryChange = { query = it },
         students = students,
+        onStudentClick = onStudentClick,
         modifier = modifier
     )
 }
@@ -110,7 +118,7 @@ fun SearchScreen(
 fun FullSearchScreenPreview() {
     TheStudentsTheme {
         Surface {
-            SearchScreen()
+            SearchScreen(onStudentClick = {})
         }
     }
 }

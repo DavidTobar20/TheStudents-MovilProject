@@ -41,7 +41,7 @@ fun BodyNotifications(
     notifications: List<Notification>,
     onAcceptClick: (Int) -> Unit,
     onRejectClick: (Int) -> Unit,
-    onViewDetailClick: (Int) -> Unit,
+    onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -68,7 +68,12 @@ fun BodyNotifications(
                         notification = notification,
                         onAcceptClick = { onAcceptClick(notification.id) },
                         onRejectClick = { onRejectClick(notification.id) },
-                        onViewDetailClick = { onViewDetailClick(notification.id) }
+                        onViewDetailClick = { 
+                            notification.studentId?.let { onStudentClick(it) }
+                        },
+                        onAvatarClick = {
+                            notification.studentId?.let { onStudentClick(it) }
+                        }
                     )
                 }
             }
@@ -107,7 +112,7 @@ fun BodyNotificationsPreview() {
                 notifications = localNotificationProvider.allNotifications,
                 onAcceptClick = {},
                 onRejectClick = {},
-                onViewDetailClick = {}
+                onStudentClick = {}
             )
         }
     }
@@ -122,7 +127,7 @@ fun BodyNotificationsEmptyPreview() {
                 notifications = emptyList(),
                 onAcceptClick = {},
                 onRejectClick = {},
-                onViewDetailClick = {}
+                onStudentClick = {}
             )
         }
     }
@@ -139,7 +144,7 @@ fun NotificationsScreen(
     modifier: Modifier = Modifier,
     onAcceptClick: (Int) -> Unit = {},
     onRejectClick: (Int) -> Unit = {},
-    onViewDetailClick: (Int) -> Unit = {}
+    onStudentClick: (String) -> Unit = {}
 )
 {
     var notifications  = localNotificationProvider.allNotifications
@@ -147,7 +152,7 @@ fun NotificationsScreen(
         notifications = notifications,
         onAcceptClick = onAcceptClick,
         onRejectClick = onRejectClick,
-        onViewDetailClick = onViewDetailClick,
+        onStudentClick = onStudentClick,
         modifier = modifier
     )
 }

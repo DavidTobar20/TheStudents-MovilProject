@@ -11,6 +11,7 @@ object localNotificationProvider {
             userInitials = "MJ",
             type = NotificationType.REVIEW,
             timeAgo = "5 minutos",
+            studentId = "4",
             subject = "Estructuras de Datos",
             rating = 5,
             comment = "Excelente compañera para proyectos y explica muy bien."
@@ -21,6 +22,7 @@ object localNotificationProvider {
             userInitials = "DR",
             type = NotificationType.LIKE,
             timeAgo = "15 minutos",
+            studentId = "3",
             reviewOf = "Carlos Gómez"
         ),
         Notification(
@@ -28,7 +30,8 @@ object localNotificationProvider {
             userName = "Laura Martínez",
             userInitials = "LM",
             type = NotificationType.FOLLOW_REQUEST,
-            timeAgo = "1 hora"
+            timeAgo = "1 hora",
+            studentId = "2"
         ),
         Notification(
             id = 4,
@@ -36,6 +39,7 @@ object localNotificationProvider {
             userInitials = "CG",
             type = NotificationType.COMMENT,
             timeAgo = "2 horas",
+            studentId = "1",
             subject = "Cálculo I",
             courseCode = "MATE1103",
             snippet = "Excelente disposición..."
