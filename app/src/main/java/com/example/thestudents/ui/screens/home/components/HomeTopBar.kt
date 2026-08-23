@@ -1,6 +1,7 @@
 package com.example.thestudents.ui.screens.home.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,14 +28,15 @@ fun HomeTopBar(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 24.dp, vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
         Image(
             painter = painterResource(id = R.drawable.logosinfondo),
             contentDescription = null,
-            modifier = Modifier.size(32.dp)
+            modifier = Modifier.size(40.dp)
         )
-        Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(0.5.dp))
         Text(
             text = stringResource(id = R.string.the_students_mayuscula),
             color = MaterialTheme.colorScheme.primary,

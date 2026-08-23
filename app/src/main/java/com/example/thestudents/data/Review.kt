@@ -2,8 +2,7 @@ package com.example.thestudents.data
 
 data class Review(
     val reviewer: Student,
-    val reviewedStudentId: String,
-    val nameReviewed: String,
+    val reviewedStudent: Student, // Ahora incluimos el objeto Student completo
     val classReviewed: String,
     val periodReviewed: String,
     val content: String,

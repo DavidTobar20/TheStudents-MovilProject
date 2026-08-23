@@ -146,7 +146,6 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         }
 
         CommentsReviewScreen(
-            review = review,
             onBackClick = { navController.popBackStack() }
         )
     }
