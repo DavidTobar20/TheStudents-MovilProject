@@ -1,15 +1,18 @@
 package com.example.thestudents.ui.screens.commentsReview.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
@@ -30,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 import com.example.thestudents.ui.theme.TheStudentsTheme
+import com.example.thestudents.ui.utils.CustomTextField
 import com.example.thestudents.ui.utils.ProfileIcon
 
 @Composable
@@ -62,10 +66,23 @@ fun CommentInputFieldBar(
                 modifier = Modifier.size(40.dp)
             )
             Spacer(modifier = Modifier.width(10.dp))
-            CommentInputField(
+            CustomTextField(
+                value = commentText,
+                onValueChange = onCommentChange,
+                placeholder = stringResource(R.string.escribe_un_comentario),
+                singleLine = true,
                 modifier = Modifier.weight(1f),
-                commentText = commentText,
-                onCommentChange = onCommentChange
+                modifierBox = Modifier
+                    .weight(1f)
+                    .height(40.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(MaterialTheme.colorScheme.surfaceContainerLowest)
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.outline,
+                        shape = RoundedCornerShape(20.dp)
+                    )
+                    .padding(horizontal = 16.dp)
             )
             Spacer(modifier = Modifier.width(10.dp))
             Box(

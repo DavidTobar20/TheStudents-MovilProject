@@ -43,7 +43,7 @@
     <string name="solicitud_seguimiento">te envió una solicitud de seguimiento</string>
     <string name="hace_tiempo">Hace %1$s</string>
     <string name="estrellas">%1$d estrellas</string>
-    <string name="cancelar">Cancelar</string>
+    <string name="back">Back</string>
     <string name="guardar">Guardar</string>
     <string name="cambiar_foto">Cambiar foto de perfil</string>
     <string name="nombre_completo_mayuscula">NOMBRE COMPLETO</string>
@@ -107,6 +107,8 @@
 
     <!-- Inicio -->
     <string name="home_screen">Home Screen</string>
+    <string name="publicar_resena">PUBLICAR RESEÑA</string>
+    <string name="publicar_de_forma_anonima">Publicar de forma anónima</string>
 
     <plurals name="programa_y_resenas">
         <item quantity="one">%1$s · %2$d reseña</item>

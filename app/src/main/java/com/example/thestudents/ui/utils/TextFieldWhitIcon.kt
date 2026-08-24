@@ -1,10 +1,10 @@
-package com.example.thestudents.ui.screens.register.components
+package com.example.thestudents.ui.utils
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -12,26 +12,24 @@ import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterTextField(
+fun TextFieldWhitIcon(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
     placeholder: String,
-    leadingIcon: androidx.compose.ui.graphics.vector.ImageVector,
-    isPasswordField: Boolean = false,
-    isPasswordVisible: Boolean = false,
-    onPasswordToggle: () -> Unit = {},
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+    leadingIcon: ImageVector,
+    isPasswordField: Boolean,
+    isPasswordVisible: Boolean,
+    onPasswordToggle: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
@@ -58,7 +56,7 @@ fun RegisterTextField(
                 Icon(
                     imageVector = leadingIcon,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(20.dp)
                 )
             },
@@ -75,11 +73,10 @@ fun RegisterTextField(
                 }
             } else null,
             visualTransformation = if (isPasswordField && !isPasswordVisible) PasswordVisualTransformation() else VisualTransformation.None,
-            keyboardOptions = keyboardOptions,
             shape = RoundedCornerShape(14.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.secondary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
                 focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
                 unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest
             ),
@@ -90,14 +87,34 @@ fun RegisterTextField(
 
 @Preview(showBackground = true)
 @Composable
-fun RegisterTextFieldPreview() {
+fun TextFieldWhitIconPreview() {
     TheStudentsTheme {
-        RegisterTextField(
+        TextFieldWhitIcon(
             value = "",
             onValueChange = {},
             label = "Nombres",
             placeholder = "Ingresa tus nombres completos",
-            leadingIcon = Icons.Default.Person
+            leadingIcon = Icons.Default.Person,
+            isPasswordField = false,
+            isPasswordVisible = false,
+            onPasswordToggle = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TextFieldWhitIconPreviewEmail() {
+    TheStudentsTheme {
+        TextFieldWhitIcon(
+            value = "",
+            onValueChange = {},
+            label = "Correo institucional",
+            placeholder = "nombre@universidad.edu.co",
+            leadingIcon = Icons.Default.Email,
+            isPasswordField = false,
+            isPasswordVisible = false,
+            onPasswordToggle = {}
         )
     }
 }
