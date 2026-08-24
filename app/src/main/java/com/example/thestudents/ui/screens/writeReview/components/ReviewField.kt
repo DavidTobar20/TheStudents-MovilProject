@@ -14,10 +14,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.thestudents.R
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.CustomTextField
 
@@ -41,7 +43,7 @@ fun ReviewField(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "RESEÑA",
+                    text = stringResource(R.string.resena_mayuscula),
                     fontSize = 11.sp,
                     color = MaterialTheme.colorScheme.secondary,
                     fontWeight = FontWeight.Bold

@@ -49,7 +49,7 @@ fun BodyWriteReviewScreen(
             .fillMaxSize(),
     ) {
         HeaderBack(
-            title = "Nueva Reseña",
+            title = stringResource(R.string.nueva_resena),
             onBackClick = onBackClick
         )
         Column(
@@ -82,7 +82,7 @@ fun BodyWriteReviewScreen(
                 SettingSwitchRow(
                     modifier = Modifier.padding(16.dp),
                     title = stringResource(R.string.publicar_de_forma_anonima),
-                    description = "Tu nombre no aparecerá en la reseña",
+                    description = stringResource(R.string.tu_nombre_no_aparecer_en_la_resena),
                     checked = isAnonymous,
                     onCheckedChange = onAnonymousChange
                 )

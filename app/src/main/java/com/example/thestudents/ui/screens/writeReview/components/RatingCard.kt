@@ -13,10 +13,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.thestudents.R
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.StarsRating
 
@@ -36,7 +38,7 @@ fun RatingCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = "CALIFICACIÓN (OPCIONAL)",
+                text = stringResource(R.string.calificacion_opcional),
                 fontSize = 11.sp,
                 color = MaterialTheme.colorScheme.secondary,
                 fontWeight = FontWeight.Bold
