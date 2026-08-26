@@ -2,6 +2,7 @@ package com.example.thestudents.ui.screens.notifications.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -54,7 +55,8 @@ private fun styleFor(type: NotificationType): NotificationAvatarStyle {
 fun NotificationAvatar(
     initials: String,
     type: NotificationType,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
     val style = styleFor(type)
     val badgeIcon = style.badgeIcon
@@ -62,7 +64,9 @@ fun NotificationAvatar(
     val avatarBg = style.avatarContainer
 
     Box(
-        modifier = modifier,
+        modifier = modifier
+            .clip(CircleShape)
+            .clickable(onClick = onClick),
         contentAlignment = Alignment.BottomEnd
     ) {
         Box(

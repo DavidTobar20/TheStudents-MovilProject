@@ -1,38 +1,50 @@
 package com.example.thestudents.navigation
 
 /**
- * Rutas de navegacion de la app.
+ * Rutas de navegacion de la app usando Sealed Class.
  *
- * Estaban escritas como cadenas sueltas en cada pantalla y en la barra inferior, asi que un
- * error de dedo solo se notaba al ejecutar. Centralizarlas deja que el compilador las revise.
+ * Centralizar las rutas permite que el compilador las revise y facilita el paso de argumentos.
  */
-object Routes {
-    const val LOGIN = "login"
-    const val REGISTER = "register"
-    const val HOME = "home"
-    const val SEARCH = "search"
-    const val NOTIFICATIONS = "notifications"
-    const val PROFILE = "profile"
-    const val EDIT_PROFILE = "edit_profile"
-    const val REVIEWS = "reviews"
+sealed class Routes(val route: String) {
+    object Login : Routes("login")
+    object Register : Routes("register")
+    object Home : Routes("home")
+    object Search : Routes("search")
+    object Notifications : Routes("notifications")
+    object Profile : Routes("profile")
+    object EditProfile : Routes("edit_profile")
+    object Reviews : Routes("reviews")
+    
+    object StudentDetail : Routes("student_detail/{$STUDENT_ID_ARG}") {
+        fun createRoute(studentId: String) = "student_detail/$studentId"
+    }
 
-    const val REVIEW_INDEX_ARG = "reviewIndex"
-    const val COMMENTS_REVIEW = "comments_review/{$REVIEW_INDEX_ARG}"
+    object CommentsReview : Routes("comments_review/{$REVIEW_INDEX_ARG}") {
+        fun createRoute(reviewIndex: Int) = "comments_review/$reviewIndex"
+    }
 
-    /** Construye la ruta concreta hacia los comentarios de una resena. */
-    fun commentsReview(reviewIndex: Int) = "comments_review/$reviewIndex"
+    companion object {
+        const val STUDENT_ID_ARG = "studentId"
+        const val REVIEW_INDEX_ARG = "reviewIndex"
 
-    /** Rutas que muestran la barra de navegacion inferior. */
-    val withBottomBar = setOf(HOME, SEARCH, NOTIFICATIONS, PROFILE, EDIT_PROFILE, REVIEWS, COMMENTS_REVIEW)
+        /** Rutas que muestran la barra de navegacion inferior. */
+        val withBottomBar = setOf(
+            Home.route, 
+            Search.route, 
+            Notifications.route, 
+            Profile.route, 
+            EditProfile.route, 
+            Reviews.route, 
+            CommentsReview.route, 
+            StudentDetail.route
+        )
 
-    /**
-     * Pestana que debe verse activa en la barra inferior.
-     *
-     * Editar perfil y los comentarios de una resena son pantallas de detalle: no tienen pestana
-     * propia, pero se llega a ellas desde Perfil, asi que esa es la que sigue resaltada.
-     */
-    fun selectedTabFor(route: String?): String? = when (route) {
-        EDIT_PROFILE, COMMENTS_REVIEW -> PROFILE
-        else -> route
+        /**
+         * Pestana que debe verse activa en la barra inferior.
+         */
+        fun selectedTabFor(route: String?): String? = when (route) {
+            EditProfile.route, CommentsReview.route, StudentDetail.route -> Profile.route
+            else -> route
+        }
     }
 }
