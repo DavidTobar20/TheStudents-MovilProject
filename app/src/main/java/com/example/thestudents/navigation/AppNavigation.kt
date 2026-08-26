@@ -16,7 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.compose.ui.Modifier
 import com.example.thestudents.data.local.localReviewsProvider
-import com.example.thestudents.ui.screens.EditarPerfil.EditarPerfilScreen
+import com.example.thestudents.ui.screens.editarPerfil.EditarPerfilScreen
 import com.example.thestudents.ui.screens.commentsReview.CommentsReviewScreen
 import com.example.thestudents.ui.screens.home.HomeScreen
 import com.example.thestudents.ui.screens.login.LoginScreen
@@ -146,6 +146,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         }
 
         CommentsReviewScreen(
+            review = review,
             onBackClick = { navController.popBackStack() }
         )
     }

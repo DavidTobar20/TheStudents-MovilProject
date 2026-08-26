@@ -30,8 +30,6 @@ import com.example.thestudents.ui.components.ReviewCard
 import com.example.thestudents.ui.screens.commentsReview.components.CommentInputFieldBar
 import com.example.thestudents.ui.screens.commentsReview.components.CommentItem
 
-import com.example.thestudents.ui.screens.commentsReview.components.ReviewCard
-
 
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.HeaderBack
@@ -159,9 +157,9 @@ fun BodyCommentsReviewScreenPreview() {
  */
 @Composable
 fun CommentsReviewScreen(
+    review: Review,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-
 ) {
     var commentInputText by rememberSaveable { mutableStateOf("") }
     var isLiked by rememberSaveable { mutableStateOf(false) }
@@ -169,7 +167,6 @@ fun CommentsReviewScreen(
     var likedComments by rememberSaveable { mutableStateOf(emptySet<Int>()) }
     var dislikedComments by rememberSaveable { mutableStateOf(emptySet<Int>()) }
     val initialCommentator = localStudentProvider.currentUser.initials
-    val review = localReviewsProvider.allReviews[0]
     BodyCommentsReviewScreen(
         initialCommentator = initialCommentator,
         review = review,
@@ -212,6 +209,7 @@ fun CommentsReviewScreenPreview() {
     TheStudentsTheme {
         Surface {
             CommentsReviewScreen(
+                review = localReviewsProvider.allReviews[0],
                 onBackClick = {}
             )
         }
