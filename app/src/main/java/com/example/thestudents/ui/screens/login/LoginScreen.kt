@@ -39,6 +39,8 @@ fun BodyLoginScreen(
     onSSOClick: () -> Unit,
     onCreateAccountClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
+    isPasswordVisible: Boolean,
+    onPasswordToggle: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -67,7 +69,9 @@ fun BodyLoginScreen(
             onEmailChange = onEmailChange,
             password = password,
             onPasswordChange = onPasswordChange,
-            onForgotPasswordClick = onForgotPasswordClick
+            onForgotPasswordClick = onForgotPasswordClick,
+            isPasswordVisible = isPasswordVisible,
+            onPasswordToggle = onPasswordToggle
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -129,7 +133,9 @@ fun BodyLoginScreenPreview() {
             onLoginClick = {},
             onSSOClick = {},
             onCreateAccountClick = {},
-            onForgotPasswordClick = {}
+            onForgotPasswordClick = {},
+            isPasswordVisible = false,
+            onPasswordToggle = {}
         )
     }
 }
@@ -153,6 +159,7 @@ fun LoginScreen(
     // dejarla en texto plano dentro del estado guardado de la instancia.
     var email by rememberSaveable { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var isPasswordVisible by remember { mutableStateOf(false) }
 
     BodyLoginScreen(
         email = email,
@@ -163,6 +170,8 @@ fun LoginScreen(
         onSSOClick = onSSOClick,
         onCreateAccountClick = onCreateAccountClick,
         onForgotPasswordClick = onForgotPasswordClick,
+        isPasswordVisible = isPasswordVisible,
+        onPasswordToggle = {isPasswordVisible = !isPasswordVisible},
         modifier = modifier
     )
 
