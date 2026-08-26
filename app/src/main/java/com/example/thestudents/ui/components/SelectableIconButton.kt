@@ -1,4 +1,4 @@
-package com.example.thestudents.ui.screens.commentsReview.components
+package com.example.thestudents.ui.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

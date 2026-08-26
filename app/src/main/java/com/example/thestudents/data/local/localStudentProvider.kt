@@ -79,6 +79,9 @@ object localStudentProvider {
     )
     
     val currentUser = students[0]
+    
+    // Simulación de seguidos: el usuario actual sigue a Valeria (2) y Daniel (3)
+    val followingIds = setOf("2", "3")
 
     fun getStudentById(id: String): Student? = students.find { it.id == id }
 }

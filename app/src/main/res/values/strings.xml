@@ -91,7 +91,8 @@
 
     <!-- Comentarios y reseñas -->
     <string name="escribe_un_comentario" tools:ignore="TypographyEllipsis">Escribe un comentario...</string>
-    <string name="sobre_persona">"sobre "</string>
+    <string name="reseno_a">reseñó a </string>
+    <string name="sobre_persona">sobre </string>
     <string name="usuario_y_tiempo">%1$s · %2$s</string>
     <string name="resena_curso_y_fecha">%1$s, %2$s  ·  %3$s</string>
     <string name="contenido_citado">“%1$s”</string>
@@ -113,6 +114,10 @@
     <string name="resena_mayuscula">RESEÑA</string>
     <string name="tu_nombre_no_aparecer_en_la_resena">Tu nombre no aparecerá en la reseña</string>
     <string name="nueva_resena">Nueva Reseña</string>
+    <string name="resenas_recientes">RESEÑAS RECIENTES</string>
+    <string name="materia">Materia</string>
+    <string name="rese_as_recientes">RESEÑAS RECIENTES</string>
+    <string name="a_n_no_hay_rese_as_de_las_personas_que_sigues_comienza_a_explorar_para_seguir_a_tus_compa_eros">Aún no hay reseñas de las personas que sigues. ¡Comienza a explorar para seguir a tus compañeros!</string>
 
     <plurals name="programa_y_resenas">
         <item quantity="one">%1$s · %2$d reseña</item>
