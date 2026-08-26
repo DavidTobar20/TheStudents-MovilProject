@@ -15,7 +15,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.compose.ui.Modifier
-import com.example.thestudents.data.local.localCourseSectionProvider
 import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.ui.screens.EditarPerfil.EditarPerfilScreen
 import com.example.thestudents.ui.screens.commentsReview.CommentsReviewScreen
@@ -26,15 +25,11 @@ import com.example.thestudents.ui.screens.profile.ProfileScreen
 import com.example.thestudents.ui.screens.register.RegisterScreen
 import com.example.thestudents.ui.screens.reviews.ReviewsScreen
 import com.example.thestudents.ui.screens.search.SearchScreen
+import com.example.thestudents.ui.screens.studentDetail.StudentDetailScreen
 import com.example.thestudents.ui.utils.FixedBottomBar
 
 /**
  * Shell de la aplicacion: el unico Scaffold que existe.
- *
- * Antes cada pantalla montaba el suyo y repetia el color de fondo y la barra inferior, lo que
- * ademas producia Scaffolds anidados en la pantalla de comentarios. Ahora el Scaffold vive aqui
- * y las pantallas solo aportan contenido; el desplazamiento que dejan la barra inferior y las
- * barras del sistema llega al NavHost como padding, asi que ninguna pantalla vuelve a calcularlo.
  */
 @Composable
 fun AppNavigation(modifier: Modifier = Modifier) {
@@ -56,7 +51,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Routes.LOGIN,
+            startDestination = Routes.Login.route,
             modifier = Modifier.padding(innerPadding)
         ) {
             authGraph(navController)
@@ -66,8 +61,7 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 }
 
 /**
- * Navegacion entre pestanas: una sola instancia de cada destino y el estado de cada pestana
- * se conserva al volver.
+ * Navegacion entre pestanas.
  */
 private fun NavHostController.navigateToTab(route: String) {
     navigate(route) {
@@ -78,40 +72,52 @@ private fun NavHostController.navigateToTab(route: String) {
 }
 
 private fun NavGraphBuilder.authGraph(navController: NavHostController) {
-    composable(Routes.LOGIN) {
+    composable(Routes.Login.route) {
         LoginScreen(
-            onLoginSuccess = { navController.navigateToTab(Routes.HOME) },
-            onCreateAccountClick = { navController.navigate(Routes.REGISTER) }
+            onLoginSuccess = { navController.navigateToTab(Routes.Home.route) },
+            onCreateAccountClick = { navController.navigate(Routes.Register.route) }
         )
     }
 
-    composable(Routes.REGISTER) {
+    composable(Routes.Register.route) {
         RegisterScreen(
-            onRegisterClick = { navController.navigateToTab(Routes.HOME) },
-            onSsoClick = { /* Pendiente: autenticacion institucional */ },
+            onRegisterClick = { navController.navigateToTab(Routes.Home.route) },
+            onSsoClick = { /* Pendiente */ },
             onNavigateToLogin = { navController.popBackStack() }
         )
     }
 }
 
 private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
-    composable(Routes.HOME) { HomeScreen() }
-
-    composable(Routes.SEARCH) { SearchScreen() }
-
-    composable(Routes.NOTIFICATIONS) { NotificationsScreen() }
-
-    composable(Routes.REVIEWS) { ReviewsScreen() }
-
-    composable(Routes.PROFILE) {
-        ProfileScreen(
-            onBackClick = { navController.popBackStack() },
-            onEditProfileClick = { navController.navigate(Routes.EDIT_PROFILE) },
-            onReviewClick = { index -> navController.navigate(Routes.commentsReview(index)) }
+    composable(Routes.Home.route) {
+        HomeScreen(
+            onReviewClick = { index -> navController.navigate(Routes.CommentsReview.createRoute(index)) }
         )
     }
 
-    composable(Routes.EDIT_PROFILE) {
+    composable(Routes.Search.route) {
+        SearchScreen(
+            onStudentClick = { id -> navController.navigate(Routes.StudentDetail.createRoute(id)) }
+        )
+    }
+
+    composable(Routes.Notifications.route) {
+        NotificationsScreen(
+            onStudentClick = { id -> navController.navigate(Routes.StudentDetail.createRoute(id)) }
+        )
+    }
+
+    composable(Routes.Reviews.route) { ReviewsScreen() }
+
+    composable(Routes.Profile.route) {
+        ProfileScreen(
+            onBackClick = { navController.popBackStack() },
+            onEditProfileClick = { navController.navigate(Routes.EditProfile.route) },
+            onReviewClick = { index -> navController.navigate(Routes.CommentsReview.createRoute(index)) }
+        )
+    }
+
+    composable(Routes.EditProfile.route) {
         EditarPerfilScreen(
             onCancelClick = { navController.popBackStack() },
             onSaveClick = { navController.popBackStack() }
@@ -119,7 +125,19 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     }
 
     composable(
-        route = Routes.COMMENTS_REVIEW,
+        route = Routes.StudentDetail.route,
+        arguments = listOf(navArgument(Routes.STUDENT_ID_ARG) { type = NavType.StringType })
+    ) { backStackEntry ->
+        val studentId = backStackEntry.arguments?.getString(Routes.STUDENT_ID_ARG) ?: ""
+        StudentDetailScreen(
+            studentId = studentId,
+            onBackClick = { navController.popBackStack() },
+            onReviewClick = { index -> navController.navigate(Routes.CommentsReview.createRoute(index)) }
+        )
+    }
+
+    composable(
+        route = Routes.CommentsReview.route,
         arguments = listOf(navArgument(Routes.REVIEW_INDEX_ARG) { type = NavType.IntType })
     ) { backStackEntry ->
         val reviewIndex = backStackEntry.arguments?.getInt(Routes.REVIEW_INDEX_ARG) ?: 0

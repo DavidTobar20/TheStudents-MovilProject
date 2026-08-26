@@ -27,6 +27,7 @@ import com.example.thestudents.ui.utils.ProfileIcon
 @Composable
 fun StudentCard(
     student: Student,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -35,7 +36,8 @@ fun StudentCard(
             .padding(vertical = 8.dp),
         color = MaterialTheme.colorScheme.surfaceContainerLowest,
         shape = RoundedCornerShape(16.dp),
-        shadowElevation = 2.dp
+        shadowElevation = 2.dp,
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier
@@ -97,7 +99,8 @@ fun StudentCardPreview() {
     TheStudentsTheme {
         Surface {
             StudentCard(
-                student = localStudentProvider.students[4]
+                student = localStudentProvider.students[4],
+                onClick = {}
             )
         }
     }

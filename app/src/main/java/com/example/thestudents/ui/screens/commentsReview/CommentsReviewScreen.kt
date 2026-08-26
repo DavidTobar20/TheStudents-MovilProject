@@ -26,10 +26,10 @@ import com.example.thestudents.R
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.ui.components.ReviewCard
 import com.example.thestudents.ui.screens.commentsReview.components.CommentInputFieldBar
 import com.example.thestudents.ui.screens.commentsReview.components.CommentItem
 import com.example.thestudents.ui.screens.commentsReview.components.CommentsTopAppBar
-import com.example.thestudents.ui.screens.commentsReview.components.ReviewCard
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 /**

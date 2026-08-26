@@ -22,7 +22,8 @@ fun NotificationItem(
     modifier: Modifier = Modifier,
     onAcceptClick: () -> Unit = {},
     onRejectClick: () -> Unit = {},
-    onViewDetailClick: () -> Unit = {}
+    onViewDetailClick: () -> Unit = {},
+    onAvatarClick: () -> Unit = {}
 ) {
     Card(
         modifier = modifier
@@ -40,7 +41,8 @@ fun NotificationItem(
         ) {
             NotificationAvatar(
                 initials = notification.userInitials,
-                type = notification.type
+                type = notification.type,
+                onClick = onAvatarClick
             )
             
             Spacer(modifier = Modifier.width(12.dp))

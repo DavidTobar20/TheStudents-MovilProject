@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.data.Comment
 import com.example.thestudents.data.local.localCommentsProvider
+import com.example.thestudents.ui.components.SelectableIconButton
 import com.example.thestudents.ui.theme.OnAvatar
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ProfileIcon
