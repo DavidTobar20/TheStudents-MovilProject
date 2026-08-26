@@ -89,7 +89,11 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
 }
 
 private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
-    composable(Routes.Home.route) { HomeScreen() }
+    composable(Routes.Home.route) {
+        HomeScreen(
+            onReviewClick = { index -> navController.navigate(Routes.CommentsReview.createRoute(index)) }
+        )
+    }
 
     composable(Routes.Search.route) {
         SearchScreen(
@@ -137,6 +141,10 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         arguments = listOf(navArgument(Routes.REVIEW_INDEX_ARG) { type = NavType.IntType })
     ) { backStackEntry ->
         val reviewIndex = backStackEntry.arguments?.getInt(Routes.REVIEW_INDEX_ARG) ?: 0
+        val review = localReviewsProvider.allReviews.getOrElse(reviewIndex) {
+            localReviewsProvider.allReviews.first()
+        }
+
         CommentsReviewScreen(
             onBackClick = { navController.popBackStack() }
         )

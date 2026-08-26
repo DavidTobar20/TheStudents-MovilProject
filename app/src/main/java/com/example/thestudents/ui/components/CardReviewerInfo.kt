@@ -1,4 +1,4 @@
-package com.example.thestudents.ui.screens.commentsReview.components
+package com.example.thestudents.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,32 +19,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.thestudents.data.Student
+import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun CardReviewerInfo(
-    nameReviewer: String,
-    usernameReviewer: String,
-    timeAgo: String,
-    initialsReviewer: String,
+    student: Student,
+    subtitle: String,
     rating: String?,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Top
     ) {
         ReviewerInfo(
-            initialsReviewer = initialsReviewer,
-            nameReviewer = nameReviewer,
-            usernameReviewer = usernameReviewer,
-            timeAgo = timeAgo
+            student = student,
+            subtitle = subtitle
         )
         if(rating != null){
             Box(
                 modifier = Modifier
-                    .padding(top = 5.dp)
                     .clip(CircleShape)
                     .size(32.dp)
                     .background(MaterialTheme.colorScheme.primary),
@@ -64,30 +62,13 @@ fun CardReviewerInfo(
 @Preview(showBackground = true)
 @Composable
 fun CardReviewerInfoPreviewWithRating(){
+    val review = localReviewsProvider.allReviews[0]
     TheStudentsTheme {
         Surface {
             CardReviewerInfo(
-                nameReviewer = "Luisa Mendoza",
-                usernameReviewer = "luisa.mendoza",
-                timeAgo = "hace 6 h",
-                initialsReviewer = "LM",
-                rating = "4.5"
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CardReviewerInfoPreviewWithoutRating(){
-    TheStudentsTheme {
-        Surface {
-            CardReviewerInfo(
-                nameReviewer = "Luisa Mendoza",
-                usernameReviewer = "luisa.mendoza",
-                timeAgo = "hace 6 h",
-                initialsReviewer = "LM",
-                rating = null
+                student = review.reviewedStudent,
+                subtitle = "Materia: ${review.classReviewed}",
+                rating = review.rating
             )
         }
     }

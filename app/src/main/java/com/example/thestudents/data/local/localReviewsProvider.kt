@@ -6,8 +6,7 @@ object localReviewsProvider {
     val allReviews = listOf(
         Review(
             reviewer = localStudentProvider.students[0],
-            reviewedStudentId = "2", // Para Valeria
-            nameReviewed = "Valeria Gómez",
+            reviewedStudent = localStudentProvider.students[1], // Valeria
             classReviewed = "MATE120",
             periodReviewed = "2025-3",
             content = "Muy responsable, aportó ideas clave en todas las etapas del proyecto.",
@@ -19,8 +18,7 @@ object localReviewsProvider {
         ),
         Review(
             reviewer = localStudentProvider.students[1],
-            reviewedStudentId = "1", // Para Juan Pablo
-            nameReviewed = "Juan Pablo Mejía",
+            reviewedStudent = localStudentProvider.students[0], // Juan Pablo
             classReviewed = "MATE110",
             periodReviewed = "2026-1",
             content = "Excelente compañero, explica muy bien los temas complejos y es muy puntual.",
@@ -32,8 +30,7 @@ object localReviewsProvider {
         ),
         Review(
             reviewer = localStudentProvider.students[2],
-            reviewedStudentId = "2", // Para Valeria
-            nameReviewed = "Valeria Gómez",
+            reviewedStudent = localStudentProvider.students[1], // Valeria
             classReviewed = "FIS103",
             periodReviewed = "2024-3",
             content = "Gran capacidad de liderazgo en el trabajo en equipo. Siempre está dispuesta a colaborar.",
@@ -45,8 +42,7 @@ object localReviewsProvider {
         ),
         Review(
             reviewer = localStudentProvider.students[3],
-            reviewedStudentId = "1", // Para Juan Pablo
-            nameReviewed = "Juan Pablo Mejía",
+            reviewedStudent = localStudentProvider.students[0], // Juan Pablo
             classReviewed = "FIS101",
             periodReviewed = "2024-2",
             content = "Muy buen compañero, siempre dispuesto a ayudar a los demás.",
@@ -58,8 +54,7 @@ object localReviewsProvider {
         ),
         Review(
             reviewer = localStudentProvider.students[4],
-            reviewedStudentId = "3", // Para Daniel Ruiz
-            nameReviewed = "Daniel Ruiz",
+            reviewedStudent = localStudentProvider.students[2], // Daniel
             classReviewed = "ISIS1206",
             periodReviewed = "2024-2",
             content = "Excelente analista, sus aportes en el código fueron vitales.",
@@ -71,8 +66,7 @@ object localReviewsProvider {
         ),
         Review(
             reviewer = localStudentProvider.students[0],
-            reviewedStudentId = "3", // Para Daniel Ruiz
-            nameReviewed = "Daniel Ruiz",
+            reviewedStudent = localStudentProvider.students[2], // Daniel
             classReviewed = "FIS102",
             periodReviewed = "2025-1",
             content = "Muy juicioso con las entregas y puntual.",
@@ -84,8 +78,7 @@ object localReviewsProvider {
         ),
         Review(
             reviewer = localStudentProvider.students[1],
-            reviewedStudentId = "4", // Para María Jiménez
-            nameReviewed = "María Jiménez",
+            reviewedStudent = localStudentProvider.students[3], // Maria
             classReviewed = "IIND2100",
             periodReviewed = "2025-1",
             content = "Una líder increíble, organizó todo el grupo de maravilla.",
@@ -97,8 +90,7 @@ object localReviewsProvider {
         ),
         Review(
             reviewer = localStudentProvider.students[2],
-            reviewedStudentId = "5", // Para Valentina Torres
-            nameReviewed = "Valentina Torres",
+            reviewedStudent = localStudentProvider.students[4], // Valentina
             classReviewed = "PSIC1101",
             periodReviewed = "2024-2",
             content = "Muy empática y buena para mediar en conflictos de grupo.",
@@ -111,5 +103,9 @@ object localReviewsProvider {
     )
 
     fun getReviewsForStudent(studentId: String): List<Review> = 
-        allReviews.filter { it.reviewedStudentId == studentId }
+        allReviews.filter { it.reviewedStudent.id == studentId }
+
+    /** Obtiene las reseñas escritas por una lista de estudiantes (seguidos). */
+    fun getReviewsByFollowed(followingIds: Set<String>): List<Review> =
+        allReviews.filter { it.reviewer.id in followingIds }
 }
