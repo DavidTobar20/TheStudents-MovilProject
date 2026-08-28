@@ -12,11 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -28,14 +23,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.thestudents.R
-import com.example.thestudents.navigation.Routes
+import com.example.thestudents.navigation.Screen
+import com.example.thestudents.navigation.bottomNavItems
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 /**
- * Barra de navegacion inferior.
+ * Barra de navegacion inferior dinamica.
  *
- * Recibe la ruta activa y una funcion para navegar en vez del NavController, asi que no depende
- * de la navegacion: se puede previsualizar y probar pasandole lambdas vacias.
+ * Itera sobre la lista [bottomNavItems] para mostrar las pestañas laterales y
+ * mantiene un boton central para la accion de "Reseñar".
  */
 @Composable
 fun FixedBottomBar(
@@ -64,34 +60,30 @@ fun FixedBottomBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                NavItem(
-                    icon = Icons.Default.Home,
-                    label = stringResource(R.string.inicio),
-                    selected = selectedRoute == Routes.Home.route,
-                    onClick = { onNavigate(Routes.Home.route) }
-                )
-                NavItem(
-                    icon = Icons.Default.Search,
-                    label = stringResource(R.string.explorar),
-                    selected = selectedRoute == Routes.Search.route,
-                    onClick = { onNavigate(Routes.Search.route) }
-                )
+                // Iteramos por los primeros dos items (Home, Search)
+                bottomNavItems.take(2).forEach { item ->
+                    val isSelected = selectedRoute == item.route
+                    NavItem(
+                        icon = if (isSelected) item.iconFilled else item.iconOutline,
+                        label = stringResource(item.labelRes),
+                        selected = isSelected,
+                        onClick = { onNavigate(item.route) }
+                    )
+                }
 
                 // Hueco reservado para que el boton central no tape ningun item.
                 Box(modifier = Modifier.size(64.dp))
 
-                NavItem(
-                    icon = Icons.Default.Notifications,
-                    label = stringResource(R.string.notificaciones),
-                    selected = selectedRoute == Routes.Notifications.route,
-                    onClick = { onNavigate(Routes.Notifications.route) }
-                )
-                NavItem(
-                    icon = Icons.Default.Person,
-                    label = stringResource(R.string.perfil),
-                    selected = selectedRoute == Routes.Profile.route,
-                    onClick = { onNavigate(Routes.Profile.route) }
-                )
+                // Iteramos por los ultimos dos items (Notifications, Profile)
+                bottomNavItems.takeLast(2).forEach { item ->
+                    val isSelected = selectedRoute == item.route
+                    NavItem(
+                        icon = if (isSelected) item.iconFilled else item.iconOutline,
+                        label = stringResource(item.labelRes),
+                        selected = isSelected,
+                        onClick = { onNavigate(item.route) }
+                    )
+                }
             }
         }
 
@@ -102,7 +94,7 @@ fun FixedBottomBar(
             modifier = Modifier
                 .size(64.dp)
                 .offset(y = (-32).dp),
-            onClick = { onNavigate(Routes.Reviews.route) },
+            onClick = { onNavigate(Screen.Reviews.route) },
             shadowElevation = 8.dp
         ) {
             Box(contentAlignment = Alignment.Center) {
@@ -122,7 +114,7 @@ fun FixedBottomBar(
 fun FixedBottomBarPreview() {
     TheStudentsTheme {
         Surface {
-            FixedBottomBar(selectedRoute = Routes.Home.route, onNavigate = {})
+            FixedBottomBar(selectedRoute = Screen.Home.route, onNavigate = {})
         }
     }
 }

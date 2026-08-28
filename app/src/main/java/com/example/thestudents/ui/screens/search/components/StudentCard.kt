@@ -26,6 +26,7 @@ import com.example.thestudents.ui.utils.StarsRating
 fun StudentCard(
     student: Student,
     onClick: () -> Unit,
+    onWriteReviewClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -77,8 +78,8 @@ fun StudentCard(
             }
 
             ButtonWithoutIcon(
-                textoBoton = stringResource(R.string.seguir_mayuscula),
-                onClick = {},
+                textoBoton = stringResource(R.string.resenar),
+                onClick = onWriteReviewClick,
                 fontSize = 11.sp,
                 contentPadding = PaddingValues(horizontal = 18.dp, vertical = 8.dp)
             )
@@ -93,7 +94,8 @@ fun StudentCardPreview() {
         Surface {
             StudentCard(
                 student = localStudentProvider.students[4],
-                onClick = {}
+                onClick = {},
+                onWriteReviewClick = {}
             )
         }
     }

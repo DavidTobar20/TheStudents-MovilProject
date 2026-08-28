@@ -1,4 +1,4 @@
-package com.example.thestudents.ui.screens.editarPerfil
+package com.example.thestudents.ui.screens.EditarPerfil
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
@@ -23,10 +23,10 @@ import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localStudentProvider
-import com.example.thestudents.ui.screens.editarPerfil.components.EditBioSection
-import com.example.thestudents.ui.screens.editarPerfil.components.EditFormSection
-import com.example.thestudents.ui.screens.editarPerfil.components.EditPhotoSection
-import com.example.thestudents.ui.screens.editarPerfil.components.EditPreferencesSection
+import com.example.thestudents.ui.screens.EditarPerfil.components.EditBioSection
+import com.example.thestudents.ui.screens.EditarPerfil.components.EditFormSection
+import com.example.thestudents.ui.screens.EditarPerfil.components.EditPhotoSection
+import com.example.thestudents.ui.screens.EditarPerfil.components.EditPreferencesSection
 import com.example.thestudents.ui.utils.HeaderBack
 
 import com.example.thestudents.ui.theme.TheStudentsTheme

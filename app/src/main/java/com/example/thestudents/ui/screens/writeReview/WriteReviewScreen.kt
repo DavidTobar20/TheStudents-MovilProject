@@ -123,9 +123,13 @@ fun BodyWriteReviewScreenPreview() {
 
 @Composable
 fun WriteReviewScreen(
+    studentId: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val student = com.example.thestudents.data.local.localStudentProvider.getStudentById(studentId)
+        ?: com.example.thestudents.data.local.localStudentProvider.students[0]
+
     var rating by remember { mutableStateOf(0) }
     var review by remember { mutableStateOf("") }
     var isAnonymous by remember { mutableStateOf(true) }
@@ -138,11 +142,11 @@ fun WriteReviewScreen(
         onAnonymousChange = { isAnonymous = it },
         review = review,
         isAnonymous = isAnonymous,
-        onPublishClick = {},
+        onPublishClick = { /* Pendiente: guardar reseña */ },
         onBackClick = onBackClick,
-        nameReviewed = "Laura Martínez",
-        initialsReviewed = "LM",
-        courseInfoReviewed = "Estructuras de Datos (ISIS1206) • 2025-2",
+        nameReviewed = student.name,
+        initialsReviewed = student.initials,
+        courseInfoReviewed = "${student.program} • ${student.period}",
     )
 }
 
@@ -151,6 +155,7 @@ fun WriteReviewScreen(
 fun WriteReviewScreenPreview() {
     TheStudentsTheme {
         WriteReviewScreen(
+            studentId = "1",
             onBackClick = {}
         )
     }
