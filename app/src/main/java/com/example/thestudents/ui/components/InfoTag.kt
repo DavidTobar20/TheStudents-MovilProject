@@ -1,4 +1,4 @@
-package com.example.thestudents.ui.screens.commentsReview.components
+package com.example.thestudents.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
@@ -43,7 +44,7 @@ fun InfoTag(
 fun InfoTagPreviewCourse() {
     TheStudentsTheme {
         Surface {
-            InfoTag(text = "ISIS1105")
+            InfoTag(text = localReviewsProvider.allReviews[0].classReviewed)
         }
     }
 }
@@ -53,7 +54,7 @@ fun InfoTagPreviewCourse() {
 fun InfoTagPreviewPeriod() {
     TheStudentsTheme {
         Surface {
-            InfoTag(text = "2025-2")
+            InfoTag(text = localReviewsProvider.allReviews[0].periodReviewed)
         }
     }
 }

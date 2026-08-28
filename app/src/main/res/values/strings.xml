@@ -91,7 +91,8 @@
 
     <!-- Comentarios y reseñas -->
     <string name="escribe_un_comentario" tools:ignore="TypographyEllipsis">Escribe un comentario...</string>
-    <string name="sobre_persona">"sobre "</string>
+    <string name="reseno_a">reseñó a </string>
+    <string name="sobre_persona">sobre </string>
     <string name="usuario_y_tiempo">%1$s · %2$s</string>
     <string name="resena_curso_y_fecha">%1$s, %2$s  ·  %3$s</string>
     <string name="contenido_citado">“%1$s”</string>
@@ -107,6 +108,10 @@
 
     <!-- Inicio -->
     <string name="home_screen">Home Screen</string>
+    <string name="resenas_recientes">RESEÑAS RECIENTES</string>
+    <string name="materia">Materia</string>
+    <string name="rese_as_recientes">RESEÑAS RECIENTES</string>
+    <string name="a_n_no_hay_rese_as_de_las_personas_que_sigues_comienza_a_explorar_para_seguir_a_tus_compa_eros">Aún no hay reseñas de las personas que sigues. ¡Comienza a explorar para seguir a tus compañeros!</string>
     <string name="publicar_resena">PUBLICAR RESEÑA</string>
     <string name="publicar_de_forma_anonima">Publicar de forma anónima</string>
     <string name="calificacion_opcional">CALIFICACIÓN (OPCIONAL)</string>
