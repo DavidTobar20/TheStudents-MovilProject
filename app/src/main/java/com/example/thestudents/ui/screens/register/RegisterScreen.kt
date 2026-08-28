@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -17,13 +16,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.thestudents.ui.screens.register.components.*
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.R
+import com.example.thestudents.ui.utils.TextFieldWhitIcon
 
 
 @Composable
@@ -91,112 +89,115 @@ fun RegisterBody(
     onNavigateToLogin: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        modifier = modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.surfaceContainerHigh
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            item {
-                RegisterHeader()
+        item {
+            RegisterHeader()
 
-                // Form Fields
-                RegisterTextField(
-                    value = names,
-                    onValueChange = onNamesChange,
-                    label = stringResource(R.string.nombres),
-                    placeholder = stringResource(R.string.ingresa_tus_nombres_completos),
-                    leadingIcon = Icons.Default.Person
+            // Form Fields
+            TextFieldWhitIcon(
+                value = names,
+                onValueChange = onNamesChange,
+                label = stringResource(R.string.nombres),
+                placeholder = stringResource(R.string.ingresa_tus_nombres_completos),
+                leadingIcon = Icons.Default.Person,
+                isPasswordField = false,
+                isPasswordVisible = false,
+                onPasswordToggle = {}
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextFieldWhitIcon(
+                value = lastNames,
+                onValueChange = onLastNamesChange,
+                label = stringResource(R.string.apellidos),
+                placeholder = stringResource(R.string.ingresa_tus_apellidos_completos),
+                leadingIcon = Icons.Default.Person,
+                isPasswordField = false,
+                isPasswordVisible = false,
+                onPasswordToggle = {}
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextFieldWhitIcon(
+                value = email,
+                onValueChange = onEmailChange,
+                label = stringResource(R.string.correo_institucional),
+                placeholder = stringResource(R.string.nombre_universidad_edu_co),
+                leadingIcon = Icons.Default.Email,
+                isPasswordField = false,
+                isPasswordVisible = false,
+                onPasswordToggle = {}
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextFieldWhitIcon(
+                value = password,
+                onValueChange = onPasswordChange,
+                label = stringResource(R.string.crea_tu_contrase_a),
+                placeholder = stringResource(R.string.crea_una_contrase_a_segura),
+                leadingIcon = Icons.Default.Lock,
+                isPasswordField = true,
+                isPasswordVisible = isPasswordVisible,
+                onPasswordToggle = onPasswordToggle
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextFieldWhitIcon(
+                value = confirmPassword,
+                onValueChange = onConfirmPasswordChange,
+                label = stringResource(R.string.confirma_tu_contrase_a),
+                placeholder = stringResource(R.string.repite_tu_contrase_a),
+                leadingIcon = Icons.Default.Lock,
+                isPasswordField = true,
+                isPasswordVisible = isConfirmPasswordVisible,
+                onPasswordToggle = onConfirmPasswordToggle
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TermsAndConditions(
+                termsAccepted = termsAccepted,
+                onTermsAcceptedChange = onTermsAcceptedChange
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Register Button
+            Button(
+                onClick = onRegisterClick,
+                enabled = termsAccepted,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f)
                 )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                RegisterTextField(
-                    value = lastNames,
-                    onValueChange = onLastNamesChange,
-                    label = stringResource(R.string.apellidos),
-                    placeholder = stringResource(R.string.ingresa_tus_apellidos_completos),
-                    leadingIcon = Icons.Default.Person
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                RegisterTextField(
-                    value = email,
-                    onValueChange = onEmailChange,
-                    label = stringResource(R.string.correo_institucional),
-                    placeholder = stringResource(R.string.nombre_universidad_edu_co),
-                    leadingIcon = Icons.Default.Email,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                RegisterTextField(
-                    value = password,
-                    onValueChange = onPasswordChange,
-                    label = stringResource(R.string.crea_tu_contrase_a),
-                    placeholder = stringResource(R.string.crea_una_contrase_a_segura),
-                    leadingIcon = Icons.Default.Lock,
-                    isPasswordField = true,
-                    isPasswordVisible = isPasswordVisible,
-                    onPasswordToggle = onPasswordToggle
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                RegisterTextField(
-                    value = confirmPassword,
-                    onValueChange = onConfirmPasswordChange,
-                    label = stringResource(R.string.confirma_tu_contrase_a),
-                    placeholder = stringResource(R.string.repite_tu_contrase_a),
-                    leadingIcon = Icons.Default.Lock,
-                    isPasswordField = true,
-                    isPasswordVisible = isConfirmPasswordVisible,
-                    onPasswordToggle = onConfirmPasswordToggle
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                TermsAndConditions(
-                    termsAccepted = termsAccepted,
-                    onTermsAcceptedChange = onTermsAcceptedChange
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Register Button
-                Button(
-                    onClick = onRegisterClick,
-                    enabled = termsAccepted,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondary,
-                        disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f)
+            ) {
+                Text(
+                    text = stringResource(R.string.crear_cuenta),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSecondary
                     )
-                ) {
-                    Text(
-                        text = stringResource(R.string.crear_cuenta),
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSecondary
-                        )
-                    )
-                }
-
-                SocialRegisterOptions(onSsoClick = onSsoClick)
-
-                RegisterFooter(onNavigateToLogin = onNavigateToLogin)
-                
-                Spacer(modifier = Modifier.height(24.dp))
+                )
             }
+
+            SocialRegisterOptions(onSsoClick = onSsoClick)
+
+            RegisterFooter(onNavigateToLogin = onNavigateToLogin)
+
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }

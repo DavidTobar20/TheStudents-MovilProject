@@ -2,8 +2,6 @@ package com.example.thestudents.ui.screens.search.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -20,9 +18,9 @@ import com.example.thestudents.R
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
-import com.example.thestudents.ui.theme.extended
 import com.example.thestudents.ui.utils.ButtonWithoutIcon
 import com.example.thestudents.ui.utils.ProfileIcon
+import com.example.thestudents.ui.utils.StarsRating
 
 @Composable
 fun StudentCard(
@@ -71,16 +69,11 @@ fun StudentCard(
                     fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f)
                 )
-                Row(modifier = Modifier.padding(top = 4.dp)) {
-                    repeat(5) { index ->
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp),
-                            tint = if (index < student.rating.toInt()) MaterialTheme.extended.rating else MaterialTheme.extended.ratingInactive
-                        )
-                    }
-                }
+                StarsRating(
+                    modifier = Modifier.size(16.dp),
+                    rating = student.rating.toInt(),
+                    onRatingSelected = null
+                )
             }
 
             ButtonWithoutIcon(

@@ -43,7 +43,7 @@
     <string name="solicitud_seguimiento">te envió una solicitud de seguimiento</string>
     <string name="hace_tiempo">Hace %1$s</string>
     <string name="estrellas">%1$d estrellas</string>
-    <string name="cancelar">Cancelar</string>
+    <string name="back">Back</string>
     <string name="guardar">Guardar</string>
     <string name="cambiar_foto">Cambiar foto de perfil</string>
     <string name="nombre_completo_mayuscula">NOMBRE COMPLETO</string>
@@ -112,6 +112,12 @@
     <string name="materia">Materia</string>
     <string name="rese_as_recientes">RESEÑAS RECIENTES</string>
     <string name="a_n_no_hay_rese_as_de_las_personas_que_sigues_comienza_a_explorar_para_seguir_a_tus_compa_eros">Aún no hay reseñas de las personas que sigues. ¡Comienza a explorar para seguir a tus compañeros!</string>
+    <string name="publicar_resena">PUBLICAR RESEÑA</string>
+    <string name="publicar_de_forma_anonima">Publicar de forma anónima</string>
+    <string name="calificacion_opcional">CALIFICACIÓN (OPCIONAL)</string>
+    <string name="resena_mayuscula">RESEÑA</string>
+    <string name="tu_nombre_no_aparecer_en_la_resena">Tu nombre no aparecerá en la reseña</string>
+    <string name="nueva_resena">Nueva Reseña</string>
 
     <plurals name="programa_y_resenas">
         <item quantity="one">%1$s · %2$d reseña</item>
