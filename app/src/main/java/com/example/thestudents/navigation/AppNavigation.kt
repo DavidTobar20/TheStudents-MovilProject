@@ -164,7 +164,8 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
 private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     composable(Screen.Home.route) {
         HomeScreen(
-            onReviewClick = { index -> navController.navigate(Screen.CommentsReview.createRoute(index)) }
+            onReviewClick = { index -> navController.navigate(Screen.CommentsReview.createRoute(index)) },
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
         )
     }
 
@@ -181,7 +182,12 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         )
     }
 
-    composable(Screen.Reviews.route) { ReviewsScreen() }
+    composable(Screen.Reviews.route) {
+        ReviewsScreen(
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
+            onWriteReviewClick = { id -> navController.navigate(Screen.WriteReview.createRoute(id)) }
+        )
+    }
 
     composable(
         route = Screen.WriteReview.route,
@@ -190,7 +196,8 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         val studentId = backStackEntry.arguments?.getString("studentId") ?: ""
         WriteReviewScreen(
             studentId = studentId,
-            onBackClick = { navController.popBackStack() }
+            onBackClick = { navController.popBackStack() },
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
         )
     }
 

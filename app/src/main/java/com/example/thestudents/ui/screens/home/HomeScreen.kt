@@ -34,6 +34,7 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
 @Composable
 fun HomeScreen(
     onReviewClick: (Int) -> Unit,
+    onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     // Requisito: Ver reseñas realizadas por las personas que sigue el usuario.
@@ -90,6 +91,7 @@ fun HomeScreen(
                         },
                         onCommentClick = { onReviewClick(realIndex) },
                         onCardClick = { onReviewClick(realIndex) },
+                        onReviewerClick = { onStudentClick(review.reviewer.id) },
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                 }
@@ -103,7 +105,10 @@ fun HomeScreen(
 fun HomeScreenPreview() {
     TheStudentsTheme(darkTheme = false) {
         Surface {
-            HomeScreen(onReviewClick = {})
+            HomeScreen(
+                onReviewClick = {},
+                onStudentClick = {}
+            )
         }
     }
 }
@@ -113,7 +118,10 @@ fun HomeScreenPreview() {
 fun HomeScreenDarkPreview() {
     TheStudentsTheme(darkTheme = true) {
         Surface {
-            HomeScreen(onReviewClick = {})
+            HomeScreen(
+                onReviewClick = {},
+                onStudentClick = {}
+            )
         }
     }
 }

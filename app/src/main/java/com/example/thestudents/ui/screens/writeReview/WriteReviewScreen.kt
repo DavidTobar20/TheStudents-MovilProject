@@ -40,10 +40,11 @@ fun BodyWriteReviewScreen(
     isAnonymous: Boolean,
     onPublishClick: () -> Unit,
     onBackClick: () -> Unit,
+    onStudentClick: () -> Unit,
     nameReviewed: String,
     initialsReviewed: String,
     courseInfoReviewed: String,
-    ) {
+) {
     Column(
         modifier = modifier
             .fillMaxSize(),
@@ -61,7 +62,8 @@ fun BodyWriteReviewScreen(
             ReviewHeader(
                 name = nameReviewed,
                 initials = initialsReviewed,
-                courseInfo = courseInfoReviewed
+                courseInfo = courseInfoReviewed,
+                onAvatarClick = onStudentClick
             )
             RatingCard(
                 rating = rating,
@@ -114,6 +116,7 @@ fun BodyWriteReviewScreenPreview() {
             isAnonymous = true,
             onPublishClick = {},
             onBackClick = {},
+            onStudentClick = {},
             nameReviewed = "Laura Martínez",
             initialsReviewed = "LM",
             courseInfoReviewed = "Estructuras de Datos (ISIS1206) • 2025-2",
@@ -125,6 +128,7 @@ fun BodyWriteReviewScreenPreview() {
 fun WriteReviewScreen(
     studentId: String,
     onBackClick: () -> Unit,
+    onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val student = com.example.thestudents.data.local.localStudentProvider.getStudentById(studentId)
@@ -144,6 +148,7 @@ fun WriteReviewScreen(
         isAnonymous = isAnonymous,
         onPublishClick = { /* Pendiente: guardar reseña */ },
         onBackClick = onBackClick,
+        onStudentClick = { onStudentClick(student.id) },
         nameReviewed = student.name,
         initialsReviewed = student.initials,
         courseInfoReviewed = "${student.program} • ${student.period}",
@@ -156,7 +161,8 @@ fun WriteReviewScreenPreview() {
     TheStudentsTheme {
         WriteReviewScreen(
             studentId = "1",
-            onBackClick = {}
+            onBackClick = {},
+            onStudentClick = {}
         )
     }
 }

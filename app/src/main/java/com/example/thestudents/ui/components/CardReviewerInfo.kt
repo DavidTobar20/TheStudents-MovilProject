@@ -28,7 +28,8 @@ fun CardReviewerInfo(
     student: Student,
     subtitle: String,
     rating: String?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onReviewerClick: (() -> Unit)? = null
 ) {
     Row(
         modifier = modifier
@@ -38,7 +39,8 @@ fun CardReviewerInfo(
     ) {
         ReviewerInfo(
             student = student,
-            subtitle = subtitle
+            subtitle = subtitle,
+            onClick = onReviewerClick
         )
         if(rating != null){
             Box(
