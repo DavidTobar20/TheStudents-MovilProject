@@ -1,6 +1,7 @@
 package com.example.thestudents.ui.screens.profile
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -48,34 +49,36 @@ fun BodyProfile(
     onReviewClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = modifier.fillMaxSize()) {
-        item { ProfileHeader(onBackClick = onBackClick) }
-        item { UserInfoSection(student = student) }
-        item { StatsSection(student = student) }
-        item {
-            ButtonWithIcon(
-                text = stringResource(R.string.editar_perfil),
-                icon = Icons.Outlined.Edit,
-                onClick = onEditProfileClick,
-                borderColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .height(48.dp)
-                    .padding(horizontal = 24.dp)
-            )
-        }
-        item { RatingChartSection() }
-        item {
-            ProfileTabs(
-                selectedTab = selectedTab,
-                onTabSelected = onTabSelected
-            )
-        }
-        itemsIndexed(reviews) { index, review ->
-            ReviewItem(
-                review = review,
-                onClick = { onReviewClick(index) }
-            )
+    Column(modifier = modifier.fillMaxSize()) {
+        ProfileHeader(onBackClick = onBackClick)
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            item { UserInfoSection(student = student) }
+            item { StatsSection(student = student) }
+            item {
+                ButtonWithIcon(
+                    text = stringResource(R.string.editar_perfil),
+                    icon = Icons.Outlined.Edit,
+                    onClick = onEditProfileClick,
+                    borderColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .height(48.dp)
+                        .padding(horizontal = 24.dp)
+                )
+            }
+            item { RatingChartSection() }
+            item {
+                ProfileTabs(
+                    selectedTab = selectedTab,
+                    onTabSelected = onTabSelected
+                )
+            }
+            itemsIndexed(reviews) { index, review ->
+                ReviewItem(
+                    review = review,
+                    onClick = { onReviewClick(index) }
+                )
+            }
         }
     }
 }

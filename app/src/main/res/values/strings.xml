@@ -7,7 +7,7 @@
     <string name="perfil">Perfil</string>
     <string name="resenas_mayuscula">RESEÑAS</string>
     <string name="editar_perfil">Editar perfil</string>
-    <string name="resenar">Reseñar</string>
+    <string name="resenar">RESEÑAR</string>
     <string name="seguir_mayuscula">SEGUIR</string>
 
     <!-- Para campo contraseñas -->
@@ -15,6 +15,7 @@
     <string name="mostrar_contrasena">Mostrar contraseña</string>
 
     <!-- Notificaciones -->
+    <string name="notificaciones_mayuscula">NOTIFICACIONES</string>
     <string name="notificaciones">Notificaciones</string>
     <string name="aceptar">Aceptar</string>
     <string name="rechazar">Rechazar</string>
@@ -63,11 +64,11 @@
     <!-- Buscar -->
     <string name="buscar_estudiantes">BUSCAR ESTUDIANTES</string>
     <string name="buscar_por_nombre_o_carrera" tools:ignore="TypographyEllipsis">Buscar por nombre o carrera...</string>
-    <string name="sugerencias_para_ti_mayuscula">SUGERENCIAS PARA TI</string>
+    <string name="sugerencias_para_ti">Sugerencias para ti</string>
 
 
     <!-- Pantalla para elegir a quien reseñar -->
-    <string name="resenar_companeros">RESEÑAR COMPAÑEROS</string>
+    <string name="resenar_companeros">RESEÑAR COMPAÑERO</string>
     <string name="personas_con_quienes_has_compartido_clase">Personas con quienes has compartido clase</string>
 
 
@@ -103,6 +104,7 @@
     <string name="resena">Reseña</string>
 
     <!-- Perfil -->
+    <string name="perfil_mayuscula">PERFIL</string>
     <string name="recibidas">Recibidas</string>
     <string name="programa_y_semestre">%1$s · Sem. %2$d</string>
     <string name="resena_curso_y_fecha">%1$s, %2$s  ·  %3$s</string>
@@ -113,6 +115,7 @@
 
 
     <!-- Edición Perfil -->
+    <string name="editar_perfil_mayuscula">EDITAR PERFIL</string>
     <string name="semestre_numero">Semestre %1$d</string>
     <string name="contador_caracteres">%1$d/%2$d</string>
 

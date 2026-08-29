@@ -53,16 +53,14 @@ fun BodyEditarPerfilScreen(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxSize()) {
+        HeaderBack(
+            title = stringResource(R.string.editar_perfil_mayuscula),
+            onBackClick = onBackClick
+        )
         LazyColumn(
             modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            item {
-                HeaderBack(
-                    title = stringResource(R.string.editar_perfil),
-                    onBackClick = onBackClick
-                )
-            }
 
             item {
                 EditPhotoSection(

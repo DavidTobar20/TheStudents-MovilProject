@@ -55,7 +55,7 @@ fun BodySearch(
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = stringResource(R.string.sugerencias_para_ti_mayuscula),
+            text = stringResource(R.string.sugerencias_para_ti),
             modifier = Modifier.fillMaxWidth(),
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
@@ -100,7 +100,7 @@ fun SearchScreen(
     onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var students  = localStudentProvider.students
+    val students  = localStudentProvider.students
     var query by rememberSaveable { mutableStateOf("") }
 
     BodySearch(
