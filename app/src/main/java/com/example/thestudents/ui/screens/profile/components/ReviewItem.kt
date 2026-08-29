@@ -24,9 +24,9 @@ import com.example.thestudents.ui.utils.ProfileIcon
 
 @Composable
 fun ReviewItem(
+    modifier: Modifier = Modifier,
     review: Review,
-    onClick: () -> Unit = {},
-    modifier: Modifier = Modifier
+    onClick: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
