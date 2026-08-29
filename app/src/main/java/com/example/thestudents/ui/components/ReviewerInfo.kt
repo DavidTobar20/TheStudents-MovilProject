@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,10 +29,12 @@ import com.example.thestudents.ui.utils.ProfileIcon
 fun ReviewerInfo(
     student: Student,
     subtitle: String, // Cambiado de timeAgo a subtitle genérico para mayor flexibilidad
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ProfileIcon(

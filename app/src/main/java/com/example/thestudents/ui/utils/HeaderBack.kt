@@ -1,4 +1,5 @@
-package com.example.thestudents.ui.screens.editarPerfil.components
+
+package com.example.thestudents.ui.utils
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,8 +24,9 @@ import com.example.thestudents.R
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
-fun HeaderEditarPerfil(
-    onCancelClick: () -> Unit,
+fun HeaderBack(
+    title: String,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -36,12 +38,12 @@ fun HeaderEditarPerfil(
     ) {
 
         IconButton(
-            onClick = onCancelClick,
+            onClick = onBackClick,
             modifier = Modifier.align(Alignment.CenterStart)
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                contentDescription = stringResource(R.string.cancelar),
+                contentDescription = stringResource(R.string.back),
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(28.dp)
             )
@@ -49,7 +51,7 @@ fun HeaderEditarPerfil(
 
 
         Text(
-            text = stringResource(R.string.editar_perfil),
+            text = title,
             fontSize = 19.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
@@ -59,10 +61,13 @@ fun HeaderEditarPerfil(
 
 @Preview(showBackground = true)
 @Composable
-fun HeaderEditarPerfilPreview() {
+fun HeaderBackPreview() {
     TheStudentsTheme {
         Surface {
-            HeaderEditarPerfil(onCancelClick = {})
+            HeaderBack(
+                title = stringResource(R.string.editar_perfil),
+                onBackClick = {}
+            )
         }
     }
 }

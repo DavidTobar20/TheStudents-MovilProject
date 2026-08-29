@@ -1,7 +1,6 @@
 package com.example.thestudents.ui.screens.editarPerfil
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,7 +27,8 @@ import com.example.thestudents.ui.screens.editarPerfil.components.EditBioSection
 import com.example.thestudents.ui.screens.editarPerfil.components.EditFormSection
 import com.example.thestudents.ui.screens.editarPerfil.components.EditPhotoSection
 import com.example.thestudents.ui.screens.editarPerfil.components.EditPreferencesSection
-import com.example.thestudents.ui.screens.editarPerfil.components.HeaderEditarPerfil
+import com.example.thestudents.ui.utils.HeaderBack
+
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ButtonWithoutIcon
 
@@ -37,7 +36,7 @@ import com.example.thestudents.ui.utils.ButtonWithoutIcon
  * Contenido de editar perfil. Sin estado propio: cada campo llega con su valor y su callback.
  */
 @Composable
-fun BodyEditarPerfil(
+fun BodyEditarPerfilScreen(
     student: Student,
     name: String,
     onNameChange: (String) -> Unit,
@@ -49,7 +48,7 @@ fun BodyEditarPerfil(
     onShowReviewsChange: (Boolean) -> Unit,
     notificationsEnabled: Boolean,
     onNotificationsChange: (Boolean) -> Unit,
-    onCancelClick: () -> Unit,
+    onBackClick: () -> Unit,
     onSaveClick: () -> Unit,
     onChangePhotoClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -59,7 +58,12 @@ fun BodyEditarPerfil(
             modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            item { HeaderEditarPerfil(onCancelClick = onCancelClick) }
+            item {
+                HeaderBack(
+                    title = stringResource(R.string.editar_perfil),
+                    onBackClick = onBackClick
+                )
+            }
 
             item {
                 EditPhotoSection(
@@ -104,21 +108,15 @@ fun BodyEditarPerfil(
         }
 
         // Boton de guardar anclado al final, fuera de la zona con scroll.
-        Box(
+        ButtonWithoutIcon(
+            textoBoton = stringResource(R.string.guardar_cambios_mayuscula),
+            onClick = onSaveClick,
+            fontSize = 14.sp,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 48.dp, vertical = 16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            ButtonWithoutIcon(
-                textoBoton = stringResource(R.string.guardar_cambios_mayuscula),
-                onClick = onSaveClick,
-                fontSize = 14.sp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-            )
-        }
+                .padding(horizontal = 48.dp, vertical = 16.dp)
+                .height(48.dp)
+        )
     }
 }
 
@@ -141,7 +139,7 @@ fun EditarPerfilScreen(
     var showReviews by rememberSaveable { mutableStateOf(true) }
     var notificationsEnabled by rememberSaveable { mutableStateOf(true) }
 
-    BodyEditarPerfil(
+    BodyEditarPerfilScreen(
         student = student,
         name = name,
         onNameChange = { name = it },
@@ -153,7 +151,7 @@ fun EditarPerfilScreen(
         onShowReviewsChange = { showReviews = it },
         notificationsEnabled = notificationsEnabled,
         onNotificationsChange = { notificationsEnabled = it },
-        onCancelClick = onCancelClick,
+        onBackClick = onCancelClick,
         onSaveClick = onSaveClick,
         onChangePhotoClick = { /* Pendiente: selector de imagen */ },
         modifier = modifier

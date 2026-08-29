@@ -29,8 +29,10 @@ import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.components.ReviewCard
 import com.example.thestudents.ui.screens.commentsReview.components.CommentInputFieldBar
 import com.example.thestudents.ui.screens.commentsReview.components.CommentItem
-import com.example.thestudents.ui.screens.commentsReview.components.CommentsTopAppBar
+
+
 import com.example.thestudents.ui.theme.TheStudentsTheme
+import com.example.thestudents.ui.utils.HeaderBack
 
 /**
  * Contenido de los comentarios de una resena.
@@ -63,7 +65,10 @@ fun BodyCommentsReviewScreen(
         color = MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-            CommentsTopAppBar(onBackClick = onBackClick)
+            HeaderBack(
+                title = stringResource(R.string.resena),
+                onBackClick = onBackClick
+            )
 
             ReviewCard(
                 review = review,
@@ -152,17 +157,16 @@ fun BodyCommentsReviewScreenPreview() {
  */
 @Composable
 fun CommentsReviewScreen(
+    review: Review,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-
 ) {
     var commentInputText by rememberSaveable { mutableStateOf("") }
     var isLiked by rememberSaveable { mutableStateOf(false) }
     var isDisliked by rememberSaveable { mutableStateOf(false) }
     var likedComments by rememberSaveable { mutableStateOf(emptySet<Int>()) }
     var dislikedComments by rememberSaveable { mutableStateOf(emptySet<Int>()) }
-    var initialCommentator = localStudentProvider.currentUser.initials
-    var review = localReviewsProvider.allReviews[0]
+    val initialCommentator = localStudentProvider.currentUser.initials
     BodyCommentsReviewScreen(
         initialCommentator = initialCommentator,
         review = review,
@@ -205,6 +209,7 @@ fun CommentsReviewScreenPreview() {
     TheStudentsTheme {
         Surface {
             CommentsReviewScreen(
+                review = localReviewsProvider.allReviews[0],
                 onBackClick = {}
             )
         }
