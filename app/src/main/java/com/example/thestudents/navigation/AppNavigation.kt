@@ -27,7 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.thestudents.R
 import com.example.thestudents.data.local.localReviewsProvider
-import com.example.thestudents.ui.screens.EditarPerfil.EditarPerfilScreen
+import com.example.thestudents.ui.screens.editarPerfil.EditarPerfilScreen
 import com.example.thestudents.ui.screens.commentsReview.CommentsReviewScreen
 import com.example.thestudents.ui.screens.home.HomeScreen
 import com.example.thestudents.ui.screens.login.LoginScreen
@@ -171,8 +171,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
 
     composable(Screen.Search.route) {
         SearchScreen(
-            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
-            onWriteReviewClick = { id -> navController.navigate(Screen.WriteReview.createRoute(id)) }
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id))}
         )
     }
 

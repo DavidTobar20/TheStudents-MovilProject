@@ -87,7 +87,7 @@ fun StudentCard(
             }
 
             ButtonWithoutIcon(
-                textoBoton = stringResource(R.string.resenar),
+                textoBoton = stringResource(R.string.seguir_mayuscula),
                 onClick = onWriteReviewClick,
                 fontSize = 11.sp,
                 contentPadding = PaddingValues(horizontal = 18.dp, vertical = 8.dp)

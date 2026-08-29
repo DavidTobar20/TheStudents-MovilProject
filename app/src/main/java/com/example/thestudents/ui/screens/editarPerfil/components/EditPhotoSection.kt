@@ -1,4 +1,4 @@
-package com.example.thestudents.ui.screens.EditarPerfil.components
+package com.example.thestudents.ui.screens.editarPerfil.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

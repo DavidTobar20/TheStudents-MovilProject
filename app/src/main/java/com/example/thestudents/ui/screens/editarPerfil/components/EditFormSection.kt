@@ -1,4 +1,4 @@
-package com.example.thestudents.ui.screens.EditarPerfil.components
+package com.example.thestudents.ui.screens.editarPerfil.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

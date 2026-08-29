@@ -41,7 +41,6 @@ fun BodySearch(
     onQueryChange: (String) -> Unit,
     students: List<Student>,
     onStudentClick: (String) -> Unit,
-    onWriteReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -70,7 +69,7 @@ fun BodySearch(
                 StudentCard(
                     student = student,
                     onClick = { onStudentClick(student.id) },
-                    onWriteReviewClick = { onWriteReviewClick(student.id) }
+                    onWriteReviewClick = { }
                 ) 
             }
         }
@@ -89,7 +88,7 @@ fun BodySearchPreview() {
                 onQueryChange = { query = it },
                 students = localStudentProvider.students,
                 onStudentClick = {},
-                onWriteReviewClick = {}
+
             )
         }
     }
@@ -101,7 +100,6 @@ fun BodySearchPreview() {
 @Composable
 fun SearchScreen(
     onStudentClick: (String) -> Unit,
-    onWriteReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var students  = localStudentProvider.students
@@ -112,7 +110,6 @@ fun SearchScreen(
         onQueryChange = { query = it },
         students = students,
         onStudentClick = onStudentClick,
-        onWriteReviewClick = onWriteReviewClick,
         modifier = modifier
     )
 }
@@ -125,7 +122,6 @@ fun FullSearchScreenPreview() {
         Surface {
             SearchScreen(
                 onStudentClick = {},
-                onWriteReviewClick = {}
             )
         }
     }
