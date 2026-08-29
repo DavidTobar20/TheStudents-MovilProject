@@ -3,7 +3,7 @@ package com.example.thestudents.ui.screens.studentDetail
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material3.*
@@ -36,7 +36,7 @@ fun BodyStudentDetail(
     reviews: List<Review>,
     onBackClick: () -> Unit,
     onFollowClick: () -> Unit,
-    onReviewClick: (Int) -> Unit,
+    onReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier.fillMaxSize()) {
@@ -45,7 +45,7 @@ fun BodyStudentDetail(
         item { StatsSection(student = student) }
         item {
             ButtonWithIcon(
-                text = stringResource(R.string.seguir_mayuscula),
+                text = stringResource(R.string.seguir),
                 icon = Icons.Default.PersonAdd,
                 onClick = onFollowClick,
                 borderColor = MaterialTheme.colorScheme.primary,
@@ -65,10 +65,10 @@ fun BodyStudentDetail(
                 color = MaterialTheme.colorScheme.primary
             )
         }
-        itemsIndexed(reviews) { index, review ->
+        items(reviews) { review ->
             ReviewItem(
                 review = review,
-                onClick = { onReviewClick(index) }
+                onClick = { onReviewClick(review.id) }
             )
         }
     }
@@ -98,7 +98,7 @@ fun BodyStudentDetailPreview() {
 fun StudentDetailScreen(
     studentId: String,
     onBackClick: () -> Unit,
-    onReviewClick: (Int) -> Unit,
+    onReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val student = localStudentProvider.getStudentById(studentId)

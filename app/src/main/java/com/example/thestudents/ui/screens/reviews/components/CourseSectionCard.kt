@@ -15,13 +15,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.data.CourseSection
-import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun CourseSectionCard(
     section: CourseSection,
+    onStudentClick: (String) -> Unit,
+    onWriteReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.padding(vertical = 12.dp)) {
@@ -49,7 +50,11 @@ fun CourseSectionCard(
         ) {
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 section.students.forEachIndexed { index, student ->
-                    ReviewStudentItem(student)
+                    ReviewStudentItem(
+                        student = student,
+                        onStudentClick = { onStudentClick(student.id) },
+                        onWriteReviewClick = { onWriteReviewClick(student.id) }
+                    )
                     if (index < (section.students.size - 1)) {
                         HorizontalDivider(
                             color = MaterialTheme.colorScheme.outlineVariant,
@@ -75,7 +80,9 @@ fun CourseSectionCardPreview() {
                         localStudentProvider.students[3],
                         localStudentProvider.students[4]
                     )
-                )
+                ),
+                onStudentClick = {},
+                onWriteReviewClick = {}
             )
         }
     }

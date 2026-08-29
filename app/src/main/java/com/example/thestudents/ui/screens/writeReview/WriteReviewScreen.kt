@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
+import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.screens.writeReview.components.RatingCard
 import com.example.thestudents.ui.screens.writeReview.components.ReviewField
 import com.example.thestudents.ui.screens.writeReview.components.ReviewHeader
@@ -36,6 +37,7 @@ fun BodyWriteReviewScreen(
     onRatingSelected: (Int) -> Unit,
     onReviewChange: (String) -> Unit,
     onAnonymousChange: (Boolean) -> Unit,
+    onStudentClick: () -> Unit,
     review: String,
     isAnonymous: Boolean,
     onPublishClick: () -> Unit,
@@ -61,7 +63,8 @@ fun BodyWriteReviewScreen(
             ReviewHeader(
                 name = nameReviewed,
                 initials = initialsReviewed,
-                courseInfo = courseInfoReviewed
+                courseInfo = courseInfoReviewed,
+                onAvatarClick = onStudentClick
             )
             RatingCard(
                 rating = rating,
@@ -110,6 +113,7 @@ fun BodyWriteReviewScreenPreview() {
             onRatingSelected = {},
             onReviewChange = {},
             onAnonymousChange = {},
+            onStudentClick = {},
             review = "Esta es una reseña de prueba",
             isAnonymous = true,
             onPublishClick = {},
@@ -123,9 +127,13 @@ fun BodyWriteReviewScreenPreview() {
 
 @Composable
 fun WriteReviewScreen(
+    studentId: String,
     onBackClick: () -> Unit,
+    onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val student = localStudentProvider.getStudentById(studentId)
+        ?: localStudentProvider.students[0]
     var rating by remember { mutableStateOf(0) }
     var review by remember { mutableStateOf("") }
     var isAnonymous by remember { mutableStateOf(true) }
@@ -136,13 +144,14 @@ fun WriteReviewScreen(
         onRatingSelected = { rating = it },
         onReviewChange = { review = it },
         onAnonymousChange = { isAnonymous = it },
+        onStudentClick = { onStudentClick(student.id) },
         review = review,
         isAnonymous = isAnonymous,
         onPublishClick = {},
         onBackClick = onBackClick,
-        nameReviewed = "Laura Martínez",
-        initialsReviewed = "LM",
-        courseInfoReviewed = "Estructuras de Datos (ISIS1206) • 2025-2",
+        nameReviewed = student.name,
+        initialsReviewed = student.initials,
+        courseInfoReviewed = "${student.program} • ${student.period}",
     )
 }
 
@@ -151,7 +160,9 @@ fun WriteReviewScreen(
 fun WriteReviewScreenPreview() {
     TheStudentsTheme {
         WriteReviewScreen(
-            onBackClick = {}
+            studentId = "1",
+            onBackClick = {},
+            onStudentClick = {},
         )
     }
 }

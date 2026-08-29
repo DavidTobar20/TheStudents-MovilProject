@@ -155,6 +155,7 @@ fun BodyCommentsReviewScreenPreview() {
  */
 @Composable
 fun CommentsReviewScreen(
+    reviewId: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 
@@ -165,7 +166,9 @@ fun CommentsReviewScreen(
     var likedComments by rememberSaveable { mutableStateOf(emptySet<Int>()) }
     var dislikedComments by rememberSaveable { mutableStateOf(emptySet<Int>()) }
     val initialCommentator = localStudentProvider.currentUser.initials
-    val review = localReviewsProvider.allReviews[0]
+    val review = localReviewsProvider.getReviewById(reviewId)
+        ?: localReviewsProvider.allReviews[0]
+
     BodyCommentsReviewScreen(
         initialCommentator = initialCommentator,
         review = review,
@@ -208,7 +211,8 @@ fun CommentsReviewScreenPreview() {
     TheStudentsTheme {
         Surface {
             CommentsReviewScreen(
-                onBackClick = {}
+                onBackClick = {},
+                reviewId = "1"
             )
         }
     }

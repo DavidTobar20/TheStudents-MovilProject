@@ -4,15 +4,15 @@
 
     <!-- Compartidos por varias pantallas -->
     <string name="the_students_mayuscula">THE STUDENTS</string>
-    <string name="perfil">Perfil</string>
     <string name="resenas_mayuscula">RESEÑAS</string>
-    <string name="editar_perfil">Editar perfil</string>
     <string name="resenar">RESEÑAR</string>
-    <string name="seguir_mayuscula">SEGUIR</string>
 
     <!-- Para campo contraseñas -->
     <string name="ocultar_contrasena">Ocultar contraseña</string>
     <string name="mostrar_contrasena">Mostrar contraseña</string>
+
+    <!-- Barra navegación -->
+    <string name="perfil">Perfil</string>
 
     <!-- Notificaciones -->
     <string name="notificaciones_mayuscula">NOTIFICACIONES</string>
@@ -65,7 +65,7 @@
     <string name="buscar_estudiantes">BUSCAR ESTUDIANTES</string>
     <string name="buscar_por_nombre_o_carrera" tools:ignore="TypographyEllipsis">Buscar por nombre o carrera...</string>
     <string name="sugerencias_para_ti">Sugerencias para ti</string>
-
+    <string name="seguir_mayuscula">SEGUIR</string>
 
     <!-- Pantalla para elegir a quien reseñar -->
     <string name="resenar_companeros">RESEÑAR COMPAÑERO</string>
@@ -112,6 +112,7 @@
     <string name="escritas">Escritas</string>
     <string name="seguidores_mayuscula">SEGUIDORES</string>
     <string name="siguiendo_mayuscula">SIGUIENDO</string>
+    <string name="editar_perfil">Editar perfil</string>
 
 
     <!-- Edición Perfil -->
@@ -136,6 +137,9 @@
 
     <!-- Components -->
     <string name="reseno_a">"reseñó a "</string>
+
+    <!-- Perfil otro estudiante -->
+    <string name="seguir">Seguir</string>
 
     <plurals name="programa_y_resenas">
         <item quantity="one">%1$s · %2$d reseña</item>

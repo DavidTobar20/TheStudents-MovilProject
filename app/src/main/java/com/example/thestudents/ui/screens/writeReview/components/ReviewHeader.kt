@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.writeReview.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -7,11 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,6 +28,7 @@ fun ReviewHeader(
     name: String,
     initials: String,
     courseInfo: String,
+    onAvatarClick: (() -> Unit)? = null
 ) {
     Row(
         modifier = modifier
@@ -33,7 +37,15 @@ fun ReviewHeader(
         verticalAlignment = Alignment.CenterVertically
     ) {
         ProfileIcon(
-            modifier = Modifier.size(43.dp),
+            modifier = Modifier
+                .size(43.dp)
+                .then(
+                    if (onAvatarClick != null) {
+                        Modifier
+                            .clip(CircleShape)
+                            .clickable(onClick = onAvatarClick)
+                    } else Modifier
+                ),
             initials = initials,
             profileImage = null,
             backgroundColor = MaterialTheme.colorScheme.primary,

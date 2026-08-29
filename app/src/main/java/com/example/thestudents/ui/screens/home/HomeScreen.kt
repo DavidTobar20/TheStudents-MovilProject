@@ -33,7 +33,8 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun HomeScreen(
-    onReviewClick: (Int) -> Unit,
+    onReviewClick: (String) -> Unit,
+    onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     // Requisito: Ver reseñas realizadas por las personas que sigue el usuario.
@@ -73,8 +74,6 @@ fun HomeScreen(
                 }
             } else {
                 itemsIndexed(followedReviews) { index, review ->
-                    // Obtenemos el índice real de la lista completa para la navegación
-                    val realIndex = localReviewsProvider.allReviews.indexOf(review)
                     
                     ReviewCard(
                         review = review,
@@ -88,8 +87,9 @@ fun HomeScreen(
                             dislikedReviews = if (index in dislikedReviews) dislikedReviews - index else dislikedReviews + index
                             if (index in dislikedReviews) likedReviews = likedReviews - index
                         },
-                        onCommentClick = { onReviewClick(realIndex) },
-                        onCardClick = { onReviewClick(realIndex) },
+                        onCommentClick = { onReviewClick(review.id) },
+                        onCardClick = { onReviewClick(review.id) },
+                        onReviewerClick = { onStudentClick(review.reviewer.id) },
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                 }
@@ -103,7 +103,10 @@ fun HomeScreen(
 fun HomeScreenPreview() {
     TheStudentsTheme(darkTheme = false) {
         Surface {
-            HomeScreen(onReviewClick = {})
+            HomeScreen(
+                onReviewClick = {},
+                onStudentClick = {}
+            )
         }
     }
 }
@@ -113,7 +116,10 @@ fun HomeScreenPreview() {
 fun HomeScreenDarkPreview() {
     TheStudentsTheme(darkTheme = true) {
         Surface {
-            HomeScreen(onReviewClick = {})
+            HomeScreen(
+                onReviewClick = {},
+                onStudentClick = {}
+            )
         }
     }
 }

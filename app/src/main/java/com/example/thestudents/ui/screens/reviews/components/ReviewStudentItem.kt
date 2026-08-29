@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.reviews.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +23,8 @@ import com.example.thestudents.ui.utils.ProfileIcon
 @Composable
 fun ReviewStudentItem(
     student: Student,
+    onStudentClick: () -> Unit,
+    onWriteReviewClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -36,10 +39,15 @@ fun ReviewStudentItem(
             backgroundColor = student.profileColor,
             contentColor = MaterialTheme.colorScheme.onPrimary,
             fontSize = 18.sp,
-            modifier = Modifier.size(48.dp)
+            modifier = Modifier
+                .size(48.dp)
+                .clickable(onClick = onStudentClick)
         )
         Spacer(modifier = Modifier.width(16.dp))
-        Column(modifier = Modifier.weight(1f)) {
+        Column(modifier = Modifier
+            .weight(1f)
+            .clickable(onClick = onStudentClick)
+        ) {
             Text(
                 text = student.name,
                 fontWeight = FontWeight.Bold,
@@ -55,7 +63,7 @@ fun ReviewStudentItem(
 
         ButtonWithoutIcon(
             textoBoton = stringResource(R.string.resenar),
-            onClick = {},
+            onClick = onWriteReviewClick,
             fontSize = 12.sp,
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
         )
@@ -68,7 +76,9 @@ fun ReviewStudentItemPreview() {
     TheStudentsTheme {
         Surface {
             ReviewStudentItem(
-                student = localStudentProvider.students[3]
+                student = localStudentProvider.students[3],
+                onStudentClick = {},
+                onWriteReviewClick = {}
             )
         }
     }

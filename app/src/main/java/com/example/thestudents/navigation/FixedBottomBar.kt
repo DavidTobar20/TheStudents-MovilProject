@@ -1,4 +1,4 @@
-package com.example.thestudents.ui.utils
+package com.example.thestudents.navigation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +17,10 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -27,22 +31,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
-import com.example.thestudents.navigation.Routes
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 /**
- * Barra de navegacion inferior.
- *
- * Recibe la ruta activa y una funcion para navegar en vez del NavController, asi que no depende
- * de la navegacion: se puede previsualizar y probar pasandole lambdas vacias.
+ * Barra de navegación inferior que recibe directamente el NavController.
  */
 @Composable
 fun FixedBottomBar(
-    selectedRoute: String?,
-    onNavigate: (String) -> Unit,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
+    val navBackStackEntry = navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry.value?.destination?.route
+    val selectedRoute = selectedTabFor(currentRoute)
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -64,45 +70,55 @@ fun FixedBottomBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
+                // 1. Home
                 NavItem(
-                    icon = Icons.Default.Home,
-                    label = stringResource(R.string.inicio),
-                    selected = selectedRoute == Routes.Home.route,
-                    onClick = { onNavigate(Routes.Home.route) }
-                )
-                NavItem(
-                    icon = Icons.Default.Search,
-                    label = stringResource(R.string.explorar),
-                    selected = selectedRoute == Routes.Search.route,
-                    onClick = { onNavigate(Routes.Search.route) }
+                    label = "Inicio",
+                    filledIcon = Icons.Filled.Home,
+                    outlinedIcon = Icons.Outlined.Home,
+                    selected = selectedRoute == Screen.Home.route,
+                    onClick = { navController.navigateToTab(Screen.Home.route) }
                 )
 
-                // Hueco reservado para que el boton central no tape ningun item.
+                // 2. Search / Explorar
+                NavItem(
+                    label = "Explorar",
+                    filledIcon = Icons.Filled.Search,
+                    outlinedIcon = Icons.Outlined.Search,
+                    selected = selectedRoute == Screen.Search.route,
+                    onClick = { navController.navigateToTab(Screen.Search.route) }
+                )
+
+                // Hueco reservado para el botón flotante central
                 Box(modifier = Modifier.size(64.dp))
 
+                // 3. Notifications
                 NavItem(
-                    icon = Icons.Default.Notifications,
-                    label = stringResource(R.string.notificaciones),
-                    selected = selectedRoute == Routes.Notifications.route,
-                    onClick = { onNavigate(Routes.Notifications.route) }
+                    label = "Notificaciones",
+                    filledIcon = Icons.Filled.Notifications,
+                    outlinedIcon = Icons.Outlined.Notifications,
+                    selected = selectedRoute == Screen.Notifications.route,
+                    onClick = { navController.navigateToTab(Screen.Notifications.route) }
                 )
+
+                // 4. Profile
                 NavItem(
-                    icon = Icons.Default.Person,
-                    label = stringResource(R.string.perfil),
-                    selected = selectedRoute == Routes.Profile.route,
-                    onClick = { onNavigate(Routes.Profile.route) }
+                    label = "Perfil",
+                    filledIcon = Icons.Filled.Person,
+                    outlinedIcon = Icons.Outlined.Person,
+                    selected = selectedRoute == Screen.Profile.route,
+                    onClick = { navController.navigateToTab(Screen.Profile.route) }
                 )
             }
         }
 
-        // Boton central elevado media altura sobre la barra.
+        // Botón central flotante (Reseñas)
         Surface(
             shape = CircleShape,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .size(64.dp)
                 .offset(y = (-32).dp),
-            onClick = { onNavigate(Routes.Reviews.route) },
+            onClick = { navController.navigateToTab(Screen.Reviews.route) },
             shadowElevation = 8.dp
         ) {
             Box(contentAlignment = Alignment.Center) {
@@ -122,7 +138,9 @@ fun FixedBottomBar(
 fun FixedBottomBarPreview() {
     TheStudentsTheme {
         Surface {
-            FixedBottomBar(selectedRoute = Routes.Home.route, onNavigate = {})
+            FixedBottomBar(
+                navController = rememberNavController()
+            )
         }
     }
 }

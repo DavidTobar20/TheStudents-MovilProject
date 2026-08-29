@@ -1,10 +1,11 @@
-package com.example.thestudents.ui.utils
+package com.example.thestudents.navigation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -22,8 +23,9 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun NavItem(
-    icon: ImageVector,
     label: String,
+    filledIcon: ImageVector,
+    outlinedIcon: ImageVector,
     selected: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
@@ -32,12 +34,12 @@ fun NavItem(
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
             .clickable(onClick = onClick)
-            .padding(horizontal = 8.dp, vertical = 4.dp), // Padding más compacto
+            .padding(horizontal = 8.dp, vertical = 4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Icon(
-            icon,
+            imageVector = if (selected) filledIcon else outlinedIcon,
             contentDescription = label,
             tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(24.dp)
@@ -55,13 +57,30 @@ fun NavItem(
 
 @Preview(showBackground = true)
 @Composable
-fun NavItemPreview() {
+fun NavItemPreviewIsSelected() {
     TheStudentsTheme {
         Surface {
             NavItem(
-                icon = Icons.Default.Home,
                 label = "Inicio",
+                filledIcon = Icons.Filled.Home,
+                outlinedIcon = Icons.Outlined.Home,
                 selected = true,
+                onClick = {}
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NavItemPreviewIsNotSelected() {
+    TheStudentsTheme {
+        Surface {
+            NavItem(
+                label = "Inicio",
+                filledIcon = Icons.Filled.Home,
+                outlinedIcon = Icons.Outlined.Home,
+                selected = false,
                 onClick = {}
             )
         }

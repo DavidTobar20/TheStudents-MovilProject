@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.MaterialTheme
@@ -46,7 +46,7 @@ fun BodyProfile(
     onTabSelected: (ProfileTab) -> Unit,
     onBackClick: () -> Unit,
     onEditProfileClick: () -> Unit,
-    onReviewClick: (Int) -> Unit,
+    onReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -73,10 +73,10 @@ fun BodyProfile(
                     onTabSelected = onTabSelected
                 )
             }
-            itemsIndexed(reviews) { index, review ->
+            items(reviews) { review ->
                 ReviewItem(
                     review = review,
-                    onClick = { onReviewClick(index) }
+                    onClick = { onReviewClick(review.id) }
                 )
             }
         }
@@ -112,7 +112,7 @@ fun BodyProfilePreview() {
 fun ProfileScreen(
     onBackClick: () -> Unit,
     onEditProfileClick: () -> Unit,
-    onReviewClick: (Int) -> Unit,
+    onReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 
 ) {

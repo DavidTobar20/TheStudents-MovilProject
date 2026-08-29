@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
@@ -25,10 +24,11 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun CardReviewerInfo(
+    modifier: Modifier = Modifier,
     student: Student,
     subtitle: String,
     rating: String?,
-    modifier: Modifier = Modifier
+    onReviewerClick: (() -> Unit)? = null
 ) {
     Row(
         modifier = modifier
@@ -38,7 +38,8 @@ fun CardReviewerInfo(
     ) {
         ReviewerInfo(
             student = student,
-            subtitle = subtitle
+            subtitle = subtitle,
+            onClick = onReviewerClick
         )
         if(rating != null){
             Box(

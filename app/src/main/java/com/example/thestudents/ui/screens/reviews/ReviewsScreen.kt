@@ -22,6 +22,8 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
 @Composable
 fun BodyReviews(
     sections: List<CourseSection>,
+    onStudentClick: (String) -> Unit,
+    onWriteReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -35,7 +37,11 @@ fun BodyReviews(
             HeaderReviews()
         }
         items(sections, key = { it.title }) { section ->
-            CourseSectionCard(section)
+            CourseSectionCard(
+                section = section,
+                onStudentClick = onStudentClick,
+                onWriteReviewClick = onWriteReviewClick
+            )
         }
     }
 }
@@ -46,7 +52,11 @@ fun BodyReviews(
 fun BodyReviewsPreview() {
     TheStudentsTheme {
         Surface {
-            BodyReviews(sections = localCourseSectionProvider.sections.take(1))
+            BodyReviews(
+                sections = localCourseSectionProvider.sections.take(1),
+                onStudentClick = {},
+                onWriteReviewClick = {}
+            )
         }
     }
 }
@@ -57,12 +67,16 @@ fun BodyReviewsPreview() {
  */
 @Composable
 fun ReviewsScreen(
+    onStudentClick: (String) -> Unit,
+    onWriteReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 
 ) {
-    var sections = localCourseSectionProvider.sections
+    val sections = localCourseSectionProvider.sections
     BodyReviews(
         sections = sections,
+        onStudentClick = onStudentClick,
+        onWriteReviewClick = onWriteReviewClick,
         modifier = modifier
     )
 }
@@ -73,7 +87,10 @@ fun ReviewsScreen(
 fun ReviewsScreenPreview() {
     TheStudentsTheme {
         Surface {
-            ReviewsScreen()
+            ReviewsScreen(
+                onStudentClick = {},
+                onWriteReviewClick = {}
+            )
         }
     }
 }

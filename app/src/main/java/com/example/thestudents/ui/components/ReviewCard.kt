@@ -44,7 +44,8 @@ fun ReviewCard(
     onLikeClick: () -> Unit,
     onDislikeClick: () -> Unit,
     onCommentClick: (() -> Unit)? = null,
-    onCardClick: (() -> Unit)? = null
+    onCardClick: (() -> Unit)? = null,
+    onReviewerClick: (() -> Unit)? = null
 ) {
     Card(
         modifier = modifier
@@ -63,7 +64,8 @@ fun ReviewCard(
             CardReviewerInfo(
                 student = review.reviewer,
                 subtitle = review.time,
-                rating = review.rating
+                rating = review.rating,
+                onReviewerClick = onReviewerClick
             )
             
             Spacer(modifier = Modifier.height(16.dp))
