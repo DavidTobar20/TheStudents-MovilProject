@@ -35,7 +35,7 @@ object localCourseSectionProvider {
         CourseSection(
             title = "Cálculo I (MATE1103)",
             icon = Icons.Default.Calculate,
-            students = getRandomStudents(1)
+            students = getRandomStudents(2)
         )
     )
 }
