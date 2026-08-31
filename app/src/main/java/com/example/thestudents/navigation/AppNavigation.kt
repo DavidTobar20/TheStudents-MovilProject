@@ -26,6 +26,7 @@ import com.example.thestudents.ui.screens.search.SearchViewModel
 import com.example.thestudents.ui.screens.studentDetail.StudentDetailScreen
 import com.example.thestudents.ui.screens.studentDetail.StudentDetailViewModel
 import com.example.thestudents.ui.screens.writeReview.WriteReviewScreen
+import com.example.thestudents.ui.screens.writeReview.WriteReviewViewModel
 
 // --- CONSTANTES DE NAVEGACIÓN ---
 const val STUDENT_ID_ARG = "studentId"
@@ -158,7 +159,9 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         arguments = listOf(navArgument(STUDENT_ID_ARG) { type = NavType.StringType })
     ) {
         val studentId = it.arguments?.getString(STUDENT_ID_ARG) ?: ""
+        val writeReviewViewModel: WriteReviewViewModel = viewModel()
         WriteReviewScreen(
+            writeReviewViewModel = writeReviewViewModel,
             studentId = studentId,
             onBackClick = { navController.popBackStack() },
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
