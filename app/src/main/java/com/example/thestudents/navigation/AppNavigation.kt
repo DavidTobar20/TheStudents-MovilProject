@@ -20,6 +20,7 @@ import com.example.thestudents.ui.screens.register.RegisterScreen
 import com.example.thestudents.ui.screens.reviews.ReviewsScreen
 import com.example.thestudents.ui.screens.reviews.ReviewsViewModel
 import com.example.thestudents.ui.screens.search.SearchScreen
+import com.example.thestudents.ui.screens.search.SearchViewModel
 import com.example.thestudents.ui.screens.studentDetail.StudentDetailScreen
 import com.example.thestudents.ui.screens.writeReview.WriteReviewScreen
 
@@ -127,7 +128,9 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     }
 
     composable(Screen.Search.route) {
+        val searchViewModel: SearchViewModel = viewModel()
         SearchScreen(
+            searchViewModel= SearchViewModel(),
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
         )
     }

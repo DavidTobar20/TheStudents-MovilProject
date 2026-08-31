@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -24,9 +25,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.ui.screens.reviews.ReviewsViewModel
 import com.example.thestudents.ui.screens.search.components.HeaderSearch
 import com.example.thestudents.ui.screens.search.components.SearchBar
 import com.example.thestudents.ui.screens.search.components.StudentCard
@@ -93,20 +96,21 @@ fun BodySearchPreview() {
 }
 
 /**
- * Pantalla de busqueda. Es la duena del texto buscado; el contenido no guarda nada.
+ * Pantalla de busqueda con ViewModel (MVVM).
+ * Observa el estado del UI y delega las acciones al ViewModel.
  */
 @Composable
 fun SearchScreen(
     onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier,
+    searchViewModel: SearchViewModel
 ) {
-    val students  = localStudentProvider.students
-    var query by rememberSaveable { mutableStateOf("") }
+    val state by searchViewModel.uiState.collectAsState()
 
     BodySearch(
-        query = query,
-        onQueryChange = { query = it },
-        students = students,
+        query = state.query,
+        onQueryChange = { searchViewModel.updateQuery(it) },
+        students = state.students,
         onStudentClick = onStudentClick,
         modifier = modifier
     )
@@ -118,7 +122,9 @@ fun SearchScreen(
 fun FullSearchScreenPreview() {
     TheStudentsTheme {
         Surface {
-            SearchScreen(onStudentClick = {})
+            SearchScreen(
+                searchViewModel = SearchViewModel(),
+                onStudentClick = {})
         }
     }
 }
