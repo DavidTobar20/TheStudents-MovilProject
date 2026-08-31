@@ -2,6 +2,7 @@ package com.example.thestudents.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -17,6 +18,7 @@ import com.example.thestudents.ui.screens.notifications.NotificationsScreen
 import com.example.thestudents.ui.screens.profile.ProfileScreen
 import com.example.thestudents.ui.screens.register.RegisterScreen
 import com.example.thestudents.ui.screens.reviews.ReviewsScreen
+import com.example.thestudents.ui.screens.reviews.ReviewsViewModel
 import com.example.thestudents.ui.screens.search.SearchScreen
 import com.example.thestudents.ui.screens.studentDetail.StudentDetailScreen
 import com.example.thestudents.ui.screens.writeReview.WriteReviewScreen
@@ -137,7 +139,9 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     }
 
     composable(Screen.Reviews.route) {
+        val reviewsViewModel: ReviewsViewModel = viewModel()
         ReviewsScreen(
+            reviewsViewModel = reviewsViewModel,
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
             onWriteReviewClick = { id -> navController.navigate(Screen.WriteReview.createRoute(id)) }
         )
