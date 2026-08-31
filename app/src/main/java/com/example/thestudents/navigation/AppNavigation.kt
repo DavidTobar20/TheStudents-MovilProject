@@ -2,6 +2,7 @@ package com.example.thestudents.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -9,6 +10,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.thestudents.data.Student
 
 import com.example.thestudents.ui.screens.commentsReview.CommentsReviewScreen
 import com.example.thestudents.ui.screens.editarPerfil.EditarPerfilScreen
@@ -22,6 +24,7 @@ import com.example.thestudents.ui.screens.reviews.ReviewsViewModel
 import com.example.thestudents.ui.screens.search.SearchScreen
 import com.example.thestudents.ui.screens.search.SearchViewModel
 import com.example.thestudents.ui.screens.studentDetail.StudentDetailScreen
+import com.example.thestudents.ui.screens.studentDetail.StudentDetailViewModel
 import com.example.thestudents.ui.screens.writeReview.WriteReviewScreen
 
 // --- CONSTANTES DE NAVEGACIÓN ---
@@ -130,7 +133,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     composable(Screen.Search.route) {
         val searchViewModel: SearchViewModel = viewModel()
         SearchScreen(
-            searchViewModel= SearchViewModel(),
+            searchViewModel = searchViewModel,
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
         )
     }
@@ -182,7 +185,9 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         arguments = listOf(navArgument(STUDENT_ID_ARG) { type = NavType.StringType })
     ) {
         val studentId = it.arguments?.getString(STUDENT_ID_ARG) ?: ""
+        val studentDetailViewModel: StudentDetailViewModel = viewModel()
         StudentDetailScreen(
+            studentDetailViewModel = studentDetailViewModel,
             studentId = studentId,
             onBackClick = { navController.popBackStack() },
             onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) }
