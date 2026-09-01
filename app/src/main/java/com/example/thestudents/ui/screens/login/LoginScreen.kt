@@ -153,7 +153,7 @@ fun LoginScreen(
     onSSOClick: () -> Unit = {},
     onCreateAccountClick: () -> Unit = {},
     onForgotPasswordClick: () -> Unit = {},
-    loginViewModel: LoginViewModel = viewModel()
+    loginViewModel: LoginViewModel
 ) {
     val state by loginViewModel.uiState.collectAsState()
 
@@ -178,6 +178,6 @@ fun LoginScreen(
 @Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 fun LoginScreenPreview() {
     TheStudentsTheme {
-        LoginScreen()
+        LoginScreen(loginViewModel = viewModel())
     }
 }

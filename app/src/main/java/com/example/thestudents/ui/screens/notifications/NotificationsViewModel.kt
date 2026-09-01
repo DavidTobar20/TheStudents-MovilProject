@@ -12,10 +12,10 @@ class NotificationsViewModel : ViewModel() {
     val uiState: StateFlow<NotificationsState> = _uiState.asStateFlow()
 
     init {
-        loadNotifications()
+        // La carga se dispara desde la UI con LaunchedEffect
     }
 
-    private fun loadNotifications() {
+    fun loadNotifications() {
         _uiState.update { it.copy(isLoading = true) }
         // Simulamos la carga con los datos locales
         val notifications = localNotificationProvider.allNotifications

@@ -14,10 +14,10 @@ class ProfileViewModel : ViewModel() {
     val uiState: StateFlow<ProfileState> = _uiState.asStateFlow()
 
     init {
-        loadProfile()
+        // La carga se dispara desde la UI con LaunchedEffect
     }
 
-    private fun loadProfile() {
+    fun loadProfile() {
         _uiState.update { it.copy(isLoading = true) }
         val student = localStudentProvider.currentUser
         val reviews = localReviewsProvider.getReviewsForStudent(student.id)

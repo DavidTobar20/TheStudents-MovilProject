@@ -31,7 +31,7 @@ fun RegisterScreen(
     onRegisterClick: () -> Unit,
     onSsoClick: () -> Unit,
     onNavigateToLogin: () -> Unit,
-    registerViewModel: RegisterViewModel = viewModel()
+    registerViewModel: RegisterViewModel
 ) {
     val state by registerViewModel.uiState.collectAsState()
 
@@ -202,7 +202,8 @@ fun RegisterScreenPreview() {
         RegisterScreen(
             onRegisterClick = {},
             onSsoClick = {},
-            onNavigateToLogin = {}
+            onNavigateToLogin = {},
+            registerViewModel = viewModel()
         )
     }
 }
