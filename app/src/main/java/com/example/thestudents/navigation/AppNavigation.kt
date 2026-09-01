@@ -1,7 +1,10 @@
 package com.example.thestudents.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -10,8 +13,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 
 import com.example.thestudents.ui.screens.commentsReview.CommentsReviewScreen
+import com.example.thestudents.ui.screens.commentsReview.CommentsReviewViewModel
 import com.example.thestudents.ui.screens.editarPerfil.EditarPerfilScreen
+import com.example.thestudents.ui.screens.editarPerfil.EditarPerfilViewModel
 import com.example.thestudents.ui.screens.home.HomeScreen
+import com.example.thestudents.ui.screens.home.HomeViewModel
 import com.example.thestudents.ui.screens.login.LoginScreen
 import com.example.thestudents.ui.screens.notifications.NotificationsScreen
 import com.example.thestudents.ui.screens.profile.ProfileScreen
@@ -118,9 +124,18 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
 // --- GRAFO PRINCIPAL DE LA APLICACIÓN ---
 private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     composable(Screen.Home.route) {
+        val homeViewModel : HomeViewModel  = viewModel()
+        val state by homeViewModel.uiState.collectAsState()
+        if (state.idReview.isNotEmpty()) {
+            navController.navigate(Screen.CommentsReview.createRoute(state.idReview))
+            homeViewModel.onNavigated()
+        }
+        if (state.idReviewer.isNotEmpty()) {
+            navController.navigate(Screen.StudentDetail.createRoute(state.idReviewer))
+            homeViewModel.onNavigated()
+        }
         HomeScreen(
-            onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
-            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
+            homeViewModel = homeViewModel
         )
     }
 
@@ -164,9 +179,14 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     }
 
     composable(Screen.EditProfile.route) {
+        val editarPerfilViewModel : EditarPerfilViewModel  = viewModel()
+        val state by editarPerfilViewModel.uiState.collectAsState()
+        if (state.navigateBack or state.saveEdit) {
+            editarPerfilViewModel.onNavigated()
+            navController.popBackStack()
+        }
         EditarPerfilScreen(
-            onCancelClick = { navController.popBackStack() },
-            onSaveClick = { navController.popBackStack() }
+            editarPerfilViewModel = editarPerfilViewModel
         )
     }
 
@@ -187,9 +207,15 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         arguments = listOf(navArgument(REVIEW_ID_ARG) { type = NavType.StringType })
     ) {
         val reviewId = it.arguments?.getString(REVIEW_ID_ARG) ?: ""
+        val commentsReviewViewModel : CommentsReviewViewModel = viewModel()
+        val state by commentsReviewViewModel.uiState.collectAsState()
+        if (state.navigateBack) {
+            commentsReviewViewModel.onNavigated()
+            navController.popBackStack()
+        }
         CommentsReviewScreen(
-            reviewId = reviewId,
-            onBackClick = { navController.popBackStack() }
+            commentsReviewViewModel = commentsReviewViewModel,
+            reviewId = reviewId
         )
     }
 }

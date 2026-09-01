@@ -26,12 +26,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
+import com.example.thestudents.data.Student
+import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.CustomTextField
 import com.example.thestudents.ui.utils.ProfileIcon
@@ -42,10 +43,7 @@ fun CommentInputFieldBar(
     commentText: String,
     onCommentChange: (String) -> Unit,
     onSendClick: () -> Unit,
-    initialCommentator: String,
-    profileImageCommentator: Int?,
-    backgroundColorProfileIconCommentator: Color,
-    contentColorProfileIconCommentator: Color
+    commentator: Student
 ) {
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainer,
@@ -58,10 +56,10 @@ fun CommentInputFieldBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             ProfileIcon(
-                initials = initialCommentator,
-                profileImage = profileImageCommentator,
-                backgroundColor = backgroundColorProfileIconCommentator,
-                contentColor = contentColorProfileIconCommentator,
+                initials = commentator.initials,
+                profileImage = commentator.profileImage,
+                backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                contentColor = MaterialTheme.colorScheme.primary,
                 fontSize = 19.sp,
                 modifier = Modifier.size(40.dp)
             )
@@ -116,10 +114,7 @@ fun CommentInputFieldBarPreview(){
                 commentText = commentText,
                 onCommentChange = {commentText = it},
                 onSendClick = {},
-                initialCommentator = "JP",
-                profileImageCommentator = null,
-                backgroundColorProfileIconCommentator = MaterialTheme.colorScheme.secondaryContainer,
-                contentColorProfileIconCommentator = MaterialTheme.colorScheme.onSecondaryContainer
+                commentator = localStudentProvider.currentUser
             )
         }
     }

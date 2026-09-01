@@ -123,14 +123,14 @@ fun ReviewCard(
                     icon = Icons.Outlined.ThumbUp,
                     count = review.likes,
                     isSelected = isLiked,
-                    selectedColor = MaterialTheme.colorScheme.tertiary,
+                    selectedColor = MaterialTheme.colorScheme.onSurface,
                     onClick = onLikeClick
                 )
                 SelectableIconButton(
                     icon = Icons.Outlined.ThumbDown,
                     count = review.disLikes,
                     isSelected = isDisliked,
-                    selectedColor = MaterialTheme.colorScheme.tertiary,
+                    selectedColor = MaterialTheme.colorScheme.error,
                     onClick = onDislikeClick
                 )
                 if (onCommentClick != null) {
