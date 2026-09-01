@@ -10,8 +10,10 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -28,38 +30,28 @@ import com.example.thestudents.ui.utils.TextFieldWhitIcon
 fun RegisterScreen(
     onRegisterClick: () -> Unit,
     onSsoClick: () -> Unit,
-    onNavigateToLogin: () -> Unit
+    onNavigateToLogin: () -> Unit,
+    registerViewModel: RegisterViewModel = viewModel()
 ) {
-    // El estado vive aquí y baja al contenido (state hoisting).
-    // Los campos de texto normales se guardan ante un giro de pantalla; las contraseñas no, para
-    // no dejarlas en texto plano dentro del estado guardado de la instancia.
-    var names by rememberSaveable { mutableStateOf("") }
-    var lastNames by rememberSaveable { mutableStateOf("") }
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    
-    var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
-    var isConfirmPasswordVisible by rememberSaveable { mutableStateOf(false) }
-    var termsAccepted by rememberSaveable { mutableStateOf(false) }
+    val state by registerViewModel.uiState.collectAsState()
 
     RegisterBody(
-        names = names,
-        onNamesChange = { names = it },
-        lastNames = lastNames,
-        onLastNamesChange = { lastNames = it },
-        email = email,
-        onEmailChange = { email = it },
-        password = password,
-        onPasswordChange = { password = it },
-        confirmPassword = confirmPassword,
-        onConfirmPasswordChange = { confirmPassword = it },
-        isPasswordVisible = isPasswordVisible,
-        onPasswordToggle = { isPasswordVisible = !isPasswordVisible },
-        isConfirmPasswordVisible = isConfirmPasswordVisible,
-        onConfirmPasswordToggle = { isConfirmPasswordVisible = !isConfirmPasswordVisible },
-        termsAccepted = termsAccepted,
-        onTermsAcceptedChange = { termsAccepted = it },
+        names = state.names,
+        onNamesChange = { registerViewModel.onNamesChange(it) },
+        lastNames = state.lastNames,
+        onLastNamesChange = { registerViewModel.onLastNamesChange(it) },
+        email = state.email,
+        onEmailChange = { registerViewModel.onEmailChange(it) },
+        password = state.password,
+        onPasswordChange = { registerViewModel.onPasswordChange(it) },
+        confirmPassword = state.confirmPassword,
+        onConfirmPasswordChange = { registerViewModel.onConfirmPasswordChange(it) },
+        isPasswordVisible = state.isPasswordVisible,
+        onPasswordToggle = { registerViewModel.onPasswordToggle() },
+        isConfirmPasswordVisible = state.isConfirmPasswordVisible,
+        onConfirmPasswordToggle = { registerViewModel.onConfirmPasswordToggle() },
+        termsAccepted = state.termsAccepted,
+        onTermsAcceptedChange = { registerViewModel.onTermsAcceptedChange(it) },
         onRegisterClick = onRegisterClick,
         onSsoClick = onSsoClick,
         onNavigateToLogin = onNavigateToLogin

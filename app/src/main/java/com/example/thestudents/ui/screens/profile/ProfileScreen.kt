@@ -12,10 +12,12 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -114,21 +116,24 @@ fun ProfileScreen(
     onEditProfileClick: () -> Unit,
     onReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-
+    profileViewModel: ProfileViewModel = viewModel()
 ) {
-    var selectedTab by rememberSaveable { mutableStateOf(ProfileTab.RECEIVED) }
-    val student = localStudentProvider.currentUser
-    val reviews = localReviewsProvider.getReviewsForStudent(student.id)
-    BodyProfile(
-        student = student,
-        reviews = reviews,
-        selectedTab = selectedTab,
-        onTabSelected = { selectedTab = it },
-        onBackClick = onBackClick,
-        onEditProfileClick = onEditProfileClick,
-        onReviewClick = onReviewClick,
-        modifier = modifier
-    )
+    val state by profileViewModel.uiState.collectAsState()
+    
+    // Si el estudiante es nulo (cargando), podríamos mostrar un placeholder o cargador
+    // Pero asumiendo que localStudentProvider.currentUser siempre existe:
+    state.student?.let { student ->
+        BodyProfile(
+            student = student,
+            reviews = state.reviews,
+            selectedTab = state.selectedTab,
+            onTabSelected = { profileViewModel.onTabSelected(it) },
+            onBackClick = onBackClick,
+            onEditProfileClick = onEditProfileClick,
+            onReviewClick = onReviewClick,
+            modifier = modifier
+        )
+    }
 }
 
 @Preview(name = "Claro", showBackground = true, showSystemUi = true)
