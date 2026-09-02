@@ -124,16 +124,4 @@ class CommentsReviewViewModel : ViewModel() {
         }
     }
 
-    fun sendComment() {
-        _uiState.update { it.copy(commentInputText = "") }
-    }
-
-    fun volver() {
-        _uiState.update { it.copy(navigateBack = true) }
-    }
-
-    fun onNavigated() {
-        _uiState.update { it.copy(navigateBack = false) }
-    }
-
 }

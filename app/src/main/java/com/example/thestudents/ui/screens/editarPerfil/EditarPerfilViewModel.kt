@@ -31,22 +31,6 @@ class EditarPerfilViewModel : ViewModel() {
         _uiState.update { it.copy(notificationsEnabled = notificationsEnabled) }
     }
 
-    fun saveEdit() {
-        _uiState.update { it.copy(saveEdit = true) }
-    }
-
-    fun navigateBack() {
-        _uiState.update { it.copy(navigateBack = true) }
-    }
-
-    fun onNavigated() {
-        _uiState.update { it.copy(saveEdit = false, navigateBack = false) }
-    }
-
-    fun updatePhoto() {
-
-    }
-
     init {
         _uiState.update { it.copy(
             student = localStudentProvider.currentUser,

@@ -124,6 +124,8 @@ fun BodyEditarPerfilScreen(
 @Composable
 fun EditarPerfilScreen(
     editarPerfilViewModel: EditarPerfilViewModel,
+    onBackClick: () -> Unit,
+    onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state by editarPerfilViewModel.uiState.collectAsState()
@@ -140,9 +142,9 @@ fun EditarPerfilScreen(
         onShowReviewsChange = { editarPerfilViewModel.updateShowReviews(it) },
         notificationsEnabled = state.notificationsEnabled,
         onNotificationsChange = { editarPerfilViewModel.updateNotificationsEnabled(it) },
-        onBackClick = { editarPerfilViewModel.navigateBack() },
-        onSaveClick = { editarPerfilViewModel.saveEdit() },
-        onChangePhotoClick = { editarPerfilViewModel.updatePhoto() },
+        onBackClick = onBackClick,
+        onSaveClick = onSaveClick,
+        onChangePhotoClick = { },
         modifier = modifier
     )
 }
@@ -154,7 +156,9 @@ fun EditarPerfilScreenPreview() {
     TheStudentsTheme {
         Surface {
             EditarPerfilScreen(
-                editarPerfilViewModel = viewModel()
+                editarPerfilViewModel = viewModel(),
+                onBackClick = {},
+                onSaveClick = {}
             )
         }
     }

@@ -20,24 +20,6 @@ class HomeViewModel : ViewModel() {
         return index in _uiState.value.dislikedReviews
     }
 
-    fun navigateReview(id: String) {
-        _uiState.update { state ->
-            state.copy(idReview = id)
-        }
-    }
-
-    fun navigateReviewer(id: String) {
-        _uiState.update { state ->
-            state.copy(idReviewer = id)
-        }
-    }
-
-    fun onNavigated() {
-        _uiState.update { state ->
-            state.copy(idReview = "", idReviewer = "")
-        }
-    }
-
     private fun Set<Int>.toggle(value: Int): Set<Int> =
         if (value in this) this - value else this + value
 

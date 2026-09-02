@@ -129,7 +129,7 @@ fun BodyCommentsReviewScreenPreview() {
             var isDisliked by rememberSaveable { mutableStateOf(false) }
             BodyCommentsReviewScreen(
                 commentator = localStudentProvider.currentUser,
-                review = localReviewsProvider.allReviews[0],
+                review = localReviewsProvider.allReviews[1],
                 onBackClick = {},
                 isLiked = isLiked,
                 isDisliked = isDisliked,
@@ -158,6 +158,7 @@ fun BodyCommentsReviewScreenPreview() {
 fun CommentsReviewScreen(
     commentsReviewViewModel: CommentsReviewViewModel,
     reviewId: String,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 
 ) {
@@ -172,7 +173,7 @@ fun CommentsReviewScreen(
     BodyCommentsReviewScreen(
         commentator = state.commentator,
         review = state.review,
-        onBackClick = { commentsReviewViewModel.volver() },
+        onBackClick = onBackClick,
         isLiked = state.isLiked,
         isDisliked = state.isDisliked,
         onLikeClick = { commentsReviewViewModel.updateIsLiked() },
@@ -183,7 +184,7 @@ fun CommentsReviewScreen(
         onCommentDislikeClick = { commentsReviewViewModel.updateDislikedComments(it) },
         commentInputText = state.commentInputText,
         onCommentTextChange = { commentsReviewViewModel.updateCommentInputText(it) },
-        onSendCommentClick = { commentsReviewViewModel.sendComment() },
+        onSendCommentClick = onBackClick,
         modifier = modifier
     )
 }
@@ -197,7 +198,8 @@ fun CommentsReviewScreenPreview() {
         Surface {
             CommentsReviewScreen(
                 commentsReviewViewModel = viewModel(),
-                reviewId = "1"
+                reviewId = "1",
+                onBackClick = {}
             )
         }
     }

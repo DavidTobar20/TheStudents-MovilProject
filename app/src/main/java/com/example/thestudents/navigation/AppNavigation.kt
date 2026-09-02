@@ -1,8 +1,6 @@
 package com.example.thestudents.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
@@ -125,17 +123,10 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
 private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     composable(Screen.Home.route) {
         val homeViewModel : HomeViewModel  = viewModel()
-        val state by homeViewModel.uiState.collectAsState()
-        if (state.idReview.isNotEmpty()) {
-            navController.navigate(Screen.CommentsReview.createRoute(state.idReview))
-            homeViewModel.onNavigated()
-        }
-        if (state.idReviewer.isNotEmpty()) {
-            navController.navigate(Screen.StudentDetail.createRoute(state.idReviewer))
-            homeViewModel.onNavigated()
-        }
         HomeScreen(
-            homeViewModel = homeViewModel
+            homeViewModel = homeViewModel,
+            onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
         )
     }
 
@@ -180,13 +171,10 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
 
     composable(Screen.EditProfile.route) {
         val editarPerfilViewModel : EditarPerfilViewModel  = viewModel()
-        val state by editarPerfilViewModel.uiState.collectAsState()
-        if (state.navigateBack or state.saveEdit) {
-            editarPerfilViewModel.onNavigated()
-            navController.popBackStack()
-        }
         EditarPerfilScreen(
-            editarPerfilViewModel = editarPerfilViewModel
+            editarPerfilViewModel = editarPerfilViewModel,
+            onBackClick = { navController.popBackStack() },
+            onSaveClick = { navController.popBackStack() }
         )
     }
 
@@ -208,14 +196,10 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     ) {
         val reviewId = it.arguments?.getString(REVIEW_ID_ARG) ?: ""
         val commentsReviewViewModel : CommentsReviewViewModel = viewModel()
-        val state by commentsReviewViewModel.uiState.collectAsState()
-        if (state.navigateBack) {
-            commentsReviewViewModel.onNavigated()
-            navController.popBackStack()
-        }
         CommentsReviewScreen(
             commentsReviewViewModel = commentsReviewViewModel,
-            reviewId = reviewId
+            reviewId = reviewId,
+            onBackClick = { navController.popBackStack() }
         )
     }
 }

@@ -31,6 +31,8 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
+    onReviewClick: (String) -> Unit,
+    onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -72,9 +74,9 @@ fun HomeScreen(
                         isDisliked = homeViewModel.reviewIsDisliked(index),
                         onLikeClick = { homeViewModel.updateLikedReviews(index) },
                         onDislikeClick = { homeViewModel.updateDislikedReviews(index) },
-                        onCommentClick = { homeViewModel.navigateReview(review.id) },
-                        onCardClick = { homeViewModel.navigateReview(review.id) },
-                        onReviewerClick = { homeViewModel.navigateReviewer(review.reviewer.id) },
+                        onCommentClick = { onReviewClick(review.id) },
+                        onCardClick = { onReviewClick(review.id) },
+                        onReviewerClick = { onStudentClick(review.reviewer.id) },
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                 }
@@ -89,7 +91,9 @@ fun HomeScreenPreview() {
     TheStudentsTheme(darkTheme = false) {
         Surface {
             HomeScreen(
-                homeViewModel = viewModel()
+                homeViewModel = viewModel(),
+                onReviewClick = {},
+                onStudentClick = {}
             )
         }
     }
@@ -101,7 +105,9 @@ fun HomeScreenDarkPreview() {
     TheStudentsTheme(darkTheme = true) {
         Surface {
             HomeScreen(
-                homeViewModel = viewModel()
+                homeViewModel = viewModel(),
+                onReviewClick = {},
+                onStudentClick = {}
             )
         }
     }
