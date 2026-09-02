@@ -41,11 +41,11 @@ fun BodyWriteReviewScreen(
     onRatingSelected: (Int) -> Unit,
     onReviewChange: (String) -> Unit,
     onAnonymousChange: (Boolean) -> Unit,
-    onStudentClick: () -> Unit,
     review: String,
     isAnonymous: Boolean,
     onPublishClick: () -> Unit,
     onBackClick: () -> Unit,
+    onStudentClick: () -> Unit,
     nameReviewed: String,
     initialsReviewed: String,
     courseInfoReviewed: String,
@@ -115,11 +115,11 @@ fun BodyWriteReviewScreenPreview() {
             onRatingSelected = {},
             onReviewChange = {},
             onAnonymousChange = {},
-            onStudentClick = {},
             review = "Esta es una reseña de prueba",
             isAnonymous = true,
             onPublishClick = {},
             onBackClick = {},
+            onStudentClick = {},
             nameReviewed = "Laura Martínez",
             initialsReviewed = "LM",
             courseInfoReviewed = "Estructuras de Datos (ISIS1206) • 2025-2",
@@ -134,7 +134,6 @@ fun WriteReviewScreen(
     onBackClick: () -> Unit,
     onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier
-
 ) {
     val state by writeReviewViewModel.uiState.collectAsState()
     LaunchedEffect(Unit) {
@@ -159,11 +158,11 @@ fun WriteReviewScreen(
             onRatingSelected = { writeReviewViewModel.updateRating(it) },
             onReviewChange = { writeReviewViewModel.updateReview(it) },
             onAnonymousChange = { writeReviewViewModel.updateIsAnonymous(it) },
-            onStudentClick = { onStudentClick(state.student!!.id) },
             review = state.review,
             isAnonymous = state.isAnonymous,
             onPublishClick = { /* Handle publish */ },
             onBackClick = onBackClick,
+            onStudentClick = { onStudentClick(state.student!!.id) },
             nameReviewed = state.student!!.name,
             initialsReviewed = state.student!!.initials,
             courseInfoReviewed = "${state.student!!.program} • ${state.student!!.period}",

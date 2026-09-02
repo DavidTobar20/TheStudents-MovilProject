@@ -71,7 +71,8 @@ fun BodySearch(
             items(students, key = { it.id }) { student -> 
                 StudentCard(
                     student = student,
-                    onClick = { onStudentClick(student.id) }
+                    onClick = { onStudentClick(student.id) },
+                    onWriteReviewClick = { }
                 ) 
             }
         }
@@ -89,7 +90,8 @@ fun BodySearchPreview() {
                 query = query,
                 onQueryChange = { query = it },
                 students = localStudentProvider.students,
-                onStudentClick = {}
+                onStudentClick = {},
+
             )
         }
     }
@@ -124,7 +126,8 @@ fun FullSearchScreenPreview() {
         Surface {
             SearchScreen(
                 searchViewModel = viewModel(),
-                onStudentClick = {})
+                onStudentClick = {}
+            )
         }
     }
 }

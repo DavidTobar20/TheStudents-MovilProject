@@ -1,7 +1,17 @@
 package com.example.thestudents.navigation
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -9,9 +19,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.thestudents.data.Student
-
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.thestudents.R
 import com.example.thestudents.ui.screens.commentsReview.CommentsReviewScreen
 import com.example.thestudents.ui.screens.commentsReview.CommentsReviewViewModel
 import com.example.thestudents.ui.screens.editarPerfil.EditarPerfilScreen
@@ -39,6 +47,14 @@ import com.example.thestudents.ui.screens.writeReview.WriteReviewViewModel
 const val STUDENT_ID_ARG = "studentId"
 const val REVIEW_ID_ARG = "reviewId"
 
+/** Determina qué pestaña debe marcarse como activa en la barra inferior. */
+fun selectedTabFor(route: String?): String? = when (route) {
+    Screen.EditProfile.route,
+    Screen.CommentsReview.route,
+    Screen.StudentDetail.route,
+    Screen.WriteReview.route -> Screen.Profile.route
+    else -> route
+}
 
 // --- ESTRUCTURA DE RUTAS ---
 sealed class Screen(val route: String) {
@@ -64,15 +80,22 @@ sealed class Screen(val route: String) {
     }
 }
 
+/**
+ * Estructura para los items de la barra de navegacion inferior.
+ */
+data class BottomNavItem(
+    val iconFilled: ImageVector,
+    val iconOutline: ImageVector,
+    val labelRes: Int,
+    val route: String
+)
 
-/** Determina qué pestaña debe marcarse como activa en la barra inferior. */
-fun selectedTabFor(route: String?): String? = when (route) {
-    Screen.EditProfile.route,
-    Screen.CommentsReview.route,
-    Screen.StudentDetail.route,
-    Screen.WriteReview.route -> Screen.Profile.route
-    else -> route
-}
+val bottomNavItems = listOf(
+    BottomNavItem(Icons.Filled.Home, Icons.Outlined.Home, R.string.inicio, Screen.Home.route),
+    BottomNavItem(Icons.Filled.Search, Icons.Outlined.Search, R.string.explorar, Screen.Search.route),
+    BottomNavItem(Icons.Filled.Notifications, Icons.Outlined.Notifications, R.string.notificaciones, Screen.Notifications.route),
+    BottomNavItem(Icons.Filled.Person, Icons.Outlined.Person, R.string.perfil, Screen.Profile.route)
+)
 
 // --- COMPOSABLE PRINCIPAL DE NAVEGACIÓN ---
 
@@ -81,7 +104,6 @@ fun AppNavigation(
     modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
-
     NavHost(
         navController = navController,
         startDestination = Screen.Login.route,
@@ -108,9 +130,7 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
         val loginViewModel: LoginViewModel = viewModel()
         LoginScreen(
             onLoginSuccess = {
-                navController.navigate(Screen.Home.route) {
-                    popUpTo(Screen.Login.route) { inclusive = true }
-                }
+                navController.navigateToTab(Screen.Home.route)
             },
             onCreateAccountClick = { navController.navigate(Screen.Register.route) },
             loginViewModel = loginViewModel
@@ -121,9 +141,7 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
         val registerViewModel: RegisterViewModel = viewModel()
         RegisterScreen(
             onRegisterClick = {
-                navController.navigate(Screen.Home.route) {
-                    popUpTo(Screen.Login.route) { inclusive = true }
-                }
+                navController.navigateToTab(Screen.Home.route)
             },
             onSsoClick = { /* Pendiente */ },
             onNavigateToLogin = { navController.popBackStack() },
@@ -172,8 +190,8 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     composable(
         route = Screen.WriteReview.route,
         arguments = listOf(navArgument(STUDENT_ID_ARG) { type = NavType.StringType })
-    ) {
-        val studentId = it.arguments?.getString(STUDENT_ID_ARG) ?: ""
+    ) { backStackEntry ->
+        val studentId = backStackEntry.arguments?.getString(STUDENT_ID_ARG) ?: ""
         val writeReviewViewModel: WriteReviewViewModel = viewModel()
         WriteReviewScreen(
             writeReviewViewModel = writeReviewViewModel,
@@ -205,8 +223,8 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     composable(
         route = Screen.StudentDetail.route,
         arguments = listOf(navArgument(STUDENT_ID_ARG) { type = NavType.StringType })
-    ) {
-        val studentId = it.arguments?.getString(STUDENT_ID_ARG) ?: ""
+    ) { backStackEntry ->
+        val studentId = backStackEntry.arguments?.getString(STUDENT_ID_ARG) ?: ""
         val studentDetailViewModel: StudentDetailViewModel = viewModel()
         StudentDetailScreen(
             studentDetailViewModel = studentDetailViewModel,
@@ -219,8 +237,8 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     composable(
         route = Screen.CommentsReview.route,
         arguments = listOf(navArgument(REVIEW_ID_ARG) { type = NavType.StringType })
-    ) {
-        val reviewId = it.arguments?.getString(REVIEW_ID_ARG) ?: ""
+    ) { backStackEntry ->
+        val reviewId = backStackEntry.arguments?.getString(REVIEW_ID_ARG) ?: ""
         val commentsReviewViewModel : CommentsReviewViewModel = viewModel()
         CommentsReviewScreen(
             commentsReviewViewModel = commentsReviewViewModel,

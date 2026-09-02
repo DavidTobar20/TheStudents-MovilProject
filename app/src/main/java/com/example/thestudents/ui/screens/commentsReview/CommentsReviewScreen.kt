@@ -160,7 +160,6 @@ fun CommentsReviewScreen(
     reviewId: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-
 ) {
 
     val state by commentsReviewViewModel.uiState.collectAsState()

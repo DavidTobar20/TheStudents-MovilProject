@@ -2,12 +2,14 @@ package com.example.thestudents.ui.screens.reviews.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,12 +43,14 @@ fun ReviewStudentItem(
             fontSize = 18.sp,
             modifier = Modifier
                 .size(48.dp)
+                .clip(CircleShape)
                 .clickable(onClick = onStudentClick)
         )
         Spacer(modifier = Modifier.width(16.dp))
-        Column(modifier = Modifier
-            .weight(1f)
-            .clickable(onClick = onStudentClick)
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .clickable(onClick = onStudentClick)
         ) {
             Text(
                 text = student.name,

@@ -21,11 +21,13 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
 import com.example.thestudents.data.Student
+import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.screens.editarPerfil.components.EditBioSection
 import com.example.thestudents.ui.screens.editarPerfil.components.EditFormSection
 import com.example.thestudents.ui.screens.editarPerfil.components.EditPhotoSection
 import com.example.thestudents.ui.screens.editarPerfil.components.EditPreferencesSection
 import com.example.thestudents.ui.utils.HeaderBack
+
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ButtonWithoutIcon
 

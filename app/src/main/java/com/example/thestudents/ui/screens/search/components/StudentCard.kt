@@ -1,6 +1,8 @@
 package com.example.thestudents.ui.screens.search.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme
@@ -8,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +29,7 @@ import com.example.thestudents.ui.utils.StarsRating
 fun StudentCard(
     student: Student,
     onClick: () -> Unit,
+    onWriteReviewClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -34,8 +38,7 @@ fun StudentCard(
             .padding(vertical = 8.dp),
         color = MaterialTheme.colorScheme.surfaceContainerLowest,
         shape = RoundedCornerShape(16.dp),
-        shadowElevation = 2.dp,
-        onClick = onClick
+        shadowElevation = 2.dp
     ) {
         Row(
             modifier = Modifier
@@ -49,10 +52,17 @@ fun StudentCard(
                 backgroundColor = student.profileColor,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 20.sp,
-                modifier = Modifier.size(56.dp)
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(CircleShape)
+                    .clickable(onClick = onClick)
             )
             Spacer(modifier = Modifier.width(16.dp))
-            Column(modifier = Modifier.weight(1f)) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable(onClick = onClick)
+            ) {
                 Text(
                     text = student.name,
                     fontWeight = FontWeight.Bold,
@@ -78,7 +88,7 @@ fun StudentCard(
 
             ButtonWithoutIcon(
                 textoBoton = stringResource(R.string.seguir_mayuscula),
-                onClick = {},
+                onClick = onWriteReviewClick,
                 fontSize = 11.sp,
                 contentPadding = PaddingValues(horizontal = 18.dp, vertical = 8.dp)
             )
@@ -93,7 +103,8 @@ fun StudentCardPreview() {
         Surface {
             StudentCard(
                 student = localStudentProvider.students[4],
-                onClick = {}
+                onClick = {},
+                onWriteReviewClick = {}
             )
         }
     }

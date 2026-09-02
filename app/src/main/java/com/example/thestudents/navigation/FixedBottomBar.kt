@@ -12,15 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -35,10 +26,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
+import com.example.thestudents.navigation.Screen
+import com.example.thestudents.navigation.bottomNavItems
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 /**
- * Barra de navegación inferior que recibe directamente el NavController.
+ * Barra de navegacion inferior dinamica.
+ *
+ * Itera sobre la lista [bottomNavItems] para mostrar las pestañas laterales y
+ * mantiene un boton central para la accion de "Reseñar".
  */
 @Composable
 fun FixedBottomBar(
@@ -70,44 +66,32 @@ fun FixedBottomBar(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                // 1. Home
-                NavItem(
-                    label = "Inicio",
-                    filledIcon = Icons.Filled.Home,
-                    outlinedIcon = Icons.Outlined.Home,
-                    selected = selectedRoute == Screen.Home.route,
-                    onClick = { navController.navigateToTab(Screen.Home.route) }
-                )
-
-                // 2. Search / Explorar
-                NavItem(
-                    label = "Explorar",
-                    filledIcon = Icons.Filled.Search,
-                    outlinedIcon = Icons.Outlined.Search,
-                    selected = selectedRoute == Screen.Search.route,
-                    onClick = { navController.navigateToTab(Screen.Search.route) }
-                )
+                // Iteramos por los primeros dos items (Home, Search)
+                bottomNavItems.take(2).forEach { item ->
+                    val isSelected = selectedRoute == item.route
+                    NavItem(
+                        label = stringResource(item.labelRes),
+                        filledIcon = item.iconFilled,
+                        outlinedIcon = item.iconOutline,
+                        selected = isSelected,
+                        onClick = { navController.navigateToTab(item.route) }
+                    )
+                }
 
                 // Hueco reservado para el botón flotante central
                 Box(modifier = Modifier.size(64.dp))
 
-                // 3. Notifications
-                NavItem(
-                    label = "Notificaciones",
-                    filledIcon = Icons.Filled.Notifications,
-                    outlinedIcon = Icons.Outlined.Notifications,
-                    selected = selectedRoute == Screen.Notifications.route,
-                    onClick = { navController.navigateToTab(Screen.Notifications.route) }
-                )
-
-                // 4. Profile
-                NavItem(
-                    label = "Perfil",
-                    filledIcon = Icons.Filled.Person,
-                    outlinedIcon = Icons.Outlined.Person,
-                    selected = selectedRoute == Screen.Profile.route,
-                    onClick = { navController.navigateToTab(Screen.Profile.route) }
-                )
+                // Iteramos por los ultimos dos items (Notifications, Profile)
+                bottomNavItems.takeLast(2).forEach { item ->
+                    val isSelected = selectedRoute == item.route
+                    NavItem(
+                        label = stringResource(item.labelRes),
+                        filledIcon = item.iconFilled,
+                        outlinedIcon = item.iconOutline,
+                        selected = isSelected,
+                        onClick = { navController.navigateToTab(item.route) }
+                    )
+                }
             }
         }
 
