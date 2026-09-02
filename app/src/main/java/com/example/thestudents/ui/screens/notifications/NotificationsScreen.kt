@@ -11,6 +11,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -116,14 +120,25 @@ fun NotificationsScreen(
     modifier: Modifier = Modifier,
     onAcceptClick: (Int) -> Unit = {},
     onRejectClick: (Int) -> Unit = {},
-    onStudentClick: (String) -> Unit = {}
-)
-{
-    val notifications  = localNotificationProvider.allNotifications
+    onStudentClick: (String) -> Unit = {},
+    notificationsViewModel: NotificationsViewModel
+) {
+    val state by notificationsViewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        notificationsViewModel.loadNotifications()
+    }
+
     BodyNotifications(
-        notifications = notifications,
-        onAcceptClick = onAcceptClick,
-        onRejectClick = onRejectClick,
+        notifications = state.notifications,
+        onAcceptClick = { 
+            notificationsViewModel.onAcceptNotification(it)
+            onAcceptClick(it)
+        },
+        onRejectClick = { 
+            notificationsViewModel.onRejectNotification(it)
+            onRejectClick(it)
+        },
         onStudentClick = onStudentClick,
         modifier = modifier
     )
@@ -135,7 +150,7 @@ fun NotificationsScreen(
 fun NotificationsScreenPreview() {
     TheStudentsTheme {
         Surface {
-            NotificationsScreen()
+            NotificationsScreen(notificationsViewModel = viewModel())
         }
     }
 }

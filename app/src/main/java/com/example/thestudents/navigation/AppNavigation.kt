@@ -2,7 +2,6 @@ package com.example.thestudents.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -12,13 +11,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.thestudents.data.Student
 
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.ui.screens.commentsReview.CommentsReviewScreen
+import com.example.thestudents.ui.screens.commentsReview.CommentsReviewViewModel
 import com.example.thestudents.ui.screens.editarPerfil.EditarPerfilScreen
+import com.example.thestudents.ui.screens.editarPerfil.EditarPerfilViewModel
 import com.example.thestudents.ui.screens.home.HomeScreen
+import com.example.thestudents.ui.screens.home.HomeViewModel
 import com.example.thestudents.ui.screens.login.LoginScreen
+import com.example.thestudents.ui.screens.login.LoginViewModel
 import com.example.thestudents.ui.screens.notifications.NotificationsScreen
+import com.example.thestudents.ui.screens.notifications.NotificationsViewModel
 import com.example.thestudents.ui.screens.profile.ProfileScreen
+import com.example.thestudents.ui.screens.profile.ProfileViewModel
 import com.example.thestudents.ui.screens.register.RegisterScreen
+import com.example.thestudents.ui.screens.register.RegisterViewModel
 import com.example.thestudents.ui.screens.reviews.ReviewsScreen
 import com.example.thestudents.ui.screens.reviews.ReviewsViewModel
 import com.example.thestudents.ui.screens.search.SearchScreen
@@ -98,17 +105,20 @@ fun NavHostController.navigateToTab(route: String) {
 // --- GRAFO DE AUTENTICACIÓN ---
 private fun NavGraphBuilder.authGraph(navController: NavHostController) {
     composable(Screen.Login.route) {
+        val loginViewModel: LoginViewModel = viewModel()
         LoginScreen(
             onLoginSuccess = {
                 navController.navigate(Screen.Home.route) {
                     popUpTo(Screen.Login.route) { inclusive = true }
                 }
             },
-            onCreateAccountClick = { navController.navigate(Screen.Register.route) }
+            onCreateAccountClick = { navController.navigate(Screen.Register.route) },
+            loginViewModel = loginViewModel
         )
     }
 
     composable(Screen.Register.route) {
+        val registerViewModel: RegisterViewModel = viewModel()
         RegisterScreen(
             onRegisterClick = {
                 navController.navigate(Screen.Home.route) {
@@ -116,7 +126,8 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
                 }
             },
             onSsoClick = { /* Pendiente */ },
-            onNavigateToLogin = { navController.popBackStack() }
+            onNavigateToLogin = { navController.popBackStack() },
+            registerViewModel = registerViewModel
         )
     }
 }
@@ -125,7 +136,9 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
 // --- GRAFO PRINCIPAL DE LA APLICACIÓN ---
 private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     composable(Screen.Home.route) {
+        val homeViewModel : HomeViewModel  = viewModel()
         HomeScreen(
+            homeViewModel = homeViewModel,
             onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
         )
@@ -140,8 +153,10 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     }
 
     composable(Screen.Notifications.route) {
+        val notificationsViewModel: NotificationsViewModel = viewModel()
         NotificationsScreen(
-            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
+            notificationsViewModel = notificationsViewModel
         )
     }
 
@@ -169,16 +184,20 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     }
 
     composable(Screen.Profile.route) {
+        val profileViewModel: ProfileViewModel = viewModel()
         ProfileScreen(
             onBackClick = { navController.popBackStack() },
             onEditProfileClick = { navController.navigate(Screen.EditProfile.route) },
-            onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) }
+            onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
+            profileViewModel = profileViewModel
         )
     }
 
     composable(Screen.EditProfile.route) {
+        val editarPerfilViewModel : EditarPerfilViewModel  = viewModel()
         EditarPerfilScreen(
-            onCancelClick = { navController.popBackStack() },
+            editarPerfilViewModel = editarPerfilViewModel,
+            onBackClick = { navController.popBackStack() },
             onSaveClick = { navController.popBackStack() }
         )
     }
@@ -202,7 +221,9 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         arguments = listOf(navArgument(REVIEW_ID_ARG) { type = NavType.StringType })
     ) {
         val reviewId = it.arguments?.getString(REVIEW_ID_ARG) ?: ""
+        val commentsReviewViewModel : CommentsReviewViewModel = viewModel()
         CommentsReviewScreen(
+            commentsReviewViewModel = commentsReviewViewModel,
             reviewId = reviewId,
             onBackClick = { navController.popBackStack() }
         )

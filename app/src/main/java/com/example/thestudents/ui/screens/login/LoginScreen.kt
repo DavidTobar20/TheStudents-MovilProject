@@ -8,7 +8,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -152,29 +152,24 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit = {},
     onSSOClick: () -> Unit = {},
     onCreateAccountClick: () -> Unit = {},
-    onForgotPasswordClick: () -> Unit = {}
+    onForgotPasswordClick: () -> Unit = {},
+    loginViewModel: LoginViewModel
 ) {
-    // El estado vive aquí y baja al contenido (state hoisting).
-    // El correo se guarda para que sobreviva a un giro de pantalla; la contraseña no, para no
-    // dejarla en texto plano dentro del estado guardado de la instancia.
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isPasswordVisible by remember { mutableStateOf(false) }
+    val state by loginViewModel.uiState.collectAsState()
 
     BodyLoginScreen(
-        email = email,
-        onEmailChange = { email = it },
-        password = password,
-        onPasswordChange = { password = it },
+        email = state.email,
+        onEmailChange = { loginViewModel.onEmailChange(it) },
+        password = state.password,
+        onPasswordChange = { loginViewModel.onPasswordChange(it) },
         onLoginClick = onLoginSuccess,
         onSSOClick = onSSOClick,
         onCreateAccountClick = onCreateAccountClick,
         onForgotPasswordClick = onForgotPasswordClick,
-        isPasswordVisible = isPasswordVisible,
-        onPasswordToggle = {isPasswordVisible = !isPasswordVisible},
+        isPasswordVisible = state.isPasswordVisible,
+        onPasswordToggle = { loginViewModel.onPasswordToggle() },
         modifier = modifier
     )
-
 }
 
 
@@ -183,6 +178,6 @@ fun LoginScreen(
 @Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 fun LoginScreenPreview() {
     TheStudentsTheme {
-        LoginScreen()
+        LoginScreen(loginViewModel = viewModel())
     }
 }
