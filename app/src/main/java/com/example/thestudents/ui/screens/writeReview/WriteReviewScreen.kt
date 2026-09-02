@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
 import com.example.thestudents.ui.screens.writeReview.components.RatingCard
 import com.example.thestudents.ui.screens.writeReview.components.ReviewField
@@ -146,7 +147,7 @@ fun WriteReviewScreen(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Estudiante no encontrado",
+                text = stringResource(R.string.estudiante_no_encontrado),
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -176,7 +177,7 @@ fun WriteReviewScreenPreview() {
     TheStudentsTheme {
         Surface {
             WriteReviewScreen(
-                writeReviewViewModel = WriteReviewViewModel(),
+                writeReviewViewModel = viewModel(),
                 studentId = "1",
                 onBackClick = {},
                 onStudentClick = {},

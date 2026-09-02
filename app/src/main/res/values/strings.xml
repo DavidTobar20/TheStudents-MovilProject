@@ -140,6 +140,7 @@
 
     <!-- Perfil otro estudiante -->
     <string name="seguir">Seguir</string>
+    <string name="estudiante_no_encontrado">Estudiante no encontrado</string>
 
     <plurals name="programa_y_resenas">
         <item quantity="one">%1$s · %2$d reseña</item>

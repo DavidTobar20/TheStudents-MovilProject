@@ -93,7 +93,7 @@ fun ReviewsScreenPreview() {
     TheStudentsTheme {
         Surface {
             ReviewsScreen(
-                reviewsViewModel = ReviewsViewModel(),
+                reviewsViewModel = viewModel(),
                 onStudentClick = {},
                 onWriteReviewClick = {}
             )

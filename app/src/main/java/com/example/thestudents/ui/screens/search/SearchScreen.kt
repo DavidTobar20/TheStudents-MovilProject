@@ -123,7 +123,7 @@ fun FullSearchScreenPreview() {
     TheStudentsTheme {
         Surface {
             SearchScreen(
-                searchViewModel = SearchViewModel(),
+                searchViewModel = viewModel(),
                 onStudentClick = {})
         }
     }
