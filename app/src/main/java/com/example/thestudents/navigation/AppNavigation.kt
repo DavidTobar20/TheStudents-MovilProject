@@ -9,6 +9,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.thestudents.data.Student
 
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.ui.screens.commentsReview.CommentsReviewScreen
@@ -26,9 +27,13 @@ import com.example.thestudents.ui.screens.profile.ProfileViewModel
 import com.example.thestudents.ui.screens.register.RegisterScreen
 import com.example.thestudents.ui.screens.register.RegisterViewModel
 import com.example.thestudents.ui.screens.reviews.ReviewsScreen
+import com.example.thestudents.ui.screens.reviews.ReviewsViewModel
 import com.example.thestudents.ui.screens.search.SearchScreen
+import com.example.thestudents.ui.screens.search.SearchViewModel
 import com.example.thestudents.ui.screens.studentDetail.StudentDetailScreen
+import com.example.thestudents.ui.screens.studentDetail.StudentDetailViewModel
 import com.example.thestudents.ui.screens.writeReview.WriteReviewScreen
+import com.example.thestudents.ui.screens.writeReview.WriteReviewViewModel
 
 // --- CONSTANTES DE NAVEGACIÓN ---
 const val STUDENT_ID_ARG = "studentId"
@@ -140,7 +145,9 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     }
 
     composable(Screen.Search.route) {
+        val searchViewModel: SearchViewModel = viewModel()
         SearchScreen(
+            searchViewModel = searchViewModel,
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
         )
     }
@@ -154,7 +161,9 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     }
 
     composable(Screen.Reviews.route) {
+        val reviewsViewModel: ReviewsViewModel = viewModel()
         ReviewsScreen(
+            reviewsViewModel = reviewsViewModel,
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
             onWriteReviewClick = { id -> navController.navigate(Screen.WriteReview.createRoute(id)) }
         )
@@ -165,7 +174,9 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         arguments = listOf(navArgument(STUDENT_ID_ARG) { type = NavType.StringType })
     ) {
         val studentId = it.arguments?.getString(STUDENT_ID_ARG) ?: ""
+        val writeReviewViewModel: WriteReviewViewModel = viewModel()
         WriteReviewScreen(
+            writeReviewViewModel = writeReviewViewModel,
             studentId = studentId,
             onBackClick = { navController.popBackStack() },
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
@@ -196,7 +207,9 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         arguments = listOf(navArgument(STUDENT_ID_ARG) { type = NavType.StringType })
     ) {
         val studentId = it.arguments?.getString(STUDENT_ID_ARG) ?: ""
+        val studentDetailViewModel: StudentDetailViewModel = viewModel()
         StudentDetailScreen(
+            studentDetailViewModel = studentDetailViewModel,
             studentId = studentId,
             onBackClick = { navController.popBackStack() },
             onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) }
