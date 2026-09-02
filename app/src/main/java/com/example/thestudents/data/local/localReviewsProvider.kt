@@ -5,6 +5,7 @@ import com.example.thestudents.data.Review
 object localReviewsProvider {
     val allReviews = listOf(
         Review(
+            id = "1",
             reviewer = localStudentProvider.students[0],
             reviewedStudent = localStudentProvider.students[1], // Valeria
             classReviewed = "MATE120",
@@ -17,6 +18,20 @@ object localReviewsProvider {
             comments = localCommentsProvider.allComments
         ),
         Review(
+            id = "2",
+            reviewer = localStudentProvider.students[0],
+            reviewedStudent = localStudentProvider.students[1], // Valeria
+            classReviewed = "MATE120",
+            periodReviewed = "2025-3",
+            content = "Muy responsable, aportó ideas clave en todas las etapas del proyecto.",
+            time = "Hace 3 días",
+            likes = 5,
+            disLikes = 0,
+            rating = "4.5",
+            comments = localCommentsProvider.allComments
+        ),
+        Review(
+            id = "3",
             reviewer = localStudentProvider.students[1],
             reviewedStudent = localStudentProvider.students[0], // Juan Pablo
             classReviewed = "MATE110",
@@ -29,6 +44,7 @@ object localReviewsProvider {
             comments = localCommentsProvider.allComments.subList(0, 1)
         ),
         Review(
+            id = "4",
             reviewer = localStudentProvider.students[2],
             reviewedStudent = localStudentProvider.students[1], // Valeria
             classReviewed = "FIS103",
@@ -41,6 +57,7 @@ object localReviewsProvider {
             comments = emptyList()
         ),
         Review(
+            id = "5",
             reviewer = localStudentProvider.students[3],
             reviewedStudent = localStudentProvider.students[0], // Juan Pablo
             classReviewed = "FIS101",
@@ -53,6 +70,7 @@ object localReviewsProvider {
             comments = emptyList()
         ),
         Review(
+            id = "6",
             reviewer = localStudentProvider.students[4],
             reviewedStudent = localStudentProvider.students[2], // Daniel
             classReviewed = "ISIS1206",
@@ -65,6 +83,7 @@ object localReviewsProvider {
             comments = emptyList()
         ),
         Review(
+            id = "7",
             reviewer = localStudentProvider.students[0],
             reviewedStudent = localStudentProvider.students[2], // Daniel
             classReviewed = "FIS102",
@@ -77,6 +96,7 @@ object localReviewsProvider {
             comments = emptyList()
         ),
         Review(
+            id = "8",
             reviewer = localStudentProvider.students[1],
             reviewedStudent = localStudentProvider.students[3], // Maria
             classReviewed = "IIND2100",
@@ -89,6 +109,7 @@ object localReviewsProvider {
             comments = emptyList()
         ),
         Review(
+            id = "9",
             reviewer = localStudentProvider.students[2],
             reviewedStudent = localStudentProvider.students[4], // Valentina
             classReviewed = "PSIC1101",
@@ -108,4 +129,6 @@ object localReviewsProvider {
     /** Obtiene las reseñas escritas por una lista de estudiantes (seguidos). */
     fun getReviewsByFollowed(followingIds: Set<String>): List<Review> =
         allReviews.filter { it.reviewer.id in followingIds }
+
+    fun getReviewById(id: String): Review? = allReviews.find { it.id == id }
 }

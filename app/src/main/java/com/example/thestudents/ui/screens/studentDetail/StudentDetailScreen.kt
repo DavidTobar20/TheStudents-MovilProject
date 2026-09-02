@@ -3,7 +3,7 @@ package com.example.thestudents.ui.screens.studentDetail
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material3.*
@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.Student
@@ -36,7 +37,7 @@ fun BodyStudentDetail(
     reviews: List<Review>,
     onBackClick: () -> Unit,
     onFollowClick: () -> Unit,
-    onReviewClick: (Int) -> Unit,
+    onReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier.fillMaxSize()) {
@@ -45,7 +46,7 @@ fun BodyStudentDetail(
         item { StatsSection(student = student) }
         item {
             ButtonWithIcon(
-                text = stringResource(R.string.seguir_mayuscula),
+                text = stringResource(R.string.seguir),
                 icon = Icons.Default.PersonAdd,
                 onClick = onFollowClick,
                 borderColor = MaterialTheme.colorScheme.primary,
@@ -65,10 +66,10 @@ fun BodyStudentDetail(
                 color = MaterialTheme.colorScheme.primary
             )
         }
-        itemsIndexed(reviews) { index, review ->
+        items(reviews, key = { it.id }) { review ->
             ReviewItem(
                 review = review,
-                onClick = { onReviewClick(index) }
+                onClick = { onReviewClick(review.id) }
             )
         }
     }
@@ -92,30 +93,37 @@ fun BodyStudentDetailPreview() {
 }
 
 /**
- * Pantalla de detalle de estudiante. Recupera los datos por ID.
+ * Pantalla de detalle de estudiante con ViewModel (MVVM).
  */
 @Composable
 fun StudentDetailScreen(
+    studentDetailViewModel: StudentDetailViewModel,
     studentId: String,
     onBackClick: () -> Unit,
-    onReviewClick: (Int) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val student = localStudentProvider.getStudentById(studentId)
-    val reviews = localReviewsProvider.getReviewsForStudent(studentId)
+    onReviewClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
 
-    if (student != null) {
+) {
+    val state by studentDetailViewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        studentDetailViewModel.getStudentById(studentId)
+    }
+
+
+    if(state.student == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
+            Text(text = "Estudiante no encontrado")
+        }
+    } else {
         BodyStudentDetail(
-            student = student,
-            reviews = reviews,
+            student = state.student!!,
+            reviews = state.reviews,
             onBackClick = onBackClick,
             onFollowClick = { /* Handle follow */ },
             onReviewClick = onReviewClick,
             modifier = modifier
-        )
-    } else {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
-            Text(text = "Estudiante no encontrado")
+            )
         }
-    }
+
 }

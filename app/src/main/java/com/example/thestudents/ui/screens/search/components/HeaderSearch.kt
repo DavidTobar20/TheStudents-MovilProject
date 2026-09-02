@@ -26,7 +26,7 @@ fun HeaderSearch(modifier: Modifier = Modifier) {
     ) {
         Text(
             text = stringResource(R.string.buscar_estudiantes),
-            fontSize = 22.sp,
+            fontSize = 19.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
             letterSpacing = 1.sp

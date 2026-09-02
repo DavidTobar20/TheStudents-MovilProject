@@ -1,4 +1,4 @@
-package com.example.thestudents.ui.utils
+package com.example.thestudents.navigation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +22,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.thestudents.R
 import com.example.thestudents.navigation.Screen
 import com.example.thestudents.navigation.bottomNavItems
@@ -35,10 +38,13 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
  */
 @Composable
 fun FixedBottomBar(
-    selectedRoute: String?,
-    onNavigate: (String) -> Unit,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
+    val navBackStackEntry = navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry.value?.destination?.route
+    val selectedRoute = selectedTabFor(currentRoute)
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -64,37 +70,39 @@ fun FixedBottomBar(
                 bottomNavItems.take(2).forEach { item ->
                     val isSelected = selectedRoute == item.route
                     NavItem(
-                        icon = if (isSelected) item.iconFilled else item.iconOutline,
                         label = stringResource(item.labelRes),
+                        filledIcon = item.iconFilled,
+                        outlinedIcon = item.iconOutline,
                         selected = isSelected,
-                        onClick = { onNavigate(item.route) }
+                        onClick = { navController.navigateToTab(item.route) }
                     )
                 }
 
-                // Hueco reservado para que el boton central no tape ningun item.
+                // Hueco reservado para el botón flotante central
                 Box(modifier = Modifier.size(64.dp))
 
                 // Iteramos por los ultimos dos items (Notifications, Profile)
                 bottomNavItems.takeLast(2).forEach { item ->
                     val isSelected = selectedRoute == item.route
                     NavItem(
-                        icon = if (isSelected) item.iconFilled else item.iconOutline,
                         label = stringResource(item.labelRes),
+                        filledIcon = item.iconFilled,
+                        outlinedIcon = item.iconOutline,
                         selected = isSelected,
-                        onClick = { onNavigate(item.route) }
+                        onClick = { navController.navigateToTab(item.route) }
                     )
                 }
             }
         }
 
-        // Boton central elevado media altura sobre la barra.
+        // Botón central flotante (Reseñas)
         Surface(
             shape = CircleShape,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .size(64.dp)
                 .offset(y = (-32).dp),
-            onClick = { onNavigate(Screen.Reviews.route) },
+            onClick = { navController.navigateToTab(Screen.Reviews.route) },
             shadowElevation = 8.dp
         ) {
             Box(contentAlignment = Alignment.Center) {
@@ -114,7 +122,9 @@ fun FixedBottomBar(
 fun FixedBottomBarPreview() {
     TheStudentsTheme {
         Surface {
-            FixedBottomBar(selectedRoute = Screen.Home.route, onNavigate = {})
+            FixedBottomBar(
+                navController = rememberNavController()
+            )
         }
     }
 }

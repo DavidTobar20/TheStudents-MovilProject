@@ -10,6 +10,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -18,6 +21,7 @@ import com.example.thestudents.data.local.localCourseSectionProvider
 import com.example.thestudents.ui.screens.reviews.components.CourseSectionCard
 import com.example.thestudents.ui.screens.reviews.components.HeaderReviews
 import com.example.thestudents.ui.theme.TheStudentsTheme
+
 
 @Composable
 fun BodyReviews(
@@ -70,10 +74,12 @@ fun ReviewsScreen(
     onStudentClick: (String) -> Unit,
     onWriteReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier,
+    reviewsViewModel: ReviewsViewModel
 ) {
-    var sections = localCourseSectionProvider.sections
+    val state by reviewsViewModel.uiState.collectAsState()
+
     BodyReviews(
-        sections = sections,
+        sections = state.sections,
         onStudentClick = onStudentClick,
         onWriteReviewClick = onWriteReviewClick,
         modifier = modifier
@@ -87,6 +93,7 @@ fun ReviewsScreenPreview() {
     TheStudentsTheme {
         Surface {
             ReviewsScreen(
+                reviewsViewModel = viewModel(),
                 onStudentClick = {},
                 onWriteReviewClick = {}
             )

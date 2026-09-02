@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +30,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.thestudents.R
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
@@ -75,7 +77,7 @@ fun ReviewCard(
             ) {
                 Text(
                     text = buildAnnotatedString {
-                        append("reseñó a ")
+                        append(stringResource(R.string.reseno_a))
                         withStyle(
                             style = SpanStyle(
                                 fontWeight = FontWeight.Bold,
@@ -121,14 +123,14 @@ fun ReviewCard(
                     icon = Icons.Outlined.ThumbUp,
                     count = review.likes,
                     isSelected = isLiked,
-                    selectedColor = MaterialTheme.colorScheme.tertiary,
+                    selectedColor = MaterialTheme.colorScheme.onSurface,
                     onClick = onLikeClick
                 )
                 SelectableIconButton(
                     icon = Icons.Outlined.ThumbDown,
                     count = review.disLikes,
                     isSelected = isDisliked,
-                    selectedColor = MaterialTheme.colorScheme.tertiary,
+                    selectedColor = MaterialTheme.colorScheme.error,
                     onClick = onDislikeClick
                 )
                 if (onCommentClick != null) {

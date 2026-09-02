@@ -6,12 +6,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Storage
 import com.example.thestudents.data.CourseSection
 import com.example.thestudents.data.Student
-import com.example.thestudents.ui.theme.Avatar1
-import com.example.thestudents.ui.theme.Avatar2
-import com.example.thestudents.ui.theme.Avatar3
-import com.example.thestudents.ui.theme.Avatar4
-import com.example.thestudents.ui.theme.Avatar6
-import com.example.thestudents.ui.theme.Avatar7
+import kotlin.random.Random
 
 /**
  * Datos de ejemplo de las secciones de curso.
@@ -20,30 +15,27 @@ import com.example.thestudents.ui.theme.Avatar7
  * cada recomposicion y estaba duplicada en la preview. Aqui se crea una sola vez.
  */
 object localCourseSectionProvider {
+    private val allStudents = localStudentProvider.students
+
+    private fun getRandomStudents(count: Int): List<Student> {
+        return allStudents.shuffled(Random).take(count)
+    }
+
     val sections: List<CourseSection> = listOf(
         CourseSection(
             title = "Estructuras de Datos (ISIS1206)",
             icon = Icons.Default.Storage,
-            students = listOf(
-                localStudentProvider.students[3], // Maria Jimenez (ID 4)
-                localStudentProvider.students[1]  // Valeria Gomez (ID 2)
-            )
+            students = getRandomStudents(2)
         ),
         CourseSection(
             title = "Física Mecánica (FIS1027)",
             icon = Icons.Default.Settings,
-            students = listOf(
-                localStudentProvider.students[2], // Daniel Ruiz (ID 3)
-                localStudentProvider.students[4]  // Valentina Torres (ID 5)
-            )
+            students = getRandomStudents(2)
         ),
         CourseSection(
             title = "Cálculo I (MATE1103)",
             icon = Icons.Default.Calculate,
-            students = listOf(
-                localStudentProvider.students[0], // Juan Pablo (ID 1)
-                localStudentProvider.students[2]  // Daniel Ruiz (ID 3)
-            )
+            students = getRandomStudents(2)
         )
     )
 }

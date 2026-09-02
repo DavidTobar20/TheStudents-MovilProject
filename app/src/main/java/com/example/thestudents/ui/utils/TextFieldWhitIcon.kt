@@ -13,12 +13,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.thestudents.ui.theme.TheStudentsTheme
+import com.example.thestudents.R
 
 @Composable
 fun TextFieldWhitIcon(
@@ -65,7 +67,7 @@ fun TextFieldWhitIcon(
                     IconButton(onClick = onPasswordToggle) {
                         Icon(
                             imageVector = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                            contentDescription = null,
+                            contentDescription = if (isPasswordVisible) stringResource(R.string.ocultar_contrasena) else stringResource(R.string.mostrar_contrasena),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(20.dp)
                         )

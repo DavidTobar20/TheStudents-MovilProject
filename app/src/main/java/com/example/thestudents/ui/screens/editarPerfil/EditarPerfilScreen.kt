@@ -11,15 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localStudentProvider
@@ -54,16 +53,14 @@ fun BodyEditarPerfilScreen(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxSize()) {
+        HeaderBack(
+            title = stringResource(R.string.editar_perfil_mayuscula),
+            onBackClick = onBackClick
+        )
         LazyColumn(
             modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            item {
-                HeaderBack(
-                    title = stringResource(R.string.editar_perfil),
-                    onBackClick = onBackClick
-                )
-            }
 
             item {
                 EditPhotoSection(
@@ -128,32 +125,28 @@ fun BodyEditarPerfilScreen(
  */
 @Composable
 fun EditarPerfilScreen(
-    onCancelClick: () -> Unit,
+    editarPerfilViewModel: EditarPerfilViewModel,
+    onBackClick: () -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier,
-    student: Student = localStudentProvider.currentUser
 ) {
-    var name by rememberSaveable { mutableStateOf(student.name) }
-    var username by rememberSaveable { mutableStateOf(student.username) }
-    var bio by rememberSaveable { mutableStateOf(student.bio) }
-    var showReviews by rememberSaveable { mutableStateOf(true) }
-    var notificationsEnabled by rememberSaveable { mutableStateOf(true) }
+    val state by editarPerfilViewModel.uiState.collectAsState()
 
     BodyEditarPerfilScreen(
-        student = student,
-        name = name,
-        onNameChange = { name = it },
-        username = username,
-        onUsernameChange = { username = it },
-        bio = bio,
-        onBioChange = { bio = it },
-        showReviews = showReviews,
-        onShowReviewsChange = { showReviews = it },
-        notificationsEnabled = notificationsEnabled,
-        onNotificationsChange = { notificationsEnabled = it },
-        onBackClick = onCancelClick,
+        student = state.student,
+        name = state.name,
+        onNameChange = { editarPerfilViewModel.updateName(it) },
+        username = state.username,
+        onUsernameChange = { editarPerfilViewModel.updateUsername(it) },
+        bio = state.bio,
+        onBioChange = { editarPerfilViewModel.updateBio(it) },
+        showReviews = state.showReviews,
+        onShowReviewsChange = { editarPerfilViewModel.updateShowReviews(it) },
+        notificationsEnabled = state.notificationsEnabled,
+        onNotificationsChange = { editarPerfilViewModel.updateNotificationsEnabled(it) },
+        onBackClick = onBackClick,
         onSaveClick = onSaveClick,
-        onChangePhotoClick = { /* Pendiente: selector de imagen */ },
+        onChangePhotoClick = { },
         modifier = modifier
     )
 }
@@ -165,7 +158,8 @@ fun EditarPerfilScreenPreview() {
     TheStudentsTheme {
         Surface {
             EditarPerfilScreen(
-                onCancelClick = {},
+                editarPerfilViewModel = viewModel(),
+                onBackClick = {},
                 onSaveClick = {}
             )
         }

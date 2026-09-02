@@ -65,7 +65,7 @@ fun HeaderBackPreview() {
     TheStudentsTheme {
         Surface {
             HeaderBack(
-                title = stringResource(R.string.editar_perfil),
+                title = "EDITAR PERFIL",
                 onBackClick = {}
             )
         }

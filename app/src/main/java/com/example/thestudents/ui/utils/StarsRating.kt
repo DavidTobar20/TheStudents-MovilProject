@@ -23,10 +23,11 @@ fun StarsRating(
 ) {
     Row() {
         for (i in 1..5) {
+            val isSelected = i <= rating
             Icon(
-                imageVector = if (i <= rating) Icons.Filled.Star else Icons.Outlined.Star,
+                imageVector = if (isSelected) Icons.Filled.Star else Icons.Outlined.Star,
                 contentDescription = "Estrella $i",
-                tint = if (i <= rating) MaterialTheme.extended.rating else MaterialTheme.extended.ratingInactive,
+                tint = if (isSelected) MaterialTheme.extended.rating else MaterialTheme.extended.ratingInactive,
                 modifier = modifier
                     .then(
                     if (onRatingSelected != null) {
@@ -61,4 +62,3 @@ fun StarsRatingPreviewReviewCard() {
             onRatingSelected = {})
     }
 }
-

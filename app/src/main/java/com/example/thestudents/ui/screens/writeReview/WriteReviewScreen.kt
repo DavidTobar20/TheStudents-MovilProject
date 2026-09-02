@@ -1,6 +1,7 @@
 package com.example.thestudents.ui.screens.writeReview
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,16 +11,20 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
 import com.example.thestudents.ui.screens.writeReview.components.RatingCard
 import com.example.thestudents.ui.screens.writeReview.components.ReviewField
@@ -46,8 +51,7 @@ fun BodyWriteReviewScreen(
     courseInfoReviewed: String,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
     ) {
         HeaderBack(
             title = stringResource(R.string.nueva_resena),
@@ -74,7 +78,7 @@ fun BodyWriteReviewScreen(
                 onReviewChange = onReviewChange
             )
             Card(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp, horizontal = 16.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
@@ -95,7 +99,6 @@ fun BodyWriteReviewScreen(
             onClick = onPublishClick,
             fontSize = 16.sp,
             modifier = Modifier
-
                 .fillMaxWidth()
                 .padding(16.dp)
                 .height(48.dp)
@@ -126,43 +129,58 @@ fun BodyWriteReviewScreenPreview() {
 
 @Composable
 fun WriteReviewScreen(
+    writeReviewViewModel: WriteReviewViewModel,
     studentId: String,
     onBackClick: () -> Unit,
     onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val student = com.example.thestudents.data.local.localStudentProvider.getStudentById(studentId)
-        ?: com.example.thestudents.data.local.localStudentProvider.students[0]
+    val state by writeReviewViewModel.uiState.collectAsState()
+    LaunchedEffect(Unit) {
+        writeReviewViewModel.getStudentById(studentId)
+    }
 
-    var rating by remember { mutableStateOf(0) }
-    var review by remember { mutableStateOf("") }
-    var isAnonymous by remember { mutableStateOf(true) }
-
-    BodyWriteReviewScreen(
-        modifier = modifier,
-        rating = rating,
-        onRatingSelected = { rating = it },
-        onReviewChange = { review = it },
-        onAnonymousChange = { isAnonymous = it },
-        review = review,
-        isAnonymous = isAnonymous,
-        onPublishClick = { /* Pendiente: guardar reseña */ },
-        onBackClick = onBackClick,
-        onStudentClick = { onStudentClick(student.id) },
-        nameReviewed = student.name,
-        initialsReviewed = student.initials,
-        courseInfoReviewed = "${student.program} • ${student.period}",
-    )
+    if (state.student == null) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(R.string.estudiante_no_encontrado),
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    } else {
+        BodyWriteReviewScreen(
+            modifier = modifier,
+            rating = state.rating,
+            onRatingSelected = { writeReviewViewModel.updateRating(it) },
+            onReviewChange = { writeReviewViewModel.updateReview(it) },
+            onAnonymousChange = { writeReviewViewModel.updateIsAnonymous(it) },
+            review = state.review,
+            isAnonymous = state.isAnonymous,
+            onPublishClick = { /* Handle publish */ },
+            onBackClick = onBackClick,
+            onStudentClick = { onStudentClick(state.student!!.id) },
+            nameReviewed = state.student!!.name,
+            initialsReviewed = state.student!!.initials,
+            courseInfoReviewed = "${state.student!!.program} • ${state.student!!.period}",
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun WriteReviewScreenPreview() {
     TheStudentsTheme {
-        WriteReviewScreen(
-            studentId = "1",
-            onBackClick = {},
-            onStudentClick = {}
-        )
+        Surface {
+            WriteReviewScreen(
+                writeReviewViewModel = viewModel(),
+                studentId = "1",
+                onBackClick = {},
+                onStudentClick = {},
+            )
+        }
     }
 }

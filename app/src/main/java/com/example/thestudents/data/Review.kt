@@ -1,6 +1,7 @@
 package com.example.thestudents.data
 
 data class Review(
+    val id: String,
     val reviewer: Student,
     val reviewedStudent: Student, // Ahora incluimos el objeto Student completo
     val classReviewed: String,

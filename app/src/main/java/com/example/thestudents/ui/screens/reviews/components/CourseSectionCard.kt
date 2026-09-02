@@ -15,7 +15,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.data.CourseSection
-import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
