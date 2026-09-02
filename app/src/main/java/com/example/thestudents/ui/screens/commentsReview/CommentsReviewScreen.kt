@@ -12,6 +12,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -22,8 +24,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
 import com.example.thestudents.data.Review
+import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.components.ReviewCard
@@ -42,7 +46,7 @@ import com.example.thestudents.ui.utils.HeaderBack
  */
 @Composable
 fun BodyCommentsReviewScreen(
-    initialCommentator: String,
+    commentator: Student,
     review: Review,
     onBackClick: () -> Unit,
     isLiked: Boolean,
@@ -108,10 +112,7 @@ fun BodyCommentsReviewScreen(
                 commentText = commentInputText,
                 onCommentChange = onCommentTextChange,
                 onSendClick = onSendCommentClick,
-                initialCommentator = initialCommentator,
-                profileImageCommentator = null,
-                backgroundColorProfileIconCommentator = MaterialTheme.colorScheme.primary,
-                contentColorProfileIconCommentator = MaterialTheme.colorScheme.onPrimary
+                commentator = commentator
             )
         }
     }
@@ -127,8 +128,8 @@ fun BodyCommentsReviewScreenPreview() {
             var isLiked by rememberSaveable { mutableStateOf(false) }
             var isDisliked by rememberSaveable { mutableStateOf(false) }
             BodyCommentsReviewScreen(
-                initialCommentator = "LS",
-                review = localReviewsProvider.allReviews[0],
+                commentator = localStudentProvider.currentUser,
+                review = localReviewsProvider.allReviews[1],
                 onBackClick = {},
                 isLiked = isLiked,
                 isDisliked = isDisliked,
@@ -155,54 +156,39 @@ fun BodyCommentsReviewScreenPreview() {
  */
 @Composable
 fun CommentsReviewScreen(
+    commentsReviewViewModel: CommentsReviewViewModel,
     reviewId: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 
 ) {
-    var commentInputText by rememberSaveable { mutableStateOf("") }
-    var isLiked by rememberSaveable { mutableStateOf(false) }
-    var isDisliked by rememberSaveable { mutableStateOf(false) }
-    var likedComments by rememberSaveable { mutableStateOf(emptySet<Int>()) }
-    var dislikedComments by rememberSaveable { mutableStateOf(emptySet<Int>()) }
-    val initialCommentator = localStudentProvider.currentUser.initials
-    val review = localReviewsProvider.getReviewById(reviewId)
-        ?: localReviewsProvider.allReviews[0]
+
+    val state by commentsReviewViewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        commentsReviewViewModel.getReviewById(reviewId)
+        commentsReviewViewModel.getCommentator()
+    }
 
     BodyCommentsReviewScreen(
-        initialCommentator = initialCommentator,
-        review = review,
+        commentator = state.commentator,
+        review = state.review,
         onBackClick = onBackClick,
-        isLiked = isLiked,
-        isDisliked = isDisliked,
-        onLikeClick = {
-            isLiked = !isLiked
-            if (isLiked) isDisliked = false
-        },
-        onDislikeClick = {
-            isDisliked = !isDisliked
-            if (isDisliked) isLiked = false
-        },
-        likedComments = likedComments,
-        dislikedComments = dislikedComments,
-        onCommentLikeClick = { index ->
-            likedComments = likedComments.toggle(index)
-            if (index in likedComments) dislikedComments = dislikedComments - index
-        },
-        onCommentDislikeClick = { index ->
-            dislikedComments = dislikedComments.toggle(index)
-            if (index in dislikedComments) likedComments = likedComments - index
-        },
-        commentInputText = commentInputText,
-        onCommentTextChange = { commentInputText = it },
-        onSendCommentClick = { commentInputText = "" },
+        isLiked = state.isLiked,
+        isDisliked = state.isDisliked,
+        onLikeClick = { commentsReviewViewModel.updateIsLiked() },
+        onDislikeClick = { commentsReviewViewModel.updateIsDisliked() },
+        likedComments = state.likedComments,
+        dislikedComments = state.dislikedComments,
+        onCommentLikeClick = { commentsReviewViewModel.updateLikedComments(it) },
+        onCommentDislikeClick = { commentsReviewViewModel.updateDislikedComments(it) },
+        commentInputText = state.commentInputText,
+        onCommentTextChange = { commentsReviewViewModel.updateCommentInputText(it) },
+        onSendCommentClick = onBackClick,
         modifier = modifier
     )
 }
 
-/** Agrega el elemento si falta y lo quita si ya estaba. */
-private fun Set<Int>.toggle(value: Int): Set<Int> =
-    if (value in this) this - value else this + value
 
 @Preview(name = "Claro", showBackground = true, showSystemUi = true)
 @Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, showSystemUi = true)
@@ -211,8 +197,9 @@ fun CommentsReviewScreenPreview() {
     TheStudentsTheme {
         Surface {
             CommentsReviewScreen(
-                onBackClick = {},
-                reviewId = "1"
+                commentsReviewViewModel = viewModel(),
+                reviewId = "1",
+                onBackClick = {}
             )
         }
     }

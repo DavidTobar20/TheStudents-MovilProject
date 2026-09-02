@@ -2,6 +2,7 @@ package com.example.thestudents.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -10,8 +11,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 
 import com.example.thestudents.ui.screens.commentsReview.CommentsReviewScreen
+import com.example.thestudents.ui.screens.commentsReview.CommentsReviewViewModel
 import com.example.thestudents.ui.screens.editarPerfil.EditarPerfilScreen
+import com.example.thestudents.ui.screens.editarPerfil.EditarPerfilViewModel
 import com.example.thestudents.ui.screens.home.HomeScreen
+import com.example.thestudents.ui.screens.home.HomeViewModel
 import com.example.thestudents.ui.screens.login.LoginScreen
 import com.example.thestudents.ui.screens.notifications.NotificationsScreen
 import com.example.thestudents.ui.screens.profile.ProfileScreen
@@ -118,7 +122,9 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
 // --- GRAFO PRINCIPAL DE LA APLICACIÓN ---
 private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     composable(Screen.Home.route) {
+        val homeViewModel : HomeViewModel  = viewModel()
         HomeScreen(
+            homeViewModel = homeViewModel,
             onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
         )
@@ -164,8 +170,10 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     }
 
     composable(Screen.EditProfile.route) {
+        val editarPerfilViewModel : EditarPerfilViewModel  = viewModel()
         EditarPerfilScreen(
-            onCancelClick = { navController.popBackStack() },
+            editarPerfilViewModel = editarPerfilViewModel,
+            onBackClick = { navController.popBackStack() },
             onSaveClick = { navController.popBackStack() }
         )
     }
@@ -187,7 +195,9 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         arguments = listOf(navArgument(REVIEW_ID_ARG) { type = NavType.StringType })
     ) {
         val reviewId = it.arguments?.getString(REVIEW_ID_ARG) ?: ""
+        val commentsReviewViewModel : CommentsReviewViewModel = viewModel()
         CommentsReviewScreen(
+            commentsReviewViewModel = commentsReviewViewModel,
             reviewId = reviewId,
             onBackClick = { navController.popBackStack() }
         )

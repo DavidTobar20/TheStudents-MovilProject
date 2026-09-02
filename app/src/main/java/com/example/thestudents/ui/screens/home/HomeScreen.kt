@@ -14,36 +14,29 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
-import com.example.thestudents.data.local.localReviewsProvider
-import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.components.ReviewCard
 import com.example.thestudents.ui.screens.home.components.HomeTopBar
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun HomeScreen(
+    homeViewModel: HomeViewModel,
     onReviewClick: (String) -> Unit,
     onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Requisito: Ver reseñas realizadas por las personas que sigue el usuario.
-    val followingIds = localStudentProvider.followingIds
-    val followedReviews = localReviewsProvider.getReviewsByFollowed(followingIds)
 
-    // Estado para los likes/dislikes de cada reseña en la Home.
-    var likedReviews by rememberSaveable { mutableStateOf(emptySet<Int>()) }
-    var dislikedReviews by rememberSaveable { mutableStateOf(emptySet<Int>()) }
+    val state by homeViewModel.uiState.collectAsState()
 
     Column(modifier = modifier.fillMaxSize()) {
         HomeTopBar()
@@ -56,7 +49,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            if (followedReviews.isEmpty()) {
+            if (state.followedReviews.isEmpty()) {
                 item {
                     Box(
                         modifier = Modifier
@@ -73,20 +66,14 @@ fun HomeScreen(
                     }
                 }
             } else {
-                itemsIndexed(followedReviews) { index, review ->
+                itemsIndexed(state.followedReviews) { index, review ->
                     
                     ReviewCard(
                         review = review,
-                        isLiked = index in likedReviews,
-                        isDisliked = index in dislikedReviews,
-                        onLikeClick = {
-                            likedReviews = if (index in likedReviews) likedReviews - index else likedReviews + index
-                            if (index in likedReviews) dislikedReviews = dislikedReviews - index
-                        },
-                        onDislikeClick = {
-                            dislikedReviews = if (index in dislikedReviews) dislikedReviews - index else dislikedReviews + index
-                            if (index in dislikedReviews) likedReviews = likedReviews - index
-                        },
+                        isLiked = homeViewModel.reviewIsLiked(index),
+                        isDisliked = homeViewModel.reviewIsDisliked(index),
+                        onLikeClick = { homeViewModel.updateLikedReviews(index) },
+                        onDislikeClick = { homeViewModel.updateDislikedReviews(index) },
                         onCommentClick = { onReviewClick(review.id) },
                         onCardClick = { onReviewClick(review.id) },
                         onReviewerClick = { onStudentClick(review.reviewer.id) },
@@ -104,6 +91,7 @@ fun HomeScreenPreview() {
     TheStudentsTheme(darkTheme = false) {
         Surface {
             HomeScreen(
+                homeViewModel = viewModel(),
                 onReviewClick = {},
                 onStudentClick = {}
             )
@@ -117,6 +105,7 @@ fun HomeScreenDarkPreview() {
     TheStudentsTheme(darkTheme = true) {
         Surface {
             HomeScreen(
+                homeViewModel = viewModel(),
                 onReviewClick = {},
                 onStudentClick = {}
             )
