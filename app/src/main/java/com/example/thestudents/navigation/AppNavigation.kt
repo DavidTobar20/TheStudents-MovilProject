@@ -25,7 +25,6 @@ import com.example.thestudents.ui.screens.commentsReview.CommentsReviewViewModel
 import com.example.thestudents.ui.screens.editarPerfil.EditarPerfilScreen
 import com.example.thestudents.ui.screens.editarPerfil.EditarPerfilViewModel
 import com.example.thestudents.ui.screens.home.HomeScreen
-import com.example.thestudents.ui.screens.home.HomeViewModel
 import com.example.thestudents.ui.screens.login.LoginScreen
 import com.example.thestudents.ui.screens.login.LoginViewModel
 import com.example.thestudents.ui.screens.notifications.NotificationsScreen
@@ -154,9 +153,7 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
 // --- GRAFO PRINCIPAL DE LA APLICACIÓN ---
 private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     composable(Screen.Home.route) {
-        val homeViewModel : HomeViewModel  = viewModel()
         HomeScreen(
-            homeViewModel = homeViewModel,
             onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
         )

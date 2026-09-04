@@ -125,9 +125,6 @@ fun NotificationsScreen(
 ) {
     val state by notificationsViewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        notificationsViewModel.loadNotifications()
-    }
 
     BodyNotifications(
         notifications = state.notifications,

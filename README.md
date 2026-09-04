@@ -24,21 +24,23 @@ Este proyecto ha sido desarrollado en **Android Studio** utilizando **Kotlin** y
 
 ## 🚀 Funcionalidades Principales
 
-* **Autenticación y Seguridad:** Registro exclusivo con correo institucional, inicio/cierre de sesión, recuperación de contraseña y gestión de políticas de datos y términos de uso.
-* **Perfil de Usuario:** Gestión de perfil (nombre, biografía, carrera, semestre, fotografía), eliminación de cuenta y visualización de perfiles públicos con distribución de calificaciones.
-* **Gestión Académica:** Declaración y administración de materias inscritas por periodos académicos.
-* **Sistema de Reseñas y Calificaciones:** Creación, edición y eliminación de calificaciones (0 a 5 estrellas) y comentarios detallados para compañeros con materias/periodos compartidos, integrando filtros automáticos contra lenguaje ofensivo.
-* **Interacción Social:** Búsqueda en vivo de estudiantes, seguimiento de perfiles, sistema de comentarios y reacciones (*like* / *dislike*) a reseñas publicadas.
-* **Feed y Exploración:** Visualización cronológica de reseñas de usuarios seguidos y publicaciones recientes, con filtros avanzados por facultad, carrera y asignatura.
-* **Centro de Notificaciones:** Avisos en tiempo real sobre nuevos seguidores, solicitudes, reseñas recibidas, comentarios y reacciones.
+* **Autenticación y Seguridad:** Registro, inicio/cierre de sesión, recuperación de contraseña y gestión de políticas de datos.
+* **Perfil de Usuario:** Gestión de perfil (biografía, carrera, semestre, fotografía), edición de datos y visualización de perfiles públicos.
+* **Gestión Académica:** Administración de materias inscritas por periodos académicos.
+* **Sistema de Reseñas y Calificaciones:** Creación, edición y eliminación de calificaciones (0 a 5 estrellas) y comentarios detallados.
+* **Interacción Social:** Búsqueda de estudiantes, seguimiento de perfiles, comentarios y reacciones (*like* / *dislike*) en reseñas.
+* **Feed y Exploración:** Visualización cronológica de reseñas y publicaciones recientes.
+* **Centro de Notificaciones:** Avisos sobre nuevos seguidores, reseñas recibidas, comentarios y reacciones.
 
 ---
 
 ## 🛠️ Stack Tecnológico
 
-* **Lenguaje:** Kotlin
-* **Framework UI:** Jetpack Compose (Material 3)
-* **Arquitectura:** Componentes modulares, separación de UI y fuentes de datos
+* **Lenguaje:** [Kotlin](https://kotlinlang.org/)
+* **Framework UI:** [Jetpack Compose](https://developer.android.com/compose) (Material 3)
+* **Navegación:** [Navigation Compose](https://developer.android.com/jetpack/compose/navigation)
+* **Iconografía:** Material Icons Extended
+* **Arquitectura:** MVVM (Model-View-ViewModel) - *En proceso de implementación completa*
 * **Diseño UI/UX:** Prototipado en Figma
 
 ---
@@ -49,37 +51,58 @@ Este proyecto ha sido desarrollado en **Android Studio** utilizando **Kotlin** y
 app/src/main/java/com/example/thestudents/
 │
 ├── data/                         # Capa de Datos (Modelos y Repositorios)
-│   ├── local/                    # Proveedores de datos "falsos" (Mocks) para pruebas
+│   ├── local/                    # Mocks y proveedores de datos locales
 │   │   ├── localStudentProvider.kt
 │   │   ├── localReviewsProvider.kt
-│   │   └── localNotificationProvider.kt
-│   ├── Student.kt                # Modelo de datos para Estudiantes
-│   ├── Review.kt                 # Modelo de datos para Reseñas
-│   ├── Notification.kt           # Modelo de datos para Notificaciones (Enum y Data Class)
-│   └── CourseSection.kt          # Modelo para agrupar materias y alumnos
+│   │   ├── localNotificationProvider.kt
+│   │   ├── localCommentsProvider.kt
+│   │   └── localCourseSectionProvider.kt
+│   ├── Student.kt                # Modelo de Estudiante
+│   ├── Review.kt                 # Modelo de Reseña
+│   ├── Comment.kt                # Modelo de Comentario
+│   ├── Notification.kt           # Modelo de Notificación
+│   └── CourseSection.kt          # Modelo de Sección de Materia
 │
-├── ui/                           # Capa de Interfaz de Usuario (Jetpack Compose)
-│   ├── screens/                  # Pantallas completas de la aplicación
-│   │   ├── home/                 # Pantalla de Inicio
-│   │   ├── login/                # Pantalla de Login (Stateful y Stateless)
-│   │   ├── profile/              # Pantalla de Perfil de usuario
-│   │   ├── reviews/              # Pantalla de listado de reseñas por materia
-│   │   ├── search/               # Pantalla de búsqueda de estudiantes
-│   │   └── notifications/        # Pantalla de Notificaciones
-│   │
-│   ├── theme/                    # Configuración visual global (Material Design 3)
-│   │   ├── Color.kt              # Paleta de colores (DarkGreen, Cream, Gold, etc.)
-│   │   ├── Type.kt               # Configuración de tipografías
-│   │   └── Theme.kt              # Definición del tema principal (TheStudentsTheme)
-│   │
-│   └── utils/                    # Componentes y funciones de utilidad global
-│       ├── FixedBottomBar.kt     # Barra de navegación inferior personalizada
-│       ├── DiamondDivider.kt     # Divisores visuales estilizados
-│       └── CustomButtons.kt      # Botones genéricos (ButtonWithIcon, etc.)
+├── navigation/                   # Configuración de Navegación
+│   ├── AppNavigation.kt          # Host de navegación principal
+│   ├── NavItem.kt                # Definición de rutas y destinos
+│   └── FixedBottomBar.kt         # Barra de navegación inferior
 │
-└── MainActivity.kt               # Punto de entrada de la aplicación y Host de navegación
+├── ui/                           # Capa de Interfaz de Usuario
+│   ├── screens/                  # Arquitectura por Pantalla (Screen, ViewModel, State)
+│   │   ├── home/                 # Feed principal y publicaciones
+│   │   ├── login/                # Inicio de sesión
+│   │   ├── register/             # Registro de nuevos usuarios
+│   │   ├── search/               # Buscador global de estudiantes
+│   │   ├── studentDetail/        # Detalle de perfil de otros estudiantes
+│   │   ├── profile/              # Perfil del usuario autenticado
+│   │   ├── editarPerfil/         # Formulario de edición de perfil
+│   │   ├── reviews/              # Listado de reseñas por materia
+│   │   ├── writeReview/          # Creación de nuevas reseñas
+│   │   ├── notifications/        # Historial de actividad y notificaciones
+│   │   └── commentsReview/       # Hilos de discusión en reseñas
+│   │
+│   ├── components/               # Componentes de UI complejos y reutilizables
+│   ├── utils/                    # Átomos de UI (Botones, campos de texto, divisores)
+│   └── theme/                    # Definición de estilos, colores y tipografía (M3)
+│
+├── MainActivity.kt               # Punto de entrada de la aplicación
+└── TheStudentsApp.kt             # Configuración global de la aplicación
  ```
 
+
+---
+
+## ⚙️ Instalación y Uso
+
+1. **Clonar el repositorio:**
+   ```bash
+   git clone https://github.com/tu-usuario/TheStudents-MovilProject.git
+   ```
+2. **Abrir en Android Studio:**
+   Importa el proyecto y espera a que Gradle sincronice las dependencias.
+3. **Ejecutar:**
+   Selecciona un emulador o dispositivo físico con Android 8.0 (API 26) o superior y presiona `Run`.
 
 ## 👥 Equipo de Desarrollo
 

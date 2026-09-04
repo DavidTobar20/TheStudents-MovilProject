@@ -14,7 +14,7 @@ class ProfileViewModel : ViewModel() {
     val uiState: StateFlow<ProfileState> = _uiState.asStateFlow()
 
     init {
-        // La carga se dispara desde la UI con LaunchedEffect
+        loadProfile()
     }
 
     fun loadProfile() {

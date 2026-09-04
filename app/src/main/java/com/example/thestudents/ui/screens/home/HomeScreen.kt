@@ -24,23 +24,49 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
+import com.example.thestudents.data.Review
 import com.example.thestudents.ui.components.ReviewCard
 import com.example.thestudents.ui.screens.home.components.HomeTopBar
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel,
     onReviewClick: (String) -> Unit,
     onStudentClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    homeViewModel: HomeViewModel = viewModel()
 ) {
 
     val state by homeViewModel.uiState.collectAsState()
 
+    BodyHomeScreen(
+        followedReviews = state.followedReviews,
+        onLikeClick = { index -> homeViewModel.updateLikedReviews(index) },
+        onDislikeClick = { index -> homeViewModel.updateDislikedReviews(index) },
+        onCommentClick = onReviewClick,
+        onCardClick = onReviewClick,
+        onReviewerClick = onStudentClick,
+        isLiked = { index -> homeViewModel.reviewIsLiked(index) },
+        isDisliked = { index -> homeViewModel.reviewIsDisliked(index) },
+        modifier = modifier
+    )
+}
+
+@Composable
+fun BodyHomeScreen(
+    followedReviews: List<Review>,
+    onLikeClick: (Int) -> Unit,
+    onDislikeClick: (Int) -> Unit,
+    onCommentClick: (String) -> Unit,
+    onCardClick: (String) -> Unit,
+    onReviewerClick: (String) -> Unit,
+    isLiked: (Int) -> Boolean,
+    isDisliked: (Int) -> Boolean,
+    modifier: Modifier = Modifier
+) {
     Column(modifier = modifier.fillMaxSize()) {
         HomeTopBar()
-        
+
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 16.dp)
@@ -49,7 +75,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            if (state.followedReviews.isEmpty()) {
+            if (followedReviews.isEmpty()) {
                 item {
                     Box(
                         modifier = Modifier
@@ -66,17 +92,17 @@ fun HomeScreen(
                     }
                 }
             } else {
-                itemsIndexed(state.followedReviews) { index, review ->
-                    
+                itemsIndexed(followedReviews) { index, review ->
+
                     ReviewCard(
                         review = review,
-                        isLiked = homeViewModel.reviewIsLiked(index),
-                        isDisliked = homeViewModel.reviewIsDisliked(index),
-                        onLikeClick = { homeViewModel.updateLikedReviews(index) },
-                        onDislikeClick = { homeViewModel.updateDislikedReviews(index) },
-                        onCommentClick = { onReviewClick(review.id) },
-                        onCardClick = { onReviewClick(review.id) },
-                        onReviewerClick = { onStudentClick(review.reviewer.id) },
+                        isLiked = isLiked(index),
+                        isDisliked = isDisliked(index),
+                        onLikeClick = { onLikeClick(index) },
+                        onDislikeClick = { onDislikeClick(index) },
+                        onCommentClick = { onCommentClick(review.id) },
+                        onCardClick = { onCardClick(review.id) },
+                        onReviewerClick = { onReviewerClick(review.reviewer.id) },
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                 }

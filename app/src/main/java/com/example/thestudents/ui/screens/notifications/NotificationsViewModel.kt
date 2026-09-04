@@ -12,7 +12,7 @@ class NotificationsViewModel : ViewModel() {
     val uiState: StateFlow<NotificationsState> = _uiState.asStateFlow()
 
     init {
-        // La carga se dispara desde la UI con LaunchedEffect
+        loadNotifications()
     }
 
     fun loadNotifications() {
@@ -43,5 +43,8 @@ class NotificationsViewModel : ViewModel() {
                 notifications = state.notifications.filter { it.id != notificationId }
             )
         }
+    }
+    init {
+
     }
 }

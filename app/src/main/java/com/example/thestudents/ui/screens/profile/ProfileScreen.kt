@@ -117,9 +117,7 @@ fun ProfileScreen(
 ) {
     val state by profileViewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        profileViewModel.loadProfile()
-    }
+
 
     if (state.student == null) {
         Box(
