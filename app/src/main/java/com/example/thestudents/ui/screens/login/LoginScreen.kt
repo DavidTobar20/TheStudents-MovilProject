@@ -157,12 +157,21 @@ fun LoginScreen(
 ) {
     val state by loginViewModel.uiState.collectAsState()
 
+    // Se usa LaunchedEffect para manejar la navegación como un "Side Effect".
+    // Esto asegura que onLoginSuccess() se ejecute solo una vez cuando navigate sea true,
+    // evitando que se llame múltiples veces si la pantalla se recompone por cualquier motivo.
+    if (state.navigate) {
+        LaunchedEffect(Unit) {
+            onLoginSuccess()
+        }
+    }
+
     BodyLoginScreen(
         email = state.email,
         onEmailChange = { loginViewModel.onEmailChange(it) },
         password = state.password,
         onPasswordChange = { loginViewModel.onPasswordChange(it) },
-        onLoginClick = onLoginSuccess,
+        onLoginClick = { loginViewModel.loginButtonPressed() },
         onSSOClick = onSSOClick,
         onCreateAccountClick = onCreateAccountClick,
         onForgotPasswordClick = onForgotPasswordClick,

@@ -12,6 +12,7 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -37,6 +38,8 @@ import com.example.thestudents.ui.screens.reviews.ReviewsScreen
 import com.example.thestudents.ui.screens.reviews.ReviewsViewModel
 import com.example.thestudents.ui.screens.search.SearchScreen
 import com.example.thestudents.ui.screens.search.SearchViewModel
+import com.example.thestudents.ui.screens.splash.SplashScreen
+import com.example.thestudents.ui.screens.splash.SplashViewModel
 import com.example.thestudents.ui.screens.studentDetail.StudentDetailScreen
 import com.example.thestudents.ui.screens.studentDetail.StudentDetailViewModel
 import com.example.thestudents.ui.screens.writeReview.WriteReviewScreen
@@ -57,6 +60,7 @@ fun selectedTabFor(route: String?): String? = when (route) {
 
 // --- ESTRUCTURA DE RUTAS ---
 sealed class Screen(val route: String) {
+    data object Splash : Screen("splash")
     data object Login : Screen("login")
     data object Register : Screen("register")
     data object Home : Screen("home")
@@ -105,9 +109,25 @@ fun AppNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Login.route,
+        startDestination = Screen.Splash.route,
         modifier = modifier
     ) {
+        composable(Screen.Splash.route) {
+            val splashViewModel: SplashViewModel = hiltViewModel()
+            SplashScreen(
+                navigateToHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                navigateToStart = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                splashViewModel = splashViewModel
+            )
+        }
         authGraph(navController)
         mainGraph(navController)
     }
@@ -126,7 +146,7 @@ fun NavHostController.navigateToTab(route: String) {
 // --- GRAFO DE AUTENTICACIÓN ---
 private fun NavGraphBuilder.authGraph(navController: NavHostController) {
     composable(Screen.Login.route) {
-        val loginViewModel: LoginViewModel = viewModel()
+        val loginViewModel: LoginViewModel = hiltViewModel()
         LoginScreen(
             onLoginSuccess = {
                 navController.navigateToTab(Screen.Home.route)
@@ -137,7 +157,7 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
     }
 
     composable(Screen.Register.route) {
-        val registerViewModel: RegisterViewModel = viewModel()
+        val registerViewModel: RegisterViewModel = hiltViewModel()
         RegisterScreen(
             onRegisterClick = {
                 navController.navigateToTab(Screen.Home.route)
@@ -160,7 +180,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     }
 
     composable(Screen.Search.route) {
-        val searchViewModel: SearchViewModel = viewModel()
+        val searchViewModel: SearchViewModel = hiltViewModel()
         SearchScreen(
             searchViewModel = searchViewModel,
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
@@ -168,7 +188,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     }
 
     composable(Screen.Notifications.route) {
-        val notificationsViewModel: NotificationsViewModel = viewModel()
+        val notificationsViewModel: NotificationsViewModel = hiltViewModel()
         NotificationsScreen(
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
             notificationsViewModel = notificationsViewModel
@@ -176,7 +196,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     }
 
     composable(Screen.Reviews.route) {
-        val reviewsViewModel: ReviewsViewModel = viewModel()
+        val reviewsViewModel: ReviewsViewModel = hiltViewModel()
         ReviewsScreen(
             reviewsViewModel = reviewsViewModel,
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
@@ -189,7 +209,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         arguments = listOf(navArgument(STUDENT_ID_ARG) { type = NavType.StringType })
     ) { backStackEntry ->
         val studentId = backStackEntry.arguments?.getString(STUDENT_ID_ARG) ?: ""
-        val writeReviewViewModel: WriteReviewViewModel = viewModel()
+        val writeReviewViewModel: WriteReviewViewModel = hiltViewModel()
         WriteReviewScreen(
             writeReviewViewModel = writeReviewViewModel,
             studentId = studentId,
@@ -199,17 +219,22 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     }
 
     composable(Screen.Profile.route) {
-        val profileViewModel: ProfileViewModel = viewModel()
+        val profileViewModel: ProfileViewModel = hiltViewModel()
         ProfileScreen(
             onBackClick = { navController.popBackStack() },
             onEditProfileClick = { navController.navigate(Screen.EditProfile.route) },
             onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
+            logoutButtonPressed = {
+                navController.navigate(Screen.Login.route) {
+                    popUpTo(0) { inclusive = true }
+                }
+            },
             profileViewModel = profileViewModel
         )
     }
 
     composable(Screen.EditProfile.route) {
-        val editarPerfilViewModel : EditarPerfilViewModel  = viewModel()
+        val editarPerfilViewModel : EditarPerfilViewModel  = hiltViewModel()
         EditarPerfilScreen(
             editarPerfilViewModel = editarPerfilViewModel,
             onBackClick = { navController.popBackStack() },
@@ -222,7 +247,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         arguments = listOf(navArgument(STUDENT_ID_ARG) { type = NavType.StringType })
     ) { backStackEntry ->
         val studentId = backStackEntry.arguments?.getString(STUDENT_ID_ARG) ?: ""
-        val studentDetailViewModel: StudentDetailViewModel = viewModel()
+        val studentDetailViewModel: StudentDetailViewModel = hiltViewModel()
         StudentDetailScreen(
             studentDetailViewModel = studentDetailViewModel,
             studentId = studentId,
@@ -236,7 +261,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         arguments = listOf(navArgument(REVIEW_ID_ARG) { type = NavType.StringType })
     ) { backStackEntry ->
         val reviewId = backStackEntry.arguments?.getString(REVIEW_ID_ARG) ?: ""
-        val commentsReviewViewModel : CommentsReviewViewModel = viewModel()
+        val commentsReviewViewModel : CommentsReviewViewModel = hiltViewModel()
         CommentsReviewScreen(
             commentsReviewViewModel = commentsReviewViewModel,
             reviewId = reviewId,

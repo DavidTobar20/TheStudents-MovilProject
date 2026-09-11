@@ -3,6 +3,7 @@ package com.example.thestudents.ui.screens.profile
 import androidx.lifecycle.ViewModel
 import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.ui.screens.profile.components.ProfileTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,8 +13,13 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(): ViewModel() {
-    private val _uiState = MutableStateFlow(ProfileState())
+class ProfileViewModel @Inject constructor(
+    private val authRepository: AuthRepository
+): ViewModel() {
+
+    private val _uiState = MutableStateFlow(ProfileState(
+        email = authRepository.currentUser?.email ?: ""
+    ))
     val uiState: StateFlow<ProfileState> = _uiState.asStateFlow()
 
     init {
@@ -33,9 +39,11 @@ class ProfileViewModel @Inject constructor(): ViewModel() {
         }
     }
 
+    fun logout() {
+        authRepository.signOut()
+    }
+
     fun onTabSelected(tab: ProfileTab) {
         _uiState.update { it.copy(selectedTab = tab) }
-        // Si quisiéramos filtrar reviews por pestaña, lo haríamos aquí
-        // Por ahora mantenemos la lógica simple según el original
     }
 }

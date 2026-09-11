@@ -6,6 +6,7 @@ import com.example.thestudents.ui.screens.profile.components.ProfileTab
 
 data class ProfileState(
     val student: Student? = null,
+    val email: String = "",
     val reviews: List<Review> = emptyList(),
     val selectedTab: ProfileTab = ProfileTab.RECEIVED,
     val isLoading: Boolean = false
