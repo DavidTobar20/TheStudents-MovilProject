@@ -41,6 +41,8 @@ fun BodyLoginScreen(
     onForgotPasswordClick: () -> Unit,
     isPasswordVisible: Boolean,
     onPasswordToggle: () -> Unit,
+    errorMessage: String,
+    showError: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -73,6 +75,18 @@ fun BodyLoginScreen(
             isPasswordVisible = isPasswordVisible,
             onPasswordToggle = onPasswordToggle
         )
+
+        // Si la variable de control es true, mostramos el texto de error, esto el profe dijo que se modificaba las proximas clases
+        if (showError) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colorScheme.error,
+                fontSize = 12.sp,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Start
+            )
+        }
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -135,7 +149,9 @@ fun BodyLoginScreenPreview() {
             onCreateAccountClick = {},
             onForgotPasswordClick = {},
             isPasswordVisible = false,
-            onPasswordToggle = {}
+            onPasswordToggle = {},
+            errorMessage = "",
+            showError = false
         )
     }
 }
@@ -158,8 +174,7 @@ fun LoginScreen(
     val state by loginViewModel.uiState.collectAsState()
 
     // Se usa LaunchedEffect para manejar la navegación como un "Side Effect".
-    // Esto asegura que onLoginSuccess() se ejecute solo una vez cuando navigate sea true,
-    // evitando que se llame múltiples veces si la pantalla se recompone por cualquier motivo.
+    // Esto asegura que onLoginSuccess() se ejecute solo una vez cuando navigate sea true.
     if (state.navigate) {
         LaunchedEffect(Unit) {
             onLoginSuccess()
@@ -177,6 +192,8 @@ fun LoginScreen(
         onForgotPasswordClick = onForgotPasswordClick,
         isPasswordVisible = state.isPasswordVisible,
         onPasswordToggle = { loginViewModel.onPasswordToggle() },
+        errorMessage = state.errorMessage,
+        showError = state.mostrarMensaje,
         modifier = modifier
     )
 }
