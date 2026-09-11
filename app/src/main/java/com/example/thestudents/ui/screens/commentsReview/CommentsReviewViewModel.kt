@@ -3,11 +3,14 @@ package com.example.thestudents.ui.screens.commentsReview
 import androidx.lifecycle.ViewModel
 import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.data.local.localStudentProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class CommentsReviewViewModel : ViewModel() {
+@HiltViewModel
+class CommentsReviewViewModel @Inject constructor(): ViewModel() {
     private val _uiState = MutableStateFlow(CommentsReviewState())
     val uiState : StateFlow<CommentsReviewState> = _uiState
 

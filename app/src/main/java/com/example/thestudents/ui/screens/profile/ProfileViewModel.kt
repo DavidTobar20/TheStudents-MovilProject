@@ -4,12 +4,15 @@ import androidx.lifecycle.ViewModel
 import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.screens.profile.components.ProfileTab
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class ProfileViewModel : ViewModel() {
+@HiltViewModel
+class ProfileViewModel @Inject constructor(): ViewModel() {
     private val _uiState = MutableStateFlow(ProfileState())
     val uiState: StateFlow<ProfileState> = _uiState.asStateFlow()
 

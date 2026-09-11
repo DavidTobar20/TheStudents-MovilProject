@@ -1,6 +1,13 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.dagger)
+    alias(libs.plugins.kotlin.serialization)
+    // KSP genera el código de Hilt (kapt no es compatible con el Kotlin integrado de AGP 9)
+    alias(libs.plugins.google.ksp)
+    //Messaging
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -59,6 +66,19 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
+
+    //Hilt
+    implementation(libs.dagger.hilt)
+    implementation(libs.hilt.compose.navigation)  // hiltViewModel() en composables
+    ksp(libs.dagger.compiler)
+
+    //Firebase
+    implementation(platform(libs.firebase.bom))   // el BOM alinea las versiones de abajo
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
