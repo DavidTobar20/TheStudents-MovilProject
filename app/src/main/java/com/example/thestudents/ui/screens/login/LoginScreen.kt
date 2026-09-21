@@ -73,20 +73,12 @@ fun BodyLoginScreen(
             onPasswordChange = onPasswordChange,
             onForgotPasswordClick = onForgotPasswordClick,
             isPasswordVisible = isPasswordVisible,
-            onPasswordToggle = onPasswordToggle
+            onPasswordToggle = onPasswordToggle,
+            errorMessage = errorMessage,
+            showError = showError
         )
 
-        // Si la variable de control es true, mostramos el texto de error, esto el profe dijo que se modificaba las proximas clases
-        if (showError) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = errorMessage,
-                color = MaterialTheme.colorScheme.error,
-                fontSize = 12.sp,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start
-            )
-        }
+
 
         Spacer(modifier = Modifier.height(32.dp))
 

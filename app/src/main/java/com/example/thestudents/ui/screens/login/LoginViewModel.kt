@@ -38,14 +38,17 @@ class   LoginViewModel @Inject constructor(
             _uiState.update { it.copy(mostrarMensaje = true, errorMessage = "Todos los campos son obligatorios") }
         } else {
             viewModelScope.launch {
-                try {
-                    authRepository.signIn(
+
+                    val result = authRepository.signIn(
                         _uiState.value.email,
                         _uiState.value.password
                     )
+
+                if (result.isSuccess){
                     _uiState.update { it.copy(navigate = true) }
-                } catch (e: Exception) {
-                    _uiState.update { it.copy(errorMessage = "Error al iniciar sesión", mostrarMensaje = true) }
+                } else {
+                    val mensaje = result.exceptionOrNull()?.message ?: "Error al iniciar sesión"
+                    _uiState.update { it.copy(errorMessage = mensaje, mostrarMensaje = true)  }
                 }
             }
         }

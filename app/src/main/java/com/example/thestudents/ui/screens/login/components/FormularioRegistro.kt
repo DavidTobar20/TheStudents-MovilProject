@@ -37,6 +37,8 @@ fun FormularioRegistro (
     isPasswordVisible: Boolean,
     onPasswordToggle: () -> Unit,
     onForgotPasswordClick: () -> Unit = {},
+    errorMessage: String = "",
+    showError: Boolean = false
 ) {
     Column(
         modifier = modifier
@@ -66,6 +68,15 @@ fun FormularioRegistro (
             isPasswordVisible = isPasswordVisible,
             onPasswordToggle = onPasswordToggle
         )
+
+        if (showError) {
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colorScheme.error,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
 
         Text(
             text = stringResource(R.string.olvidaste_tu_contrasena),
