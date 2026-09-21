@@ -2,11 +2,14 @@ package com.example.thestudents.ui.screens.editarPerfil
 
 import androidx.lifecycle.ViewModel
 import com.example.thestudents.data.local.localStudentProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class EditarPerfilViewModel : ViewModel() {
+@HiltViewModel
+class EditarPerfilViewModel @Inject constructor(): ViewModel() {
 
     private val _uiState = MutableStateFlow(EditarPerfilState())
     val uiState : StateFlow<EditarPerfilState> = _uiState

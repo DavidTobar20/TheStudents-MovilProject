@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -34,6 +35,16 @@ fun RegisterScreen(
     registerViewModel: RegisterViewModel
 ) {
     val state by registerViewModel.uiState.collectAsState()
+    val errorMsg by registerViewModel.errorMessage.collectAsState()
+    val showError by registerViewModel.mostrarMensajeError.collectAsState()
+    val navigateHome by registerViewModel.navigateToHome.collectAsState()
+    val showPassword by registerViewModel.mostrarPassword.collectAsState()
+
+    if (navigateHome) {
+        LaunchedEffect(Unit) {
+            onRegisterClick() // Llama a la navegación definida en el NavHost
+        }
+    }
 
     RegisterBody(
         names = state.names,
@@ -46,13 +57,13 @@ fun RegisterScreen(
         onPasswordChange = { registerViewModel.onPasswordChange(it) },
         confirmPassword = state.confirmPassword,
         onConfirmPasswordChange = { registerViewModel.onConfirmPasswordChange(it) },
-        isPasswordVisible = state.isPasswordVisible,
-        onPasswordToggle = { registerViewModel.onPasswordToggle() },
-        isConfirmPasswordVisible = state.isConfirmPasswordVisible,
-        onConfirmPasswordToggle = { registerViewModel.onConfirmPasswordToggle() },
+        isPasswordVisible = showPassword,
+        onPasswordToggle = { registerViewModel.mostrarEsconderPassword() },
+        isConfirmPasswordVisible = showPassword,
+        onConfirmPasswordToggle = { registerViewModel.mostrarEsconderPassword() },
         termsAccepted = state.termsAccepted,
         onTermsAcceptedChange = { registerViewModel.onTermsAcceptedChange(it) },
-        onRegisterClick = onRegisterClick,
+        onRegisterClick = { registerViewModel.onRegisterClick() },
         onSsoClick = onSsoClick,
         onNavigateToLogin = onNavigateToLogin
     )

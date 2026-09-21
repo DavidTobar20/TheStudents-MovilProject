@@ -1,14 +1,11 @@
 package com.example.thestudents.ui.screens.profile
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -40,30 +37,57 @@ import com.example.thestudents.ui.utils.ButtonWithIcon
 @Composable
 fun BodyProfile(
     student: Student,
+    email: String,
     reviews: List<Review>,
     selectedTab: ProfileTab,
     onTabSelected: (ProfileTab) -> Unit,
     onBackClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     onReviewClick: (String) -> Unit,
+    onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         ProfileHeader(onBackClick = onBackClick)
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             item { UserInfoSection(student = student) }
+            item {
+                Text(
+                    text = "Email: $email",
+                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
             item { StatsSection(student = student) }
             item {
-                ButtonWithIcon(
-                    text = stringResource(R.string.editar_perfil),
-                    icon = Icons.Outlined.Edit,
-                    onClick = onEditProfileClick,
-                    borderColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.primary,
+                Row(
                     modifier = Modifier
-                        .height(48.dp)
-                        .padding(horizontal = 24.dp)
-                )
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    ButtonWithIcon(
+                        text = stringResource(R.string.editar_perfil),
+                        icon = Icons.Outlined.Edit,
+                        onClick = onEditProfileClick,
+                        borderColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(48.dp)
+                    )
+                    ButtonWithIcon(
+                        text = stringResource(R.string.cerrar_sesion),
+                        icon = Icons.AutoMirrored.Filled.Logout,
+                        onClick = onLogoutClick,
+                        borderColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(48.dp)
+                    )
+                }
             }
             item { RatingChartSection() }
             item {
@@ -92,12 +116,14 @@ fun BodyProfilePreview() {
             val student = localStudentProvider.currentUser
             BodyProfile(
                 student = student,
+                email = "user@example.com",
                 reviews = localReviewsProvider.getReviewsForStudent(student.id),
                 selectedTab = selectedTab,
                 onTabSelected = { selectedTab = it },
                 onBackClick = {},
                 onEditProfileClick = {},
-                onReviewClick = {}
+                onReviewClick = {},
+                onLogoutClick = {}
             )
         }
     }
@@ -112,12 +138,11 @@ fun ProfileScreen(
     onBackClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     onReviewClick: (String) -> Unit,
+    logoutButtonPressed: () -> Unit,
     modifier: Modifier = Modifier,
     profileViewModel: ProfileViewModel
 ) {
     val state by profileViewModel.uiState.collectAsState()
-
-
 
     if (state.student == null) {
         Box(
@@ -133,12 +158,17 @@ fun ProfileScreen(
     } else {
         BodyProfile(
             student = state.student!!,
+            email = state.email,
             reviews = state.reviews,
             selectedTab = state.selectedTab,
             onTabSelected = { profileViewModel.onTabSelected(it) },
             onBackClick = onBackClick,
             onEditProfileClick = onEditProfileClick,
             onReviewClick = onReviewClick,
+            onLogoutClick = {
+                profileViewModel.logout()
+                logoutButtonPressed()
+            },
             modifier = modifier
         )
     }
@@ -154,6 +184,7 @@ fun FullProfileScreenPreview() {
                 onBackClick = {},
                 onEditProfileClick = {},
                 onReviewClick = {},
+                logoutButtonPressed = {},
                 profileViewModel = viewModel()
             )
         }
