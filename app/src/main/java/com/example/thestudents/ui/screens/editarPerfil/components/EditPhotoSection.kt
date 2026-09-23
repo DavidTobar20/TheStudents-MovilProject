@@ -35,6 +35,7 @@ import com.example.thestudents.ui.utils.ProfileIcon
 fun EditPhotoSection(
     initials: String,
     profileImageRes: Int?,
+    profileImageUrl: String?,
     onEditClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -52,6 +53,7 @@ fun EditPhotoSection(
             ProfileIcon(
                 initials = initials,
                 profileImage = profileImageRes,
+                profileImageUrl = profileImageUrl,
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 contentColor = MaterialTheme.colorScheme.primary,
                 fontSize = 36.sp,
@@ -80,7 +82,8 @@ fun EditPhotoSection(
         Text(
             text = stringResource(R.string.cambiar_foto),
             fontSize = 13.sp,
-            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f)
+            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f),
+            modifier = Modifier.clickable { onEditClick() }
         )
     }
 }
@@ -94,6 +97,7 @@ fun EditPhotoSectionPreview() {
             EditPhotoSection(
                 initials = student.initials,
                 profileImageRes = student.profileImage,
+                profileImageUrl = null,
                 onEditClick = {}
             )
         }

@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.storage)
 
     //Coil
     implementation("io.coil-kt:coil-compose:2.4.0")

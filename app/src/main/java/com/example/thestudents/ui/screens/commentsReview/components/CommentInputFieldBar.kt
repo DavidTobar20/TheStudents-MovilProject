@@ -58,6 +58,7 @@ fun CommentInputFieldBar(
             ProfileIcon(
                 initials = commentator.initials,
                 profileImage = commentator.profileImage,
+                profileImageUrl = null,
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 contentColor = MaterialTheme.colorScheme.primary,
                 fontSize = 19.sp,

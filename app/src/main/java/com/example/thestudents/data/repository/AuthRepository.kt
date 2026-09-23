@@ -7,11 +7,12 @@ import com.google.firebase.auth.FirebaseUser
 import javax.inject.Inject
 
 
-class AuthRepository@Inject constructor(
+class AuthRepository @Inject constructor(
     private val authRemoteDataSource: AuthRemoteDataSource
 ){
 
-    val currentUser: FirebaseUser? = authRemoteDataSource.currentUser
+    val currentUser: FirebaseUser?
+        get() = authRemoteDataSource.currentUser //  Ahora siempre retorna los datos más recientes del usuario autenticado en Firebase.
     suspend fun signIn(email: String, password: String) : Result<Unit> {
         return try {
             authRemoteDataSource.signIn(email, password)

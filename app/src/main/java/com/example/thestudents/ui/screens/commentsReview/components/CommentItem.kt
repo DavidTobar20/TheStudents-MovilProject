@@ -40,6 +40,7 @@ fun CommentItem(
         ProfileIcon(
             initials = comment.commentator.initials,
             profileImage = comment.commentator.profileImage,
+            profileImageUrl = null,
             backgroundColor = comment.commentator.profileColor,
             contentColor = OnAvatar,
             fontSize = 18.sp,

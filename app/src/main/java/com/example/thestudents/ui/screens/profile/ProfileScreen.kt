@@ -38,6 +38,7 @@ import com.example.thestudents.ui.utils.ButtonWithIcon
 fun BodyProfile(
     student: Student,
     email: String,
+    profileImageUrl: String?,
     reviews: List<Review>,
     selectedTab: ProfileTab,
     onTabSelected: (ProfileTab) -> Unit,
@@ -50,7 +51,12 @@ fun BodyProfile(
     Column(modifier = modifier.fillMaxSize()) {
         ProfileHeader(onBackClick = onBackClick)
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            item { UserInfoSection(student = student) }
+            item { 
+                UserInfoSection(
+                    student = student,
+                    profileImageUrl = profileImageUrl
+                ) 
+            }
             item {
                 Text(
                     text = "Email: $email",
@@ -117,6 +123,7 @@ fun BodyProfilePreview() {
             BodyProfile(
                 student = student,
                 email = "user@example.com",
+                profileImageUrl = null,
                 reviews = localReviewsProvider.getReviewsForStudent(student.id),
                 selectedTab = selectedTab,
                 onTabSelected = { selectedTab = it },
@@ -139,10 +146,14 @@ fun ProfileScreen(
     onEditProfileClick: () -> Unit,
     onReviewClick: (String) -> Unit,
     logoutButtonPressed: () -> Unit,
-    modifier: Modifier = Modifier,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+    modifier: Modifier = Modifier
 ) {
     val state by profileViewModel.uiState.collectAsState()
+    //recarga automáticamente la información del usuario y muestra la foto nueva al instante.
+    LaunchedEffect(Unit) {
+        profileViewModel.loadProfile()
+    }
 
     if (state.student == null) {
         Box(
@@ -159,6 +170,7 @@ fun ProfileScreen(
         BodyProfile(
             student = state.student!!,
             email = state.email,
+            profileImageUrl = state.profileImageUrl,
             reviews = state.reviews,
             selectedTab = state.selectedTab,
             onTabSelected = { profileViewModel.onTabSelected(it) },

@@ -51,6 +51,7 @@ fun ReviewHeader(
             profileImage = null,
             backgroundColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
+            profileImageUrl = null,
             fontSize = 18.sp
         )
         Spacer(modifier = Modifier.width(12.dp))

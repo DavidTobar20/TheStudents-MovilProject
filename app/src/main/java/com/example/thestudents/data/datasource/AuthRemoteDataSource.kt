@@ -1,15 +1,18 @@
 package com.example.thestudents.data.datasource
 
+import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AuthRemoteDataSource @Inject constructor (
     private val auth: FirebaseAuth
-    ) {
+) {
 
-    val currentUser: FirebaseUser? = auth.currentUser
+    val currentUser: FirebaseUser?
+        get() = auth.currentUser // Ahora siempre retorna los datos más recientes del usuario autenticado en Firebase.
     suspend fun signIn(email: String, password: String  ): Unit{
         auth.signInWithEmailAndPassword(email,password).await()
 
@@ -24,5 +27,15 @@ class AuthRemoteDataSource @Inject constructor (
         auth.signOut()
     }
 
+    suspend fun updateProfileImage(photoUrl: String): Unit{
+        val uri = Uri.parse(photoUrl)
+        currentUser?.updateProfile(
+            UserProfileChangeRequest.Builder()
+                .setPhotoUri(uri)
+                .build()
+        )?.await()
+
     }
+
+}
 

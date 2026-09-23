@@ -25,6 +25,7 @@ import com.example.thestudents.ui.utils.ProfileIcon
 @Composable
 fun UserInfoSection(
     student: Student,
+    profileImageUrl: String?,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -37,10 +38,11 @@ fun UserInfoSection(
             ProfileIcon(
                 initials = student.initials,
                 profileImage = student.profileImage,
-                modifier = Modifier.size(80.dp),
+                profileImageUrl = profileImageUrl,
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 contentColor = MaterialTheme.colorScheme.primary,
-                fontSize = 32.sp
+                fontSize = 32.sp,
+                modifier = Modifier.size(80.dp)
             )
             Spacer(modifier = Modifier.width(20.dp))
             Column {
@@ -96,7 +98,8 @@ fun UserInfoSection(
 fun UserInfoSectionPreview() {
     TheStudentsTheme {
         UserInfoSection(
-            student = localStudentProvider.currentUser
+            student = localStudentProvider.currentUser,
+            profileImageUrl = null
         )
     }
 }

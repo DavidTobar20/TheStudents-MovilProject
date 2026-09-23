@@ -1,6 +1,9 @@
 package com.example.thestudents.ui.screens.editarPerfil
 
 import android.content.res.Configuration
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -21,15 +24,13 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
 import com.example.thestudents.data.Student
-import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.screens.editarPerfil.components.EditBioSection
 import com.example.thestudents.ui.screens.editarPerfil.components.EditFormSection
 import com.example.thestudents.ui.screens.editarPerfil.components.EditPhotoSection
 import com.example.thestudents.ui.screens.editarPerfil.components.EditPreferencesSection
-import com.example.thestudents.ui.utils.HeaderBack
-
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ButtonWithoutIcon
+import com.example.thestudents.ui.utils.HeaderBack
 
 /**
  * Contenido de editar perfil. Sin estado propio: cada campo llega con su valor y su callback.
@@ -43,6 +44,7 @@ fun BodyEditarPerfilScreen(
     onUsernameChange: (String) -> Unit,
     bio: String,
     onBioChange: (String) -> Unit,
+    profileImageUrl: String?,
     showReviews: Boolean,
     onShowReviewsChange: (Boolean) -> Unit,
     notificationsEnabled: Boolean,
@@ -66,6 +68,7 @@ fun BodyEditarPerfilScreen(
                 EditPhotoSection(
                     initials = student.initials,
                     profileImageRes = student.profileImage,
+                    profileImageUrl = profileImageUrl,
                     onEditClick = onChangePhotoClick
                 )
             }
@@ -132,6 +135,12 @@ fun EditarPerfilScreen(
 ) {
     val state by editarPerfilViewModel.uiState.collectAsState()
 
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { editarPerfilViewModel.uploadImageToFirebase(it) }
+    }
+
     BodyEditarPerfilScreen(
         student = state.student,
         name = state.name,
@@ -140,13 +149,16 @@ fun EditarPerfilScreen(
         onUsernameChange = { editarPerfilViewModel.updateUsername(it) },
         bio = state.bio,
         onBioChange = { editarPerfilViewModel.updateBio(it) },
+        profileImageUrl = state.profileImageUrl,
         showReviews = state.showReviews,
         onShowReviewsChange = { editarPerfilViewModel.updateShowReviews(it) },
         notificationsEnabled = state.notificationsEnabled,
         onNotificationsChange = { editarPerfilViewModel.updateNotificationsEnabled(it) },
         onBackClick = onBackClick,
         onSaveClick = onSaveClick,
-        onChangePhotoClick = { },
+        onChangePhotoClick = {
+            launcher.launch("image/*")
+        },
         modifier = modifier
     )
 }

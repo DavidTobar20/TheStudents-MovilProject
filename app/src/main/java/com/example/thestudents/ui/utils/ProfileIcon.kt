@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.thestudents.R
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
@@ -29,10 +30,11 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
 fun ProfileIcon(
     initials: String,
     profileImage: Int?,
-    modifier: Modifier = Modifier,
+    profileImageUrl: String?,
     backgroundColor: Color,
     contentColor: Color,
-    fontSize: TextUnit
+    fontSize: TextUnit,
+    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
@@ -40,7 +42,14 @@ fun ProfileIcon(
             .background(backgroundColor),
         contentAlignment = Alignment.Center
     ) {
-        if (profileImage != null) {
+        if (!profileImageUrl.isNullOrEmpty()) {
+            AsyncImage(
+                model = profileImageUrl,
+                contentDescription = stringResource(R.string.imagen_de_perfil),
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        } else if (profileImage != null) {
             Image(
                 painter = painterResource(id = profileImage),
                 contentDescription = stringResource(R.string.imagen_de_perfil),
@@ -66,6 +75,7 @@ fun ProfileIconPreviewReviewScreen() {
             ProfileIcon(
                 initials = "JP",
                 profileImage = null,
+                profileImageUrl = null,
                 backgroundColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 18.sp,
@@ -83,6 +93,7 @@ fun ProfileIconPreviewInfo() {
             ProfileIcon(
                 initials = "JP",
                 profileImage = null,
+                profileImageUrl = null,
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 contentColor = MaterialTheme.colorScheme.primary,
                 fontSize = 32.sp,

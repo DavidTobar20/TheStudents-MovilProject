@@ -38,6 +38,7 @@ fun ReviewItem(
             ProfileIcon(
                 initials = review.reviewer.initials,
                 profileImage = review.reviewer.profileImage,
+                profileImageUrl = null,
                 backgroundColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 14.sp,

@@ -38,6 +38,7 @@ fun ReviewStudentItem(
         ProfileIcon(
             initials = student.initials,
             profileImage = student.profileImage,
+            profileImageUrl = null,
             backgroundColor = student.profileColor,
             contentColor = MaterialTheme.colorScheme.onPrimary,
             fontSize = 18.sp,

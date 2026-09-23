@@ -17,9 +17,12 @@ class ProfileViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow(ProfileState(
-        email = authRepository.currentUser?.email ?: ""
-    ))
+    private val _uiState = MutableStateFlow(
+        ProfileState(
+            email = authRepository.currentUser?.email ?: "",
+            profileImageUrl = authRepository.currentUser?.photoUrl?.toString() ?: ""
+        )
+    )
     val uiState: StateFlow<ProfileState> = _uiState.asStateFlow()
 
     init {
@@ -34,6 +37,7 @@ class ProfileViewModel @Inject constructor(
             it.copy(
                 student = student,
                 reviews = reviews,
+                profileImageUrl = authRepository.currentUser?.photoUrl?.toString() ?: "",
                 isLoading = false
             )
         }

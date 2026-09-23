@@ -42,7 +42,7 @@ fun BodyStudentDetail(
 ) {
     LazyColumn(modifier = modifier.fillMaxSize()) {
         item { ProfileHeader(onBackClick = onBackClick) }
-        item { UserInfoSection(student = student) }
+        item { UserInfoSection(student = student, profileImageUrl = null) }
         item { StatsSection(student = student) }
         item {
             ButtonWithIcon(
