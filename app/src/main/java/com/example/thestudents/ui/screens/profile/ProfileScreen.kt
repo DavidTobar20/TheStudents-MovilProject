@@ -123,7 +123,7 @@ fun BodyProfilePreview() {
             BodyProfile(
                 student = student,
                 email = "user@example.com",
-                profileImageUrl = null,
+                profileImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCq6qha5YiJYI4ZIs3Sug9cpBKz23j-X5kWIMC6qU0jA&s=10",
                 reviews = localReviewsProvider.getReviewsForStudent(student.id),
                 selectedTab = selectedTab,
                 onTabSelected = { selectedTab = it },

@@ -22,7 +22,7 @@ class NotificationsViewModel @Inject constructor(): ViewModel() {
         _uiState.update { it.copy(isLoading = true) }
         // Simulamos la carga con los datos locales
         val notifications = localNotificationProvider.allNotifications
-        _uiState.update { 
+        _uiState.update {
             it.copy(
                 notifications = notifications,
                 isLoading = false

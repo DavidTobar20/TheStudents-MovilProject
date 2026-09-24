@@ -1,6 +1,5 @@
 package com.example.thestudents.data.local
 
-import com.example.thestudents.R
 import com.example.thestudents.data.Student
 import com.example.thestudents.ui.theme.Avatar2
 import com.example.thestudents.ui.theme.Avatar3
@@ -22,7 +21,7 @@ object localStudentProvider {
             initials = "JP",
             profileColor = Avatar5,
             period = "2024-2",
-            profileImage = R.drawable.logosinfondo
+            profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU8TFJ7iUwyhF0_LOmPpst5aFLBQUYvRcuREn63JTVvg&s=10"
         ),
         Student(
             id = "2",
@@ -35,7 +34,8 @@ object localStudentProvider {
             reviewsCount = 15,
             initials = "VG",
             profileColor = Avatar2,
-            period = "2025-1"
+            period = "2025-1",
+            profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU8TFJ7iUwyhF0_LOmPpst5aFLBQUYvRcuREn63JTVvg&s=10"
         ),
         Student(
             id = "3",
@@ -48,7 +48,8 @@ object localStudentProvider {
             reviewsCount = 10,
             initials = "DR",
             profileColor = Avatar3,
-            period = "2025-2"
+            period = "2025-2",
+            profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU8TFJ7iUwyhF0_LOmPpst5aFLBQUYvRcuREn63JTVvg&s=10"
         ),
         Student(
             id = "4",
@@ -61,7 +62,8 @@ object localStudentProvider {
             reviewsCount = 10,
             initials = "MJ",
             profileColor = Avatar4,
-            period = "2025-2"
+            period = "2025-2",
+            profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU8TFJ7iUwyhF0_LOmPpst5aFLBQUYvRcuREn63JTVvg&s=10"
         ),
         Student(
             id = "5",
@@ -74,7 +76,8 @@ object localStudentProvider {
             reviewsCount = 28,
             initials = "VT",
             profileColor = Avatar7,
-            period = "2024-2"
+            period = "2024-2",
+            profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU8TFJ7iUwyhF0_LOmPpst5aFLBQUYvRcuREn63JTVvg&s=10"
         )
     )
     

@@ -67,7 +67,7 @@ fun BodyEditarPerfilScreen(
             item {
                 EditPhotoSection(
                     initials = student.initials,
-                    profileImageRes = student.profileImage,
+                    profileImage = student.profileImage,
                     profileImageUrl = profileImageUrl,
                     onEditClick = onChangePhotoClick
                 )

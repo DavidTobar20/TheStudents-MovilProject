@@ -1,6 +1,5 @@
 package com.example.thestudents.data
 
-import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
 
 
@@ -16,5 +15,5 @@ data class Student(
     val initials: String,
     val profileColor: Color,
     val period: String,
-    @DrawableRes val profileImage: Int? = null
+    val profileImage: String? = null
 )

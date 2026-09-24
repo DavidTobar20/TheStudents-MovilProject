@@ -34,7 +34,7 @@ import com.example.thestudents.ui.utils.ProfileIcon
 @Composable
 fun EditPhotoSection(
     initials: String,
-    profileImageRes: Int?,
+    profileImage: String?,
     profileImageUrl: String?,
     onEditClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -52,7 +52,7 @@ fun EditPhotoSection(
         ) {
             ProfileIcon(
                 initials = initials,
-                profileImage = profileImageRes,
+                profileImage = profileImage,
                 profileImageUrl = profileImageUrl,
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 contentColor = MaterialTheme.colorScheme.primary,
@@ -96,7 +96,7 @@ fun EditPhotoSectionPreview() {
             val student = localStudentProvider.currentUser
             EditPhotoSection(
                 initials = student.initials,
-                profileImageRes = student.profileImage,
+                profileImage = student.profileImage,
                 profileImageUrl = null,
                 onEditClick = {}
             )
