@@ -7,51 +7,41 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ChatBubble
+import androidx.compose.material.icons.filled.PersonAdd
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.thestudents.data.Student
 import com.example.thestudents.data.NotificationType
+import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.theme.extended
 import com.example.thestudents.ui.utils.ProfileIcon
 
-/** Apariencia del avatar segun el tipo de notificacion, resuelta contra el tema activo. */
-private data class NotificationAvatarStyle(
-    val badgeIcon: ImageVector,
-    val avatarContainer: Color,
-    val onAvatarContainer: Color
-)
-
-@Composable
-private fun styleFor(type: NotificationType): NotificationAvatarStyle {
-    val scheme = MaterialTheme.colorScheme
+/** Obtiene el icono del badge segun el tipo de notificacion. */
+private fun badgeIconFor(type: NotificationType): ImageVector {
     return when (type) {
-        NotificationType.REVIEW -> NotificationAvatarStyle(
-            Icons.Default.Star, scheme.primaryContainer, scheme.onPrimaryContainer
-        )
-        NotificationType.LIKE -> NotificationAvatarStyle(
-            Icons.Default.ThumbUp, scheme.secondaryContainer, scheme.onSecondaryContainer
-        )
-        NotificationType.FOLLOW_REQUEST -> NotificationAvatarStyle(
-            Icons.Default.PersonAdd, scheme.tertiaryContainer, scheme.onTertiaryContainer
-        )
-        NotificationType.COMMENT -> NotificationAvatarStyle(
-            Icons.Default.ChatBubble, scheme.surfaceContainerHighest, scheme.onSurface
-        )
+        NotificationType.REVIEW -> Icons.Default.Star
+        NotificationType.LIKE -> Icons.Default.ThumbUp
+        NotificationType.FOLLOW_REQUEST -> Icons.Default.PersonAdd
+        NotificationType.COMMENT -> Icons.Default.ChatBubble
     }
 }
 
+/**
+ * Avatar de notificaciones: muestra la foto/iniciales del estudiante usando [ProfileIcon]
+ * e incluye una pequeña insignia (badge) en la esquina inferior derecha que indica el tipo de notificacion.
+ */
 @Composable
 fun NotificationAvatar(
     student: Student,
@@ -59,10 +49,8 @@ fun NotificationAvatar(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
-    val style = styleFor(type)
-    val badgeIcon = style.badgeIcon
+    val badgeIcon = badgeIconFor(type)
     val badgeColor = MaterialTheme.extended.rating
-    val avatarBg = style.avatarContainer
 
     Box(
         modifier = modifier
@@ -73,8 +61,8 @@ fun NotificationAvatar(
         ProfileIcon(
             initials = student.initials,
             profileImage = student.profileImage,
-            backgroundColor = avatarBg,
-            contentColor = style.onAvatarContainer,
+            backgroundColor = student.profileColor,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
             fontSize = 18.sp,
             modifier = Modifier.size(48.dp)
         )

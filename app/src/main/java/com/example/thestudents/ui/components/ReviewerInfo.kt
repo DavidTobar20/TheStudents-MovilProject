@@ -37,7 +37,7 @@ fun ReviewerInfo(
             initials = student.initials,
             profileImage = student.profileImage,
             backgroundColor = student.profileColor,
-            contentColor = OnAvatar,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
             fontSize = 14.sp,
             modifier = Modifier
                 .padding(end = 12.dp)
