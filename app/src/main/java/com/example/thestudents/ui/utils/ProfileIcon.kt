@@ -55,12 +55,17 @@ fun ProfileIcon(
                     )
                 },
                 error = {
-                    Text(
-                        text = initials,
-                        fontSize = fontSize,
-                        fontWeight = FontWeight.Bold,
-                        color = contentColor
-                    )
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = initials,
+                            fontSize = fontSize,
+                            fontWeight = FontWeight.Bold,
+                            color = contentColor
+                        )
+                    }
                 },
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
