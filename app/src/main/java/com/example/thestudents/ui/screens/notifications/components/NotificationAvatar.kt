@@ -10,20 +10,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.thestudents.data.Student
 import com.example.thestudents.data.NotificationType
+import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.theme.extended
+import com.example.thestudents.ui.utils.ProfileIcon
 
 /** Apariencia del avatar segun el tipo de notificacion, resuelta contra el tema activo. */
 private data class NotificationAvatarStyle(
@@ -53,7 +54,7 @@ private fun styleFor(type: NotificationType): NotificationAvatarStyle {
 
 @Composable
 fun NotificationAvatar(
-    initials: String,
+    student: Student,
     type: NotificationType,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
@@ -69,20 +70,14 @@ fun NotificationAvatar(
             .clickable(onClick = onClick),
         contentAlignment = Alignment.BottomEnd
     ) {
-        Box(
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(avatarBg),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = initials,
-                color = style.onAvatarContainer,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
-        }
+        ProfileIcon(
+            initials = student.initials,
+            profileImage = student.profileImage,
+            backgroundColor = avatarBg,
+            contentColor = style.onAvatarContainer,
+            fontSize = 18.sp,
+            modifier = Modifier.size(48.dp)
+        )
         
         Box(
             modifier = Modifier
@@ -106,6 +101,9 @@ fun NotificationAvatar(
 @Composable
 fun NotificationAvatarPreview() {
     TheStudentsTheme {
-        NotificationAvatar(initials = "MJ", type = NotificationType.REVIEW)
+        NotificationAvatar(
+            student = localStudentProvider.students[3],
+            type = NotificationType.REVIEW
+        )
     }
 }

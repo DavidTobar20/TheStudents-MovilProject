@@ -6,11 +6,9 @@ enum class NotificationType {
 
 data class Notification(
     val id: Int,
-    val userName: String,
-    val userInitials: String,
+    val student: Student,
     val type: NotificationType,
     val timeAgo: String,
-    val studentId: String? = null,
     // Campos opcionales según el tipo
     val subject: String? = null,
     val rating: Int? = null,

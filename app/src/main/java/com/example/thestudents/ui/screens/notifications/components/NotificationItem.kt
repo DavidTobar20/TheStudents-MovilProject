@@ -40,7 +40,7 @@ fun NotificationItem(
             verticalAlignment = Alignment.Top
         ) {
             NotificationAvatar(
-                initials = notification.userInitials,
+                student = notification.student,
                 type = notification.type,
                 onClick = onAvatarClick
             )
@@ -76,23 +76,23 @@ private fun NotificationContentSwitcher(
 ) {
     when (notification.type) {
         NotificationType.REVIEW -> ReviewNotificationContent(
-            userName = notification.userName,
+            userName = notification.student.name,
             subject = notification.subject ?: "",
             comment = notification.comment ?: "",
             rating = notification.rating ?: 0,
             onViewDetailClick = onViewDetailClick
         )
         NotificationType.LIKE -> LikeNotificationContent(
-            userName = notification.userName,
+            userName = notification.student.name,
             reviewOf = notification.reviewOf ?: ""
         )
         NotificationType.FOLLOW_REQUEST -> FollowRequestContent(
-            userName = notification.userName,
+            userName = notification.student.name,
             onAcceptClick = onAcceptClick,
             onRejectClick = onRejectClick
         )
         NotificationType.COMMENT -> CommentNotificationContent(
-            userName = notification.userName,
+            userName = notification.student.name,
             subject = notification.subject ?: "",
             courseCode = notification.courseCode ?: "",
             snippet = notification.snippet ?: "",
