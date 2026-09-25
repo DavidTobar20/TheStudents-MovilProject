@@ -36,7 +36,6 @@ fun ReviewerInfo(
         ProfileIcon(
             initials = student.initials,
             profileImage = student.profileImage,
-            profileImageUrl = null, // De momento null para otros usuarios
             backgroundColor = student.profileColor,
             contentColor = OnAvatar,
             fontSize = 14.sp,

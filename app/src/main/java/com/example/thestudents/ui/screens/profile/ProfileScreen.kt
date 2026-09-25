@@ -38,7 +38,6 @@ import com.example.thestudents.ui.utils.ButtonWithIcon
 fun BodyProfile(
     student: Student,
     email: String,
-    profileImageUrl: String?,
     reviews: List<Review>,
     selectedTab: ProfileTab,
     onTabSelected: (ProfileTab) -> Unit,
@@ -53,8 +52,7 @@ fun BodyProfile(
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             item { 
                 UserInfoSection(
-                    student = student,
-                    profileImageUrl = profileImageUrl
+                    student = student
                 ) 
             }
             item {
@@ -123,7 +121,6 @@ fun BodyProfilePreview() {
             BodyProfile(
                 student = student,
                 email = "user@example.com",
-                profileImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCq6qha5YiJYI4ZIs3Sug9cpBKz23j-X5kWIMC6qU0jA&s=10",
                 reviews = localReviewsProvider.getReviewsForStudent(student.id),
                 selectedTab = selectedTab,
                 onTabSelected = { selectedTab = it },
@@ -170,7 +167,6 @@ fun ProfileScreen(
         BodyProfile(
             student = state.student!!,
             email = state.email,
-            profileImageUrl = state.profileImageUrl,
             reviews = state.reviews,
             selectedTab = state.selectedTab,
             onTabSelected = { profileViewModel.onTabSelected(it) },

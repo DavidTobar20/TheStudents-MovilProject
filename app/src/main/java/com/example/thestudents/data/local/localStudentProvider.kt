@@ -35,7 +35,7 @@ object localStudentProvider {
             initials = "VG",
             profileColor = Avatar2,
             period = "2025-1",
-            profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU8TFJ7iUwyhF0_LOmPpst5aFLBQUYvRcuREn63JTVvg&s=10"
+            profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUZ126jfV5AGfpktXWWmTEFgk2RR39k68nIDL2favyjg&s=10"
         ),
         Student(
             id = "3",
@@ -49,7 +49,7 @@ object localStudentProvider {
             initials = "DR",
             profileColor = Avatar3,
             period = "2025-2",
-            profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU8TFJ7iUwyhF0_LOmPpst5aFLBQUYvRcuREn63JTVvg&s=10"
+            profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQojgKLiFp8-dyqIK4ohTSzt9c9xrJS7uo_GPagEvVQnQ&s=10"
         ),
         Student(
             id = "4",
@@ -63,7 +63,7 @@ object localStudentProvider {
             initials = "MJ",
             profileColor = Avatar4,
             period = "2025-2",
-            profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU8TFJ7iUwyhF0_LOmPpst5aFLBQUYvRcuREn63JTVvg&s=10"
+            profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjI4Khb5hnQidFixTCwkg-wn4syJsMg2bUN4T_87hcpg&s=10"
         ),
         Student(
             id = "5",
@@ -77,7 +77,7 @@ object localStudentProvider {
             initials = "VT",
             profileColor = Avatar7,
             period = "2024-2",
-            profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU8TFJ7iUwyhF0_LOmPpst5aFLBQUYvRcuREn63JTVvg&s=10"
+            profileImage = "https://radionacional-v3.s3.amazonaws.com/s3fs-public/node/article/field_image/Diomedes%20D%C3%ADas.jpg"
         )
     )
     

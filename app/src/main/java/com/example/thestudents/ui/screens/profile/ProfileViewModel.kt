@@ -21,10 +21,7 @@ class ProfileViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(
         ProfileState(
-            email = authRepository.currentUser?.email ?: "",
-            profileImageUrl = authRepository.currentUser?.photoUrl?.toString().let { 
-                if (it.isNullOrEmpty()) defaultPhotoUrl else it 
-            }
+            email = authRepository.currentUser?.email ?: ""
         )
     )
     val uiState: StateFlow<ProfileState> = _uiState.asStateFlow()
@@ -35,15 +32,16 @@ class ProfileViewModel @Inject constructor(
 
     fun loadProfile() {
         _uiState.update { it.copy(isLoading = true) }
-        val student = localStudentProvider.currentUser
-        val reviews = localReviewsProvider.getReviewsForStudent(student.id)
+        val baseStudent = localStudentProvider.currentUser
+        val reviews = localReviewsProvider.getReviewsForStudent(baseStudent.id)
         val authPhoto = authRepository.currentUser?.photoUrl?.toString()
-        val defaultPhotoUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCq6qha5YiJYI4ZIs3Sug9cpBKz23j-X5kWIMC6qU0jA&s=10"
+        val photoUrl = if (authPhoto.isNullOrEmpty()) defaultPhotoUrl else authPhoto
+        val student = baseStudent.copy(profileImage = photoUrl)
+
         _uiState.update {
             it.copy(
                 student = student,
                 reviews = reviews,
-                profileImageUrl = if (authPhoto.isNullOrEmpty()) defaultPhotoUrl else authPhoto,
                 isLoading = false
             )
         }

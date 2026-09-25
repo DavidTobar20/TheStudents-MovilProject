@@ -9,6 +9,5 @@ data class ProfileState(
     val email: String = "",
     val reviews: List<Review> = emptyList(),
     val selectedTab: ProfileTab = ProfileTab.RECEIVED,
-    val isLoading: Boolean = false,
-    val profileImageUrl: String? = null
+    val isLoading: Boolean = false
 )

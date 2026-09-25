@@ -14,7 +14,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.Student
@@ -42,7 +41,7 @@ fun BodyStudentDetail(
 ) {
     LazyColumn(modifier = modifier.fillMaxSize()) {
         item { ProfileHeader(onBackClick = onBackClick) }
-        item { UserInfoSection(student = student, profileImageUrl = null) }
+        item { UserInfoSection(student = student) }
         item { StatsSection(student = student) }
         item {
             ButtonWithIcon(

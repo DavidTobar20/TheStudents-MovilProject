@@ -25,13 +25,18 @@ class EditarPerfilViewModel @Inject constructor(
 
     init {
         val currentUser = localStudentProvider.currentUser
+        val authPhoto = authRepository.currentUser?.photoUrl?.toString()
+        val student = if (!authPhoto.isNullOrEmpty()) {
+            currentUser.copy(profileImage = authPhoto)
+        } else {
+            currentUser
+        }
         _uiState.update {
             it.copy(
-                student = currentUser,
-                name = currentUser.name,
-                username = currentUser.username,
-                bio = currentUser.bio,
-                profileImageUrl = authRepository.currentUser?.photoUrl?.toString() ?: ""
+                student = student,
+                name = student.name,
+                username = student.username,
+                bio = student.bio
             )
         }
     }
@@ -61,9 +66,10 @@ class EditarPerfilViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true) }
             val result = storageRepository.uploadProfileImage(uri)
             if (result.isSuccess) {
-                _uiState.update {
-                    it.copy(
-                        profileImageUrl = result.getOrNull(),
+                val url = result.getOrNull()
+                _uiState.update { state ->
+                    state.copy(
+                        student = state.student.copy(profileImage = url),
                         isLoading = false
                     )
                 }

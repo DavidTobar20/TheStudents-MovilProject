@@ -8,7 +8,6 @@ data class EditarPerfilState(
     val name: String = "",
     val username: String = "",
     val bio: String = "",
-    val profileImageUrl: String? = null,
     val showReviews: Boolean = true,
     val notificationsEnabled: Boolean = true,
     val isLoading: Boolean = false

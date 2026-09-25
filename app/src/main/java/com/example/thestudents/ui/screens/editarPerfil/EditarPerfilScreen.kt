@@ -44,7 +44,6 @@ fun BodyEditarPerfilScreen(
     onUsernameChange: (String) -> Unit,
     bio: String,
     onBioChange: (String) -> Unit,
-    profileImageUrl: String?,
     showReviews: Boolean,
     onShowReviewsChange: (Boolean) -> Unit,
     notificationsEnabled: Boolean,
@@ -68,7 +67,6 @@ fun BodyEditarPerfilScreen(
                 EditPhotoSection(
                     initials = student.initials,
                     profileImage = student.profileImage,
-                    profileImageUrl = profileImageUrl,
                     onEditClick = onChangePhotoClick
                 )
             }
@@ -149,7 +147,6 @@ fun EditarPerfilScreen(
         onUsernameChange = { editarPerfilViewModel.updateUsername(it) },
         bio = state.bio,
         onBioChange = { editarPerfilViewModel.updateBio(it) },
-        profileImageUrl = state.profileImageUrl,
         showReviews = state.showReviews,
         onShowReviewsChange = { editarPerfilViewModel.updateShowReviews(it) },
         notificationsEnabled = state.notificationsEnabled,
