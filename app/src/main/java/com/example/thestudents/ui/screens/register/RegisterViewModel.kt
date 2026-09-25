@@ -78,24 +78,20 @@ class RegisterViewModel @Inject constructor(
         if (names.isEmpty() || lastNames.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             _errorMessage.value = "Todos los campos son obligatorios"
             _mostrarMensajeError.value = true
-        } else if (password.length < 6) {
-            _errorMessage.value = "La contraseña debe tener al menos 6 caracteres"
-            _mostrarMensajeError.value = true
-        } else if (email == "admin@admin.com") {
-            _errorMessage.value = "El correo ya esta en uso"
+        } else if (password != confirmPassword) {
+            _errorMessage.value = "Las contraseñas no coinciden"
             _mostrarMensajeError.value = true
         } else {
             viewModelScope.launch {
                 _uiState.update { it.copy(isLoading = true) }
-                try {
-                    authRepository.signUp(email, password)
+                val result = authRepository.signUp(email, password)
+                if (result.isSuccess) {
                     _navigateToHome.value = true
-                    _uiState.update { it.copy(isLoading = false) }
-                } catch (e: Exception) {
-                    _errorMessage.value = e.message.toString()
+                } else {
+                    _errorMessage.value = result.exceptionOrNull()?.message ?: "Error al registrar la cuenta"
                     _mostrarMensajeError.value = true
-                    _uiState.update { it.copy(isLoading = false) }
                 }
+                _uiState.update { it.copy(isLoading = false) }
             }
         }
     }

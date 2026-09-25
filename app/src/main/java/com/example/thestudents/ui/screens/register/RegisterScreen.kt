@@ -46,6 +46,19 @@ fun RegisterScreen(
         }
     }
 
+    if (showError) {
+        AlertDialog(
+            onDismissRequest = { registerViewModel.onErrorDismiss() },
+            title = { Text(text = "Error de registro") },
+            text = { Text(text = errorMsg) },
+            confirmButton = {
+                TextButton(onClick = { registerViewModel.onErrorDismiss() }) {
+                    Text(text = "Aceptar")
+                }
+            }
+        )
+    }
+
     RegisterBody(
         names = state.names,
         onNamesChange = { registerViewModel.onNamesChange(it) },

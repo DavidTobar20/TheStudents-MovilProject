@@ -34,8 +34,7 @@ object localStudentProvider {
             reviewsCount = 15,
             initials = "VG",
             profileColor = Avatar2,
-            period = "2025-1",
-            profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUZ126jfV5AGfpktXWWmTEFgk2RR39k68nIDL2favyjg&s=10"
+            period = "2025-1"
         ),
         Student(
             id = "3",
