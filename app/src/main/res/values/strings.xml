@@ -152,6 +152,10 @@
         <item quantity="one">%1$s · %2$d reseña</item>
         <item quantity="other">%1$s · %2$d reseñas</item>
     </plurals>
+    <plurals name="resenas_count">
+        <item quantity="one">%1$d reseña</item>
+        <item quantity="other">%1$d reseñas</item>
+    </plurals>
     <plurals name="comentario_con_estrellas">
         <item quantity="one">. \"%1$s\" (con %2$d estrella)</item>
         <item quantity="other">. \"%1$s\" (con %2$d estrellas)</item>

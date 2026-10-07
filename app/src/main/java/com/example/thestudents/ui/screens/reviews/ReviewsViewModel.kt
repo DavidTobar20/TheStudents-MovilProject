@@ -1,7 +1,8 @@
 package com.example.thestudents.ui.screens.reviews
 
 import androidx.lifecycle.ViewModel
-import com.example.thestudents.data.local.localCourseSectionProvider
+import com.example.thestudents.data.local.localInscriptionProvider
+import com.example.thestudents.data.local.localStudentProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +15,8 @@ class ReviewsViewModel @Inject constructor(): ViewModel() {
     val uiState: StateFlow<ReviewsState> = _uiState
 
     fun getAllSections(){
-        _uiState.update { it.copy(sections = localCourseSectionProvider.sections) }
+        val sections = localInscriptionProvider.getCourseSectionsForUser(localStudentProvider.currentUser.id)
+        _uiState.update { it.copy(sections = sections) }
     }
     init {
         getAllSections()

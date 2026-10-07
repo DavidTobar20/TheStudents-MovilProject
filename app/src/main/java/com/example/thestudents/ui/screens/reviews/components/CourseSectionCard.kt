@@ -2,11 +2,7 @@ package com.example.thestudents.ui.screens.reviews.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material3.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,7 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.data.CourseSection
-import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.data.local.localInscriptionProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
@@ -27,15 +23,8 @@ fun CourseSectionCard(
 ) {
     Column(modifier = modifier.padding(vertical = 12.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = section.icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(20.dp),
-            )
-            Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = section.title,
+                text = "${section.title} (${section.period})",
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.primary
@@ -49,13 +38,14 @@ fun CourseSectionCard(
             shadowElevation = 1.dp
         ) {
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                section.students.forEachIndexed { index, student ->
+                section.inscriptions.forEachIndexed { index, inscription ->
+                    val student = inscription.student
                     ReviewStudentItem(
-                        student = student,
+                        inscription = inscription,
                         onStudentClick = { onStudentClick(student.id) },
                         onWriteReviewClick = { onWriteReviewClick(student.id) }
                     )
-                    if (index < (section.students.size - 1)) {
+                    if (index < (section.inscriptions.size - 1)) {
                         HorizontalDivider(
                             color = MaterialTheme.colorScheme.outlineVariant,
                             thickness = 0.5.dp
@@ -75,10 +65,10 @@ fun CourseSectionCardPreview() {
             CourseSectionCard(
                 section = CourseSection(
                     title = "Estructuras de Datos (ISIS1206)",
-                    icon = Icons.Default.Storage,
-                    students = listOf(
-                        localStudentProvider.students[3],
-                        localStudentProvider.students[4]
+                    period = "2025-1",
+                    inscriptions = listOf(
+                        localInscriptionProvider.inscriptions[2],
+                        localInscriptionProvider.inscriptions[4]
                     )
                 ),
                 onStudentClick = {},

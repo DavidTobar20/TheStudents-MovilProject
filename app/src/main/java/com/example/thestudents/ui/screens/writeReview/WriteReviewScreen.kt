@@ -165,7 +165,7 @@ fun WriteReviewScreen(
             onStudentClick = { onStudentClick(state.student!!.id) },
             nameReviewed = state.student!!.name,
             initialsReviewed = state.student!!.initials,
-            courseInfoReviewed = "${state.student!!.program} • ${state.student!!.period}",
+            courseInfoReviewed = state.student!!.program,
         )
     }
 }

@@ -61,7 +61,8 @@ fun StudentCard(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .clickable(onClick = onClick)
+                    .clickable(onClick = onClick),
+                verticalArrangement = Arrangement.spacedBy(1.dp)
             ) {
                 Text(
                     text = student.name,
@@ -70,15 +71,12 @@ fun StudentCard(
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = pluralStringResource(
-                        R.plurals.programa_y_resenas,
-                        student.reviewsCount,
-                        student.program,
-                        student.reviewsCount
-                    ),
+                    text = "${student.program}\n${pluralStringResource(R.plurals.resenas_count, student.reviewsCount, student.reviewsCount)}",
                     fontSize = 13.sp,
+                    lineHeight = 14.sp,
                     color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f)
                 )
+                Spacer(modifier = Modifier.height(4.dp))
                 StarsRating(
                     modifier = Modifier.size(16.dp),
                     rating = student.rating.toInt(),

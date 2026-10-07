@@ -4,8 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,19 +14,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
-import com.example.thestudents.data.Student
-import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.data.Inscription
+import com.example.thestudents.data.local.localInscriptionProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ButtonWithoutIcon
 import com.example.thestudents.ui.utils.ProfileIcon
 
 @Composable
 fun ReviewStudentItem(
-    student: Student,
+    inscription: Inscription,
     onStudentClick: () -> Unit,
     onWriteReviewClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val student = inscription.student
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -59,7 +58,7 @@ fun ReviewStudentItem(
                 color = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = student.period,
+                text = inscription.period,
                 fontSize = 13.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -80,7 +79,7 @@ fun ReviewStudentItemPreview() {
     TheStudentsTheme {
         Surface {
             ReviewStudentItem(
-                student = localStudentProvider.students[3],
+                inscription = localInscriptionProvider.inscriptions[2],
                 onStudentClick = {},
                 onWriteReviewClick = {}
             )
