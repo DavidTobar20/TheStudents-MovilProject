@@ -1,0 +1,34 @@
+package com.example.thestudents.data.datasource.services
+
+import com.example.thestudents.data.dtos.CreateReviewDto
+import com.example.thestudents.data.dtos.ReviewDto
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+
+interface ReviewRetrofitService {
+
+    @GET("excluir/{student_id}")
+    suspend fun getAllReviewsExcludingStudentId(@Path("student_id") studentId: String): List<ReviewDto>
+
+    @GET("resenado/{resenado_id}")
+    suspend fun getReviewsByReviewedStudentId(@Path("resenado_id") resenado_id: String): List<ReviewDto>
+
+    @GET("autor/{autor_id}")
+    suspend fun getReviewsByReviewerId(@Path("autor_id") autor_id: String): List<ReviewDto>
+
+    @POST("")
+    suspend fun createReview(@Body review: CreateReviewDto): Unit
+
+    @PUT("{review_id}")
+    suspend fun updateReview(@Path("review_id") reviewId: String, @Body review: CreateReviewDto): Unit
+
+    @DELETE("{review_id}")
+    suspend fun deleteReview(@Path("review_id") reviewId: String): Unit
+
+
+
+}
