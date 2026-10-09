@@ -6,4 +6,6 @@ data class HomeState(
     val followedReviews: List<Review> = emptyList(),
     val likedReviews: Set<Int> = emptySet(),
     val dislikedReviews: Set<Int> = emptySet(),
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null
 )

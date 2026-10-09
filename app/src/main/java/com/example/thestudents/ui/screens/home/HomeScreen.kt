@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,9 +23,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
 import com.example.thestudents.data.Review
+import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.ui.components.ReviewCard
 import com.example.thestudents.ui.screens.home.components.HomeTopBar
 import com.example.thestudents.ui.theme.TheStudentsTheme
@@ -41,6 +42,8 @@ fun HomeScreen(
 
     BodyHomeScreen(
         followedReviews = state.followedReviews,
+        isLoading = state.isLoading,
+        errorMessage = state.errorMessage,
         onLikeClick = { index -> homeViewModel.updateLikedReviews(index) },
         onDislikeClick = { index -> homeViewModel.updateDislikedReviews(index) },
         onCommentClick = onReviewClick,
@@ -55,6 +58,8 @@ fun HomeScreen(
 @Composable
 fun BodyHomeScreen(
     followedReviews: List<Review>,
+    isLoading: Boolean = false,
+    errorMessage: String? = null,
     onLikeClick: (Int) -> Unit,
     onDislikeClick: (Int) -> Unit,
     onCommentClick: (String) -> Unit,
@@ -67,44 +72,68 @@ fun BodyHomeScreen(
     Column(modifier = modifier.fillMaxSize()) {
         HomeTopBar()
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 16.dp)
-        ) {
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
+        when {
+            isLoading -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
-
-            if (followedReviews.isEmpty()) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillParentMaxSize()
-                            .padding(32.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = stringResource(R.string.aun_no_hay_resenas_de_las_personas_que_sigues_comienza_a_explorar_para_seguir_a_tus_companeros),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center
+            errorMessage != null -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = errorMessage,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+            followedReviews.isEmpty() -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(R.string.aun_no_hay_resenas_de_las_personas_que_sigues_comienza_a_explorar_para_seguir_a_tus_companeros),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+            else -> {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    item {
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    itemsIndexed(followedReviews) { index, review ->
+                        ReviewCard(
+                            review = review,
+                            isLiked = isLiked(index),
+                            isDisliked = isDisliked(index),
+                            onLikeClick = { onLikeClick(index) },
+                            onDislikeClick = { onDislikeClick(index) },
+                            onCommentClick = { onCommentClick(review.id) },
+                            onCardClick = { onCardClick(review.id) },
+                            onReviewerClick = { onReviewerClick(review.reviewer.id) },
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                         )
                     }
-                }
-            } else {
-                itemsIndexed(followedReviews) { index, review ->
-
-                    ReviewCard(
-                        review = review,
-                        isLiked = isLiked(index),
-                        isDisliked = isDisliked(index),
-                        onLikeClick = { onLikeClick(index) },
-                        onDislikeClick = { onDislikeClick(index) },
-                        onCommentClick = { onCommentClick(review.id) },
-                        onCardClick = { onCardClick(review.id) },
-                        onReviewerClick = { onReviewerClick(review.reviewer.id) },
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                    )
                 }
             }
         }
@@ -116,10 +145,17 @@ fun BodyHomeScreen(
 fun HomeScreenPreview() {
     TheStudentsTheme(darkTheme = false) {
         Surface {
-            HomeScreen(
-                homeViewModel = viewModel(),
-                onReviewClick = {},
-                onStudentClick = {}
+            BodyHomeScreen(
+                followedReviews = localReviewsProvider.allReviews,
+                isLoading = false,
+                errorMessage = null,
+                onLikeClick = {},
+                onDislikeClick = {},
+                onCommentClick = {},
+                onCardClick = {},
+                onReviewerClick = {},
+                isLiked = { false },
+                isDisliked = { false }
             )
         }
     }
@@ -130,10 +166,17 @@ fun HomeScreenPreview() {
 fun HomeScreenDarkPreview() {
     TheStudentsTheme(darkTheme = true) {
         Surface {
-            HomeScreen(
-                homeViewModel = viewModel(),
-                onReviewClick = {},
-                onStudentClick = {}
+            BodyHomeScreen(
+                followedReviews = localReviewsProvider.allReviews,
+                isLoading = false,
+                errorMessage = null,
+                onLikeClick = {},
+                onDislikeClick = {},
+                onCommentClick = {},
+                onCardClick = {},
+                onReviewerClick = {},
+                isLiked = { false },
+                isDisliked = { false }
             )
         }
     }

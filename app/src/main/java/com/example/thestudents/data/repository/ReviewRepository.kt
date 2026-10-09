@@ -1,6 +1,6 @@
 package com.example.thestudents.data.repository
 
-import coil.network.HttpException
+import retrofit2.HttpException
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.datasource.impl.ReviewRetrofitDataSourceImpl
 import com.example.thestudents.data.dtos.CreateReviewDto

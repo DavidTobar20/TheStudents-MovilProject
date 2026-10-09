@@ -1,13 +1,13 @@
 package com.example.thestudents.ui.screens.home
 
 import androidx.lifecycle.ViewModel
-import com.example.thestudents.data.local.localReviewsProvider
-import com.example.thestudents.data.local.localStudentProvider
+import androidx.lifecycle.viewModelScope
 import com.example.thestudents.data.repository.ReviewRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,10 +60,29 @@ class HomeViewModel @Inject constructor(
     }
 
     init {
-        _uiState.update {
-            it.copy(
-                followedReviews = localReviewsProvider.getReviewsByFollowed(localStudentProvider.followingIds)
-            )
+        loadReviews()
+    }
+
+    fun loadReviews() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            val result = reviewRepository.getAllReviewsExcludingStudentId("1")
+            result.onSuccess { reviews ->
+                _uiState.update {
+                    it.copy(
+                        followedReviews = reviews,
+                        isLoading = false,
+                        errorMessage = null
+                    )
+                }
+            }.onFailure { error ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = error.message ?: "Error al cargar las reseñas"
+                    )
+                }
+            }
         }
     }
 
