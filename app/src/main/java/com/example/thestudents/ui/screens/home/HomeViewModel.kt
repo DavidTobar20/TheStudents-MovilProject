@@ -3,6 +3,7 @@ package com.example.thestudents.ui.screens.home
 import androidx.lifecycle.ViewModel
 import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.data.repository.ReviewRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -10,7 +11,9 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(): ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val reviewRepository: ReviewRepository
+): ViewModel() {
 
     private val _uiState = MutableStateFlow<HomeState>(HomeState())
     val uiState: StateFlow<HomeState> = _uiState
@@ -59,7 +62,6 @@ class HomeViewModel @Inject constructor(): ViewModel() {
     init {
         _uiState.update {
             it.copy(
-                followingIds = localStudentProvider.followingIds,
                 followedReviews = localReviewsProvider.getReviewsByFollowed(localStudentProvider.followingIds)
             )
         }
