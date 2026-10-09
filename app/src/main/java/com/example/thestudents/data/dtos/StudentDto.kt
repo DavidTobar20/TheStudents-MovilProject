@@ -6,47 +6,56 @@ import com.example.thestudents.ui.theme.avatarColorFor
 import com.google.gson.annotations.SerializedName
 
 data class StudentDto(
-    val id: Int,
-    val correo: String,
+    val id: Int? = null,
+    val correo: String? = null,
     @SerializedName("nombre_usuario")
-    val nombreUsuario: String,
-    val nombre: String,
-    val biografia: String,
+    val nombreUsuario: String? = null,
+    val nombre: String? = null,
+    val biografia: String? = null,
     @SerializedName("foto_url")
-    val fotoUrl: String,
+    val fotoUrl: String? = null,
     @SerializedName("color_perfil")
-    val colorPerfil: String,
-    val carrera: String,
-    val semestre: Int,
-    val estado: String,
+    val colorPerfil: String? = null,
+    val carrera: String? = null,
+    val semestre: Int? = null,
+    val estado: String? = null,
     @SerializedName("fecha_creacion")
-    val fechaCreacion: String
+    val fechaCreacion: String? = null
 )
 
 fun StudentDto.toStudent(): Student {
+    val usernameSafe = nombreUsuario.orEmpty()
+    val nameSafe = nombre.orEmpty()
+    val idSafe = id?.toString() ?: "0"
+
     val parsedColor = try {
-        Color(android.graphics.Color.parseColor(colorPerfil))
+        if (!colorPerfil.isNullOrBlank()) {
+            Color(android.graphics.Color.parseColor(colorPerfil))
+        } else {
+            avatarColorFor(usernameSafe.ifEmpty { idSafe })
+        }
     } catch (e: Exception) {
-        avatarColorFor(nombreUsuario.ifEmpty { id.toString() })
+        avatarColorFor(usernameSafe.ifEmpty { idSafe })
     }
 
-    val initialsComputed = nombre.split(" ")
+    val initialsComputed = nameSafe.split(" ")
+        .filter { it.isNotBlank() }
         .mapNotNull { it.firstOrNull()?.uppercase() }
         .take(2)
         .joinToString("")
         .ifEmpty { "US" }
 
     return Student(
-        id = id.toString(),
-        name = nombre,
-        username = nombreUsuario,
-        program = carrera,
-        semester = semestre,
-        bio = biografia,
+        id = idSafe,
+        name = nameSafe,
+        username = usernameSafe,
+        program = carrera.orEmpty(),
+        semester = semestre ?: 1,
+        bio = biografia.orEmpty(),
         rating = 0f,
         reviewsCount = 0,
         initials = initialsComputed,
         profileColor = parsedColor,
-        profileImage = fotoUrl.ifEmpty { null }
+        profileImage = if (fotoUrl.isNullOrBlank()) null else fotoUrl
     )
 }

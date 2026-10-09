@@ -8,6 +8,12 @@ data class ProfileState(
     val student: Student? = null,
     val email: String = "",
     val reviews: List<Review> = emptyList(),
-    val selectedTab: ProfileTab = ProfileTab.RECEIVED,
-    val isLoading: Boolean = false
+    val receivedReviews: List<Review> = emptyList(),
+    val writtenReviews: List<Review> = emptyList(),
+    val selectedTab: ProfileTab = ProfileTab.WRITTEN,
+    val followersCount: Int = 0,
+    val followingCount: Int = 0,
+    val reviewsCount: Int = 0,
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null
 )

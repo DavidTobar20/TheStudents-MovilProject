@@ -14,5 +14,7 @@ data class Student(
     val reviewsCount: Int,
     val initials: String,
     val profileColor: Color,
-    val profileImage: String? = null
+    val profileImage: String? = null,
+    val followersCount: Int = 0,
+    val followingCount: Int = 0
 )

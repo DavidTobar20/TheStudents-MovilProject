@@ -26,8 +26,12 @@ import com.example.thestudents.ui.utils.ProfileIcon
 fun ReviewItem(
     modifier: Modifier = Modifier,
     review: Review,
+    isWrittenTab: Boolean = false,
     onClick: () -> Unit = {}
 ) {
+    val displayStudent = if (isWrittenTab) review.reviewedStudent else review.reviewer
+    val displayName = if (isWrittenTab) "Para: ${review.reviewedStudent.name}" else review.reviewer.name
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -36,8 +40,8 @@ fun ReviewItem(
     ) {
         Row(verticalAlignment = Alignment.Top) {
             ProfileIcon(
-                initials = review.reviewer.initials,
-                profileImage = review.reviewer.profileImage,
+                initials = displayStudent.initials,
+                profileImage = displayStudent.profileImage,
                 backgroundColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 14.sp,
@@ -47,7 +51,7 @@ fun ReviewItem(
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = review.reviewer.name,
+                        text = displayName,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 15.sp

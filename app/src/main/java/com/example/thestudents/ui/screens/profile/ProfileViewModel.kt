@@ -1,20 +1,23 @@
 package com.example.thestudents.ui.screens.profile
 
 import androidx.lifecycle.ViewModel
-import com.example.thestudents.data.local.localReviewsProvider
+import androidx.lifecycle.viewModelScope
 import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.data.repository.AuthRepository
+import com.example.thestudents.data.repository.ReviewRepository
 import com.example.thestudents.ui.screens.profile.components.ProfileTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val reviewRepository: ReviewRepository
 ): ViewModel() {
 
     private val defaultPhotoUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCq6qha5YiJYI4ZIs3Sug9cpBKz23j-X5kWIMC6qU0jA&s=10"
@@ -31,19 +34,46 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun loadProfile() {
-        _uiState.update { it.copy(isLoading = true) }
-        val baseStudent = localStudentProvider.currentUser
-        val reviews = localReviewsProvider.getReviewsForStudent(baseStudent.id)
-        val authPhoto = authRepository.currentUser?.photoUrl?.toString()
-        val photoUrl = if (authPhoto.isNullOrEmpty()) defaultPhotoUrl else authPhoto
-        val student = baseStudent.copy(profileImage = photoUrl)
+        _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+        viewModelScope.launch {
+            val baseStudent = localStudentProvider.currentUser
+            val currentUserId = baseStudent.id
 
-        _uiState.update {
-            it.copy(
-                student = student,
-                reviews = reviews,
-                isLoading = false
-            )
+            // Consultar reseñas escritas y recibidas desde el backend vía Retrofit
+            val writtenResult = reviewRepository.getReviewsByReviewerId(currentUserId)
+            val receivedResult = reviewRepository.getReviewsByReviewedStudentId(currentUserId)
+
+            val written = writtenResult.getOrDefault(emptyList())
+            val received = receivedResult.getOrDefault(emptyList())
+
+            val authPhoto = authRepository.currentUser?.photoUrl?.toString()
+            val photoUrl = if (authPhoto.isNullOrEmpty()) defaultPhotoUrl else authPhoto
+            val student = baseStudent.copy(profileImage = photoUrl)
+
+            val followersCount = localStudentProvider.getFollowersCount(currentUserId)
+            val followingCount = localStudentProvider.getFollowingCount(currentUserId)
+            val totalReviewsCount = written.size + received.size
+
+            val currentTab = _uiState.value.selectedTab
+            val activeReviews = if (currentTab == ProfileTab.RECEIVED) received else written
+
+            val error = if (writtenResult.isFailure && receivedResult.isFailure) {
+                writtenResult.exceptionOrNull()?.message ?: "Error al cargar reseñas"
+            } else null
+
+            _uiState.update {
+                it.copy(
+                    student = student,
+                    writtenReviews = written,
+                    receivedReviews = received,
+                    reviews = activeReviews,
+                    followersCount = followersCount,
+                    followingCount = followingCount,
+                    reviewsCount = totalReviewsCount,
+                    isLoading = false,
+                    errorMessage = error
+                )
+            }
         }
     }
 
@@ -52,6 +82,12 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun onTabSelected(tab: ProfileTab) {
-        _uiState.update { it.copy(selectedTab = tab) }
+        _uiState.update { state ->
+            val activeReviews = if (tab == ProfileTab.RECEIVED) state.receivedReviews else state.writtenReviews
+            state.copy(
+                selectedTab = tab,
+                reviews = activeReviews
+            )
+        }
     }
 }
