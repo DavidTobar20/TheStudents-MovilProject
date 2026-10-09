@@ -2,7 +2,6 @@ package com.example.thestudents.ui.screens.updateReview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.data.repository.ReviewRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,19 +20,39 @@ class UpdateReviewViewModel @Inject constructor(
     val uiState: StateFlow<UpdateReviewState> = _uiState.asStateFlow()
 
     fun loadReview(reviewId: String) {
-        val localReview = localReviewsProvider.getReviewById(reviewId)
-        if (localReview != null) {
-            val initialRating = localReview.rating?.toDoubleOrNull()?.toInt() ?: 0
-            _uiState.update {
-                it.copy(
-                    reviewId = reviewId,
-                    review = localReview,
-                    rating = initialRating,
-                    reviewContent = localReview.content
-                )
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, errorMessage = null, reviewId = reviewId) }
+            val result = reviewRepository.getReviewById(reviewId)
+            if (result.isSuccess) {
+                val review = result.getOrNull()
+                if (review != null) {
+                    val initialRating = review.rating?.toDoubleOrNull()?.toInt() ?: 0
+                    _uiState.update {
+                        it.copy(
+                            review = review,
+                            rating = initialRating,
+                            reviewContent = review.content,
+                            isLoading = false,
+                            errorMessage = null
+                        )
+                    }
+                } else {
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = "Reseña no encontrada"
+                        )
+                    }
+                }
+            } else {
+                val errorMsg = result.exceptionOrNull()?.message ?: "Error al cargar la reseña"
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = errorMsg
+                    )
+                }
             }
-        } else {
-            _uiState.update { it.copy(reviewId = reviewId) }
         }
     }
 

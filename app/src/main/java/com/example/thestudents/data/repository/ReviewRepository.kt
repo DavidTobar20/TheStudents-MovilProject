@@ -44,6 +44,16 @@ class ReviewRepository @Inject constructor(
         }
     }
 
+    suspend fun getReviewById(reviewId: String) : Result<Review> {
+        return try {
+            val reviewDto = reviewRemoteDataSource.getReviewById(reviewId)
+            val review = reviewDto.toReview()
+            Result.success(review)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     suspend fun createReview(
         autorId: String,
         resenadoId: String,

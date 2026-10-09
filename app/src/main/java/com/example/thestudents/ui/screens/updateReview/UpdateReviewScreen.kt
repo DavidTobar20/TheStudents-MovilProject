@@ -149,38 +149,52 @@ fun UpdateReviewScreen(
     }
 
     val review = state.review
-    if (review == null && !state.isLoading) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = stringResource(R.string.estudiante_no_encontrado),
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+    when {
+        state.isLoading && review == null -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        review == null -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = state.errorMessage ?: stringResource(R.string.resena_no_encontrada),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+        else -> {
+            val reviewedStudent = review.reviewedStudent
+            BodyUpdateReviewScreen(
+                modifier = modifier,
+                rating = state.rating,
+                onRatingSelected = { updateReviewViewModel.updateRating(it) },
+                reviewContent = state.reviewContent,
+                onReviewContentChange = { updateReviewViewModel.updateReviewContent(it) },
+                isAnonymous = state.isAnonymous,
+                onAnonymousChange = { updateReviewViewModel.updateIsAnonymous(it) },
+                nameReviewed = reviewedStudent.name,
+                initialsReviewed = reviewedStudent.initials,
+                courseInfoReviewed = "${review.classReviewed} · ${review.periodReviewed}",
+                profileImageReviewed = reviewedStudent.profileImage,
+                onUpdateClick = {
+                    updateReviewViewModel.submitUpdateReview(onSuccess = onUpdateSuccess)
+                },
+                onBackClick = onBackClick,
+                onStudentClick = { onStudentClick(reviewedStudent.id) },
+                isLoading = state.isLoading
             )
         }
-    } else if (review != null) {
-        val reviewedStudent = review.reviewedStudent
-        BodyUpdateReviewScreen(
-            modifier = modifier,
-            rating = state.rating,
-            onRatingSelected = { updateReviewViewModel.updateRating(it) },
-            reviewContent = state.reviewContent,
-            onReviewContentChange = { updateReviewViewModel.updateReviewContent(it) },
-            isAnonymous = state.isAnonymous,
-            onAnonymousChange = { updateReviewViewModel.updateIsAnonymous(it) },
-            nameReviewed = reviewedStudent.name,
-            initialsReviewed = reviewedStudent.initials,
-            courseInfoReviewed = "${review.classReviewed} · ${review.periodReviewed}",
-            profileImageReviewed = reviewedStudent.profileImage,
-            onUpdateClick = {
-                updateReviewViewModel.submitUpdateReview(onSuccess = onUpdateSuccess)
-            },
-            onBackClick = onBackClick,
-            onStudentClick = { onStudentClick(reviewedStudent.id) },
-            isLoading = state.isLoading
-        )
     }
 }
 

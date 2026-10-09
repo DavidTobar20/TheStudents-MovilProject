@@ -20,6 +20,9 @@ interface ReviewRetrofitService {
     @GET("resena/autor/{autor_id}")
     suspend fun getReviewsByReviewerId(@Path("autor_id") autor_id: String): List<ReviewDto>
 
+    @GET("resena/{resena_id}")
+    suspend fun getReviewById(@Path("resena_id") resena_id: String): ReviewDto
+
     @POST("resena")
     suspend fun createReview(@Body review: CreateReviewDto): Unit
 

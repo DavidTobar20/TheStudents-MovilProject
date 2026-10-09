@@ -11,6 +11,8 @@ interface ReviewRemoteDataSource {
 
     suspend fun getReviewsByReviewerId(reviewerId: String): List<ReviewDto>
 
+    suspend fun getReviewById(reviewId: String): ReviewDto
+
     suspend fun createReview(review: CreateReviewDto): Unit
 
     suspend fun updateReview(reviewId: String, review: CreateReviewDto): Unit
