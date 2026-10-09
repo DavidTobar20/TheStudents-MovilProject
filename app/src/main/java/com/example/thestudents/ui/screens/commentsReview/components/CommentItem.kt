@@ -1,6 +1,9 @@
 package com.example.thestudents.ui.screens.commentsReview.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ThumbDown
 import androidx.compose.material.icons.outlined.ThumbUp
@@ -32,8 +35,12 @@ fun CommentItem(
     isDisliked: Boolean,
     onLikeClick: () -> Unit,
     onDislikeClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onCommentatorClick: (() -> Unit)? = null
 ) {
+    val commentatorModifier =
+        if (onCommentatorClick != null) Modifier.clickable(onClick = onCommentatorClick) else Modifier
+
     Row(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -43,7 +50,10 @@ fun CommentItem(
             backgroundColor = comment.commentator.profileColor,
             contentColor = OnAvatar,
             fontSize = 18.sp,
-            modifier = Modifier.size(43.dp)
+            modifier = Modifier
+                .size(43.dp)
+                .clip(CircleShape)
+                .then(commentatorModifier)
         )
         Spacer(modifier = Modifier.width(10.dp))
         Column(
@@ -56,7 +66,8 @@ fun CommentItem(
                 Text(
                     text = comment.commentator.name,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
+                    fontSize = 18.sp,
+                    modifier = commentatorModifier
                 )
                 Text(
                     text = comment.createdAt,

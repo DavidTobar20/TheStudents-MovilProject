@@ -9,12 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.ui.draw.clip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,6 +27,7 @@ fun ReviewHeader(
     modifier: Modifier = Modifier,
     name: String,
     initials: String,
+    profileImage: String? = null,
     courseInfo: String,
     onAvatarClick: (() -> Unit)? = null
 ) {
@@ -47,7 +48,7 @@ fun ReviewHeader(
                     } else Modifier
                 ),
             initials = initials,
-            profileImage = null,
+            profileImage = profileImage,
             backgroundColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
             fontSize = 18.sp
@@ -58,23 +59,25 @@ fun ReviewHeader(
                 text = name,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 18.sp)
+                fontSize = 18.sp
+            )
             Text(
                 text = courseInfo,
                 color = MaterialTheme.colorScheme.primary,
-                fontSize = 12.sp)
+                fontSize = 12.sp
+            )
         }
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun ReviewHeaderPreview() {
-    TheStudentsTheme() {
+    TheStudentsTheme {
         ReviewHeader(
             name = "Juan Pérez",
             initials = "JP",
+            profileImage = null,
             courseInfo = "Física Mecánica (FISI1027) · 2025-2",
         )
     }

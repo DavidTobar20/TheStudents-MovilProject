@@ -26,7 +26,7 @@ class WriteReviewViewModel @Inject constructor(
     
     fun getInscriptionById(inscriptionId: String) {
         viewModelScope.launch {
-            _uiState.update { it.copy(error = null) }
+            _uiState.update { it.copy(error = null, isLoading = true) }
             val result = inscripcionRepository.getInscripcionById(inscriptionId)
             if (result.isSuccess) {
                 val inscription = result.getOrNull()
@@ -35,14 +35,20 @@ class WriteReviewViewModel @Inject constructor(
                         it.copy(
                             student = inscription.student,
                             className = inscription.className,
-                            period = inscription.period
+                            period = inscription.period,
+                            isLoading = false
                         )
                     }
+                } else {
+                    _uiState.update { it.copy(isLoading = false) }
                 }
             } else {
                 val error = result.exceptionOrNull()
                 _uiState.update {
-                    it.copy(error = error?.message ?: "Error al cargar la inscripción")
+                    it.copy(
+                        error = error?.message ?: "Error al cargar la inscripción",
+                        isLoading = false
+                    )
                 }
             }
         }
@@ -58,9 +64,13 @@ class WriteReviewViewModel @Inject constructor(
 
     fun createReview() {
         viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
             val state = _uiState.value
             val autorId = localStudentProvider.currentUser.id
-            val resenadoId = state.student?.id ?: return@launch
+            val resenadoId = state.student?.id ?: run {
+                _uiState.update { it.copy(isLoading = false) }
+                return@launch
+            }
             val ratingStr = if (state.rating > 0) state.rating.toString() else null
 
             val result = reviewRepository.createReview(
@@ -73,9 +83,9 @@ class WriteReviewViewModel @Inject constructor(
             )
 
             if (result.isSuccess) {
-                _uiState.update { it.copy(navigateToHome = true, error = null) }
+                _uiState.update { it.copy(navigateToHome = true, error = null, isLoading = false) }
             } else {
-                _uiState.update { it.copy(error = result.exceptionOrNull()?.message) }
+                _uiState.update { it.copy(error = result.exceptionOrNull()?.message, isLoading = false) }
             }
         }
     }

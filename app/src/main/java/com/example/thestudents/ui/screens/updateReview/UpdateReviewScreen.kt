@@ -49,6 +49,7 @@ fun BodyUpdateReviewScreen(
     onStudentClick: () -> Unit,
     nameReviewed: String,
     initialsReviewed: String,
+    profileImageReviewed: String? ,
     courseInfoReviewed: String,
     isLoading: Boolean = false,
 ) {
@@ -68,6 +69,7 @@ fun BodyUpdateReviewScreen(
             ReviewHeader(
                 name = nameReviewed,
                 initials = initialsReviewed,
+                profileImage = profileImageReviewed,
                 courseInfo = courseInfoReviewed,
                 onAvatarClick = onStudentClick
             )
@@ -135,6 +137,7 @@ fun BodyUpdateReviewScreenPreview() {
             onStudentClick = {},
             nameReviewed = "Laura Martínez",
             initialsReviewed = "LM",
+            profileImageReviewed = null,
             courseInfoReviewed = "Estructuras de Datos (ISIS1206) • 2025-2",
         )
     }
@@ -199,6 +202,7 @@ fun UpdateReviewScreen(
                     onStudentClick = { onStudentClick(state.student!!.id) },
                     nameReviewed = state.student!!.name,
                     initialsReviewed = state.student!!.initials,
+                    profileImageReviewed = state.student?.profileImage,
                     courseInfoReviewed = "${state.className} • ${state.period}",
                     isLoading = state.isLoading
                 )

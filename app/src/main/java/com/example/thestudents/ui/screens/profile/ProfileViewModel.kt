@@ -93,30 +93,47 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun deleteReview(reviewId: String) {
+        val previousProfile = _uiState.value.userProfile ?: return
+        val previousCount = _uiState.value.reviewsCount
+
+        // Se quita de la lista de una vez, sin esperar al servidor, para que desaparezca al instante.
+        val updatedCreated = previousProfile.createdReviews.filter { it.id != reviewId }
+        val updatedReceived = previousProfile.receivedReviews.filter { it.id != reviewId }
+        _uiState.update {
+            it.copy(
+                userProfile = previousProfile.copy(
+                    createdReviews = updatedCreated,
+                    receivedReviews = updatedReceived
+                ),
+                reviewsCount = updatedCreated.size + updatedReceived.size,
+                deleteErrorMessage = null
+            )
+        }
+
         viewModelScope.launch {
             val result = reviewRepository.deleteReview(reviewId)
             if (result.isSuccess) {
-                _uiState.update { state ->
-                    val profile = state.userProfile ?: return@update state
-                    val updatedCreated = profile.createdReviews.filter { it.id != reviewId }
-                    val updatedReceived = profile.receivedReviews.filter { it.id != reviewId }
-                    val updatedProfile = profile.copy(
-                        createdReviews = updatedCreated,
-                        receivedReviews = updatedReceived
-                    )
-                    val newReviewsCount = updatedCreated.size + updatedReceived.size
-
-                    state.copy(
-                        userProfile = updatedProfile,
-                        reviewsCount = newReviewsCount
-                    )
-                }
+                _uiState.update { it.copy(reviewDeleted = true) }
             } else {
+                // Si el backend no la borro, se vuelve a mostrar.
                 _uiState.update {
-                    it.copy(errorMessage = "Error al eliminar la reseña")
+                    it.copy(
+                        userProfile = previousProfile,
+                        reviewsCount = previousCount,
+                        deleteErrorMessage = result.exceptionOrNull()?.message
+                            ?: "No se pudo eliminar la reseña"
+                    )
                 }
             }
         }
+    }
+
+    fun onReviewDeletedHandled() {
+        _uiState.update { it.copy(reviewDeleted = false) }
+    }
+
+    fun onDeleteErrorShown() {
+        _uiState.update { it.copy(deleteErrorMessage = null) }
     }
 
 }

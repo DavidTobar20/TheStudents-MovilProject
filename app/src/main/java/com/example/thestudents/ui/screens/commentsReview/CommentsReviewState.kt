@@ -2,7 +2,6 @@ package com.example.thestudents.ui.screens.commentsReview
 
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.Student
-import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.data.local.localStudentProvider
 
 data class CommentsReviewState(
@@ -12,5 +11,8 @@ data class CommentsReviewState(
     val likedComments: Set<Int> = emptySet(),
     val dislikedComments: Set<Int> = emptySet(),
     val commentator: Student = localStudentProvider.currentUser,
-    val review: Review = localReviewsProvider.allReviews[1]
+    // La resena se carga desde el backend con el id que llega por la ruta; ya no hay una fija.
+    val review: Review? = null,
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null
 )

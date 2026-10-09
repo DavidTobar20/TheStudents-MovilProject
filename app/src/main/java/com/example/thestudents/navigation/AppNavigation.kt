@@ -259,6 +259,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             onEditProfileClick = { navController.navigate(Screen.EditProfile.route) },
             onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
             onEditReviewClick = { reviewId -> navController.navigate(Screen.UpdateReview.createRoute(reviewId)) },
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
             logoutButtonPressed = {
                 navController.navigate(Screen.Login.route) {
                     popUpTo(0) { inclusive = true }
@@ -287,7 +288,8 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             studentDetailViewModel = studentDetailViewModel,
             studentId = studentId,
             onBackClick = { navController.popBackStack() },
-            onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) }
+            onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
         )
     }
 
@@ -300,7 +302,8 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         CommentsReviewScreen(
             commentsReviewViewModel = commentsReviewViewModel,
             reviewId = reviewId,
-            onBackClick = { navController.popBackStack() }
+            onBackClick = { navController.popBackStack() },
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
         )
     }
 }

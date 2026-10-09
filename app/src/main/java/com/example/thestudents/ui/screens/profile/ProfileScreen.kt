@@ -1,9 +1,9 @@
 package com.example.thestudents.ui.screens.profile
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.outlined.Edit
@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,6 +51,7 @@ fun BodyProfile(
     onReviewClick: (String) -> Unit,
     onEditReviewClick: (String) -> Unit = {},
     onDeleteReviewClick: (String) -> Unit = {},
+    onStudentClick: (String) -> Unit = {},
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -127,13 +129,14 @@ fun BodyProfile(
                     )
                 }
             } else {
-                items(reviews, key = { it.id }) { review ->
+                items(reviews.size) { index ->
                     ReviewItem(
-                        review = review,
+                        review = reviews[index],
                         isWrittenTab = selectedTab == ProfileTab.WRITTEN,
-                        onClick = { onReviewClick(review.id) },
-                        onEditClick = { onEditReviewClick(review.id) },
-                        onDeleteClick = { onDeleteReviewClick(review.id) }
+                        onClick = { onReviewClick(reviews[index].id) },
+                        onEditClick = { onEditReviewClick(reviews[index].id) },
+                        onDeleteClick = { onDeleteReviewClick(reviews[index].id) },
+                        onStudentClick = onStudentClick
                     )
                 }
             }
@@ -177,6 +180,7 @@ fun ProfileScreen(
     onEditProfileClick: () -> Unit,
     onReviewClick: (String) -> Unit,
     onEditReviewClick: (String) -> Unit,
+    onStudentClick: (String) -> Unit,
     logoutButtonPressed: () -> Unit,
     profileViewModel: ProfileViewModel,
     modifier: Modifier = Modifier
@@ -184,6 +188,23 @@ fun ProfileScreen(
     val state by profileViewModel.uiState.collectAsState()
     LaunchedEffect(Unit) {
         profileViewModel.loadProfile()
+    }
+
+    // Cuando el backend confirma que se elimino una resena, se recarga el perfil para que la
+    // lista y los contadores queden igual que en el servidor, sin salir de la pantalla.
+    LaunchedEffect(state.reviewDeleted) {
+        if (state.reviewDeleted) {
+            profileViewModel.loadProfile()
+            profileViewModel.onReviewDeletedHandled()
+        }
+    }
+
+    val context = LocalContext.current
+    LaunchedEffect(state.deleteErrorMessage) {
+        state.deleteErrorMessage?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            profileViewModel.onDeleteErrorShown()
+        }
     }
 
     val userProfile = state.userProfile
@@ -229,6 +250,7 @@ fun ProfileScreen(
                 onReviewClick = onReviewClick,
                 onEditReviewClick = onEditReviewClick,
                 onDeleteReviewClick = { profileViewModel.deleteReview(it) },
+                onStudentClick = onStudentClick,
                 onLogoutClick = {
                     profileViewModel.logout()
                     logoutButtonPressed()
@@ -250,6 +272,7 @@ fun FullProfileScreenPreview() {
                 onEditProfileClick = {},
                 onReviewClick = {},
                 onEditReviewClick = {},
+                onStudentClick = {},
                 logoutButtonPressed = {},
                 profileViewModel = viewModel()
             )

@@ -1,6 +1,7 @@
 package com.example.thestudents.ui.screens.commentsReview
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -18,9 +20,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,6 +53,7 @@ fun BodyCommentsReviewScreen(
     commentator: Student,
     review: Review,
     onBackClick: () -> Unit,
+    onStudentClick: (String) -> Unit,
     isLiked: Boolean,
     isDisliked: Boolean,
     onLikeClick: () -> Unit,
@@ -78,6 +83,9 @@ fun BodyCommentsReviewScreen(
                 isDisliked = isDisliked,
                 onLikeClick = onLikeClick,
                 onDislikeClick = onDislikeClick,
+                onReviewerClick = review.reviewer.id
+                    .takeIf { it.isNotBlank() }
+                    ?.let { id -> { onStudentClick(id) } },
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
 
@@ -103,6 +111,9 @@ fun BodyCommentsReviewScreen(
                         isDisliked = index in dislikedComments,
                         onLikeClick = { onCommentLikeClick(index) },
                         onDislikeClick = { onCommentDislikeClick(index) },
+                        onCommentatorClick = comment.commentator.id
+                            .takeIf { it.isNotBlank() }
+                            ?.let { id -> { onStudentClick(id) } },
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
                 }
@@ -131,6 +142,7 @@ fun BodyCommentsReviewScreenPreview() {
                 commentator = localStudentProvider.currentUser,
                 review = localReviewsProvider.allReviews[1],
                 onBackClick = {},
+                onStudentClick = {},
                 isLiked = isLiked,
                 isDisliked = isDisliked,
                 onLikeClick = { isLiked = !isLiked },
@@ -159,21 +171,57 @@ fun CommentsReviewScreen(
     commentsReviewViewModel: CommentsReviewViewModel,
     reviewId: String,
     onBackClick: () -> Unit,
+    onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
     val state by commentsReviewViewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(reviewId) {
         commentsReviewViewModel.getReviewById(reviewId)
         commentsReviewViewModel.getCommentator()
     }
 
+    val review = state.review
+    if (review == null) {
+        // Mientras carga o si falla, se deja la cabecera para poder volver atras.
+        Surface(
+            modifier = modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.surfaceContainerHigh
+        ) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                HeaderBack(
+                    title = stringResource(R.string.resena),
+                    onBackClick = onBackClick
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    val error = state.errorMessage
+                    if (error != null) {
+                        Text(
+                            text = error,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.error,
+                            textAlign = TextAlign.Center
+                        )
+                    } else {
+                        CircularProgressIndicator()
+                    }
+                }
+            }
+        }
+        return
+    }
 
     BodyCommentsReviewScreen(
         commentator = state.commentator,
-        review = state.review,
+        review = review,
         onBackClick = onBackClick,
+        onStudentClick = onStudentClick,
         isLiked = state.isLiked,
         isDisliked = state.isDisliked,
         onLikeClick = { commentsReviewViewModel.updateIsLiked() },
@@ -199,7 +247,8 @@ fun CommentsReviewScreenPreview() {
             CommentsReviewScreen(
                 commentsReviewViewModel = viewModel(),
                 reviewId = "1",
-                onBackClick = {}
+                onBackClick = {},
+                onStudentClick = {}
             )
         }
     }

@@ -2,6 +2,8 @@ package com.example.thestudents.ui.screens.profile.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.outlined.Delete
@@ -36,10 +38,20 @@ fun ReviewItem(
     showActions: Boolean = isWrittenTab,
     onClick: () -> Unit = {},
     onEditClick: () -> Unit = {},
-    onDeleteClick: () -> Unit = {}
+    onDeleteClick: () -> Unit = {},
+    onStudentClick: ((String) -> Unit)? = null
 ) {
     val displayStudent = if (isWrittenTab) review.reviewedStudent else review.reviewer
     val displayName = if (isWrittenTab) "Para: ${review.reviewedStudent.name}" else review.reviewer.name
+
+    // En "Escritas" se muestra a quien se resenó; en "Recibidas", a quien escribió la resena.
+    // Tocar su foto o su nombre abre su perfil.
+    val studentModifier =
+        if (onStudentClick != null && displayStudent.id.isNotBlank()) {
+            Modifier.clickable { onStudentClick(displayStudent.id) }
+        } else {
+            Modifier
+        }
 
     Column(
         modifier = modifier
@@ -54,7 +66,10 @@ fun ReviewItem(
                 backgroundColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 14.sp,
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .then(studentModifier)
             )
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
@@ -63,7 +78,8 @@ fun ReviewItem(
                         text = displayName,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary,
-                        fontSize = 15.sp
+                        fontSize = 15.sp,
+                        modifier = studentModifier
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(

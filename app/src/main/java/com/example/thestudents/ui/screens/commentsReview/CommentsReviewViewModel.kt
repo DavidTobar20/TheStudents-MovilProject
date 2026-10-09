@@ -1,21 +1,54 @@
 package com.example.thestudents.ui.screens.commentsReview
 
 import androidx.lifecycle.ViewModel
-import com.example.thestudents.data.local.localReviewsProvider
+import androidx.lifecycle.viewModelScope
 import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.data.repository.ReviewRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CommentsReviewViewModel @Inject constructor(): ViewModel() {
+class CommentsReviewViewModel @Inject constructor(
+    private val reviewRepository: ReviewRepository
+) : ViewModel() {
     private val _uiState = MutableStateFlow(CommentsReviewState())
     val uiState : StateFlow<CommentsReviewState> = _uiState
 
     fun getReviewById(id: String) {
-        _uiState.update { it.copy(review = localReviewsProvider.getReviewById(id) ?: localReviewsProvider.allReviews[0]) }
+        // Si ya esta cargada esta misma resena (por ejemplo al rotar la pantalla), no se pide otra vez.
+        if (_uiState.value.review?.id == id) return
+
+        _uiState.update {
+            it.copy(
+                isLoading = true,
+                errorMessage = null,
+                isLiked = false,
+                isDisliked = false,
+                likedComments = emptySet(),
+                dislikedComments = emptySet()
+            )
+        }
+        viewModelScope.launch {
+            val result = reviewRepository.getReviewById(id)
+            _uiState.update { state ->
+                result.fold(
+                    onSuccess = { review ->
+                        state.copy(review = review, isLoading = false, errorMessage = null)
+                    },
+                    onFailure = { error ->
+                        state.copy(
+                            review = null,
+                            isLoading = false,
+                            errorMessage = error.message ?: "Error al cargar la reseña"
+                        )
+                    }
+                )
+            }
+        }
     }
 
     fun getCommentator() {
@@ -28,10 +61,11 @@ class CommentsReviewViewModel @Inject constructor(): ViewModel() {
 
     fun updateIsLiked() {
         _uiState.update { state ->
+            val review = state.review ?: return@update state
             if (state.isDisliked) {
-                val nuevaResena = state.review.copy(
-                    disLikes = state.review.disLikes - 1,
-                    likes = state.review.likes + 1
+                val nuevaResena = review.copy(
+                    disLikes = review.disLikes - 1,
+                    likes = review.likes + 1
                 )
                 state.copy(
                     isLiked = !state.isLiked,
@@ -40,16 +74,16 @@ class CommentsReviewViewModel @Inject constructor(): ViewModel() {
                 )
             } else{
                 if(state.isLiked) {
-                    val nuevaResena = state.review.copy(
-                        likes = state.review.likes - 1,
+                    val nuevaResena = review.copy(
+                        likes = review.likes - 1,
                     )
                     state.copy(
                         isLiked = false,
                         review = nuevaResena
                     )
                 } else{
-                    val nuevaResena = state.review.copy(
-                        likes = state.review.likes + 1,
+                    val nuevaResena = review.copy(
+                        likes = review.likes + 1,
                     )
                     state.copy(
                         isLiked = true,
@@ -62,10 +96,11 @@ class CommentsReviewViewModel @Inject constructor(): ViewModel() {
 
     fun updateIsDisliked() {
         _uiState.update { state ->
+            val review = state.review ?: return@update state
             if (state.isLiked) {
-                val nuevaResena = state.review.copy(
-                    disLikes = state.review.disLikes + 1,
-                    likes = state.review.likes - 1
+                val nuevaResena = review.copy(
+                    disLikes = review.disLikes + 1,
+                    likes = review.likes - 1
                 )
                 state.copy(
                     isDisliked = !state.isDisliked,
@@ -74,16 +109,16 @@ class CommentsReviewViewModel @Inject constructor(): ViewModel() {
                 )
             } else{
                 if(state.isDisliked) {
-                    val nuevaResena = state.review.copy(
-                        disLikes = state.review.disLikes - 1,
+                    val nuevaResena = review.copy(
+                        disLikes = review.disLikes - 1,
                     )
                     state.copy(
                         isDisliked = false,
                         review = nuevaResena
                     )
                 } else{
-                    val nuevaResena = state.review.copy(
-                        disLikes = state.review.disLikes + 1,
+                    val nuevaResena = review.copy(
+                        disLikes = review.disLikes + 1,
                     )
                     state.copy(
                         isDisliked = true,

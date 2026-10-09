@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -48,6 +49,7 @@ fun BodyWriteReviewScreen(
     onStudentClick: () -> Unit,
     nameReviewed: String,
     initialsReviewed: String,
+    profileImageReviewed: String? = null,
     courseInfoReviewed: String,
 ) {
     Column(
@@ -66,6 +68,7 @@ fun BodyWriteReviewScreen(
             ReviewHeader(
                 name = nameReviewed,
                 initials = initialsReviewed,
+                profileImage = profileImageReviewed,
                 courseInfo = courseInfoReviewed,
                 onAvatarClick = onStudentClick
             )
@@ -122,6 +125,7 @@ fun BodyWriteReviewScreenPreview() {
             onStudentClick = {},
             nameReviewed = "Laura Martínez",
             initialsReviewed = "LM",
+            profileImageReviewed = null,
             courseInfoReviewed = "Estructuras de Datos (ISIS1206) • 2025-2",
         )
     }
@@ -147,43 +151,58 @@ fun WriteReviewScreen(
         }
     }
 
-    if (state.student == null) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = stringResource(R.string.estudiante_no_encontrado),
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+    when {
+        state.isLoading && state.student == null -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
-    } else {
-        Column(modifier = modifier.fillMaxSize()) {
-            BodyWriteReviewScreen(
-                modifier = Modifier.weight(1f),
-                rating = state.rating,
-                onRatingSelected = { writeReviewViewModel.updateRating(it) },
-                onReviewChange = { writeReviewViewModel.updateReview(it) },
-                onAnonymousChange = { writeReviewViewModel.updateIsAnonymous(it) },
-                review = state.review,
-                isAnonymous = state.isAnonymous,
-                onPublishClick = { writeReviewViewModel.createReview() },
-                onBackClick = onBackClick,
-                onStudentClick = { onStudentClick(state.student!!.id) },
-                nameReviewed = state.student!!.name,
-                initialsReviewed = state.student!!.initials,
-                courseInfoReviewed = "${state.className} • ${state.period}",
-            )
-            if (state.error != null) {
+        state.student == null -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(32.dp),
+                contentAlignment = Alignment.Center
+            ) {
                 Text(
-                    text = state.error!!,
+                    text = state.error ?: stringResource(R.string.estudiante_no_encontrado),
+                    style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
                     textAlign = TextAlign.Center
                 )
+            }
+        }
+        else -> {
+            Column(modifier = modifier.fillMaxSize()) {
+                BodyWriteReviewScreen(
+                    modifier = Modifier.weight(1f),
+                    rating = state.rating,
+                    onRatingSelected = { writeReviewViewModel.updateRating(it) },
+                    onReviewChange = { writeReviewViewModel.updateReview(it) },
+                    onAnonymousChange = { writeReviewViewModel.updateIsAnonymous(it) },
+                    review = state.review,
+                    isAnonymous = state.isAnonymous,
+                    onPublishClick = { writeReviewViewModel.createReview() },
+                    onBackClick = onBackClick,
+                    onStudentClick = { onStudentClick(state.student!!.id) },
+                    nameReviewed = state.student!!.name,
+                    initialsReviewed = state.student!!.initials,
+                    profileImageReviewed = state.student?.profileImage,
+                    courseInfoReviewed = "${state.className} • ${state.period}",
+                )
+                if (state.error != null) {
+                    Text(
+                        text = state.error!!,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
     }

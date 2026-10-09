@@ -10,5 +10,6 @@ data class WriteReviewState(
     val review: String = "",
     val isAnonymous: Boolean = false,
     val navigateToHome: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val isLoading: Boolean = false
 )
