@@ -2,14 +2,35 @@ package com.example.thestudents.data.repository
 
 import retrofit2.HttpException
 import com.example.thestudents.data.Review
+import com.example.thestudents.data.Student
 import com.example.thestudents.data.datasource.impl.ReviewRetrofitDataSourceImpl
 import com.example.thestudents.data.dtos.CreateReviewDto
 import com.example.thestudents.data.dtos.toReview
+import com.example.thestudents.data.dtos.toStudent
 import javax.inject.Inject
 
 class ReviewRepository @Inject constructor(
     private val reviewRemoteDataSource: ReviewRetrofitDataSourceImpl
 ) {
+
+    suspend fun getAllUsers(): Result<List<Student>> {
+        return try {
+            val usersDto = reviewRemoteDataSource.getAllUsers()
+            val students = usersDto.map { it.toStudent() }
+            Result.success(students)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getUserById(id: String): Result<Student> {
+        return try {
+            val userDto = reviewRemoteDataSource.getUserById(id)
+            Result.success(userDto.toStudent())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
     suspend fun getAllReviewsExcludingStudentId(studentId: String): Result<List<Review>> {
         return try {

@@ -2,8 +2,13 @@ package com.example.thestudents.data.datasource
 
 import com.example.thestudents.data.dtos.CreateReviewDto
 import com.example.thestudents.data.dtos.ReviewDto
+import com.example.thestudents.data.dtos.StudentDto
 
 interface ReviewRemoteDataSource {
+
+    suspend fun getAllUsers(): List<StudentDto>
+
+    suspend fun getUserById(id: String): StudentDto
 
     suspend fun getAllReviewsExcludingStudentId(studentId: String): List<ReviewDto>
 

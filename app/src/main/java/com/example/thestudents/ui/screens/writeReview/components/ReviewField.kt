@@ -28,7 +28,9 @@ fun ReviewField(
     modifier: Modifier = Modifier,
     review: String,
     onReviewChange: (String) -> Unit,
-    maxLength: Int = 300) {
+    placeholder: String = "Escribe tu experiencia...",
+    maxLength: Int = 300
+) {
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -58,7 +60,7 @@ fun ReviewField(
             CustomTextField(
                 value = review,
                 onValueChange = { if (it.length <= maxLength) onReviewChange(it) },
-                placeholder = "Escribe tu experiencia con Laura...",
+                placeholder = placeholder,
                 singleLine = false,
                 modifier = Modifier
                     .fillMaxWidth()

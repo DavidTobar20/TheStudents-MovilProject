@@ -8,6 +8,7 @@ import com.example.thestudents.data.repository.ReviewRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,9 +18,9 @@ class WriteReviewViewModel @Inject constructor(
     private val reviewRepository: ReviewRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow(WriteReviewState())
-    val uiState: StateFlow<WriteReviewState> = _uiState
+    val uiState: StateFlow<WriteReviewState> = _uiState.asStateFlow()
 
-    fun updateRating(input: Int){
+    fun updateRating(input: Int) {
         _uiState.update { it.copy(rating = input) }
     }
     
@@ -36,11 +37,11 @@ class WriteReviewViewModel @Inject constructor(
         }
     }
 
-    fun updateReview(input: String){
+    fun updateReview(input: String) {
         _uiState.update { it.copy(review = input) }
     }
 
-    fun updateIsAnonymous(input: Boolean){
+    fun updateIsAnonymous(input: Boolean) {
         _uiState.update { it.copy(isAnonymous = input) }
     }
 

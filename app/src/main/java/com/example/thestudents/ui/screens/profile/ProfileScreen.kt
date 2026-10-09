@@ -15,6 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
 import com.example.thestudents.data.Review
@@ -47,6 +50,8 @@ fun BodyProfile(
     onBackClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     onReviewClick: (String) -> Unit,
+    onEditReviewClick: (studentId: String, reviewId: String) -> Unit = { _, _ -> },
+    onDeleteReviewClick: (reviewId: String) -> Unit = {},
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -126,7 +131,9 @@ fun BodyProfile(
                     ReviewItem(
                         review = review,
                         isWrittenTab = selectedTab == ProfileTab.WRITTEN,
-                        onClick = { onReviewClick(review.id) }
+                        onClick = { onReviewClick(review.id) },
+                        onEditClick = { onEditReviewClick(review.reviewedStudent.id, review.id) },
+                        onDeleteClick = { onDeleteReviewClick(review.id) }
                     )
                 }
             }
@@ -169,13 +176,24 @@ fun ProfileScreen(
     onBackClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     onReviewClick: (String) -> Unit,
+    onEditReviewClick: (studentId: String, reviewId: String) -> Unit = { _, _ -> },
     logoutButtonPressed: () -> Unit,
     profileViewModel: ProfileViewModel,
     modifier: Modifier = Modifier
 ) {
     val state by profileViewModel.uiState.collectAsState()
-    LaunchedEffect(Unit) {
-        profileViewModel.loadProfile()
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                profileViewModel.loadProfile()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
     }
 
     if (state.student == null && state.isLoading) {
@@ -205,6 +223,8 @@ fun ProfileScreen(
             onBackClick = onBackClick,
             onEditProfileClick = onEditProfileClick,
             onReviewClick = onReviewClick,
+            onEditReviewClick = onEditReviewClick,
+            onDeleteReviewClick = { profileViewModel.deleteReview(it) },
             onLogoutClick = {
                 profileViewModel.logout()
                 logoutButtonPressed()

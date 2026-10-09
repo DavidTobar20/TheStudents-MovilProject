@@ -4,11 +4,21 @@ import com.example.thestudents.data.datasource.ReviewRemoteDataSource
 import com.example.thestudents.data.datasource.services.ReviewRetrofitService
 import com.example.thestudents.data.dtos.CreateReviewDto
 import com.example.thestudents.data.dtos.ReviewDto
+import com.example.thestudents.data.dtos.StudentDto
 import javax.inject.Inject
 
 class ReviewRetrofitDataSourceImpl @Inject constructor(
     val service: ReviewRetrofitService
 ) : ReviewRemoteDataSource {
+
+    override suspend fun getAllUsers(): List<StudentDto> {
+        return service.getAllUsers()
+    }
+
+    override suspend fun getUserById(id: String): StudentDto {
+        return service.getUserById(id)
+    }
+
     override suspend fun getAllReviewsExcludingStudentId(studentId: String): List<ReviewDto> {
         return service.getAllReviewsExcludingStudentId(studentId)
     }

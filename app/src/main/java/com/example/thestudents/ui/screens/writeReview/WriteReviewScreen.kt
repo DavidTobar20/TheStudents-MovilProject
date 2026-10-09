@@ -34,9 +34,12 @@ import com.example.thestudents.ui.utils.ButtonWithoutIcon
 import com.example.thestudents.ui.utils.HeaderBack
 import com.example.thestudents.ui.utils.SettingSwitchRow
 
+import androidx.compose.material3.CircularProgressIndicator
+
 @Composable
 fun BodyWriteReviewScreen(
     modifier: Modifier = Modifier,
+    isEditMode: Boolean = false,
     rating: Int,
     onRatingSelected: (Int) -> Unit,
     onReviewChange: (String) -> Unit,
@@ -49,12 +52,14 @@ fun BodyWriteReviewScreen(
     nameReviewed: String,
     initialsReviewed: String,
     courseInfoReviewed: String,
+    isLoading: Boolean = false,
+    errorMessage: String? = null,
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
         HeaderBack(
-            title = stringResource(R.string.nueva_resena),
+            title = if (isEditMode) stringResource(R.string.editar_resena) else stringResource(R.string.nueva_resena),
             onBackClick = onBackClick
         )
         Column(
@@ -75,7 +80,8 @@ fun BodyWriteReviewScreen(
             )
             ReviewField(
                 review = review,
-                onReviewChange = onReviewChange
+                onReviewChange = onReviewChange,
+                placeholder = "Escribe tu experiencia con $nameReviewed..."
             )
             Card(
                 modifier = Modifier
@@ -93,9 +99,18 @@ fun BodyWriteReviewScreen(
                     onCheckedChange = onAnonymousChange
                 )
             }
+
+            if (errorMessage != null) {
+                Text(
+                    text = errorMessage,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
         }
         ButtonWithoutIcon(
-            textoBoton = stringResource(R.string.publicar_resena),
+            textoBoton = if (isLoading) "GUARDANDO..." else if (isEditMode) stringResource(R.string.guardar_cambios_mayuscula) else stringResource(R.string.publicar_resena),
             onClick = onPublishClick,
             fontSize = 16.sp,
             modifier = Modifier
@@ -147,7 +162,20 @@ fun WriteReviewScreen(
         }
     }
 
-    if (state.student == null) {
+    LaunchedEffect(state.saveSuccess) {
+        if (state.saveSuccess) {
+            onBackClick()
+        }
+    }
+
+    if (state.isLoading && state.student == null) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    } else if (state.student == null) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center

@@ -27,6 +27,8 @@ import com.example.thestudents.ui.screens.profile.components.UserInfoSection
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ButtonWithIcon
 
+import androidx.compose.material.icons.outlined.Edit
+
 /**
  * Contenido del detalle del estudiante.
  */
@@ -37,6 +39,7 @@ fun BodyStudentDetail(
     onBackClick: () -> Unit,
     onFollowClick: () -> Unit,
     onReviewClick: (String) -> Unit,
+    onWriteReviewClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier.fillMaxSize()) {
@@ -44,16 +47,33 @@ fun BodyStudentDetail(
         item { UserInfoSection(student = student) }
         item { StatsSection(student = student) }
         item {
-            ButtonWithIcon(
-                text = stringResource(R.string.seguir),
-                icon = Icons.Default.PersonAdd,
-                onClick = onFollowClick,
-                borderColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.primary,
+            Row(
                 modifier = Modifier
-                    .height(48.dp)
-                    .padding(horizontal = 24.dp)
-            )
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                ButtonWithIcon(
+                    text = stringResource(R.string.seguir),
+                    icon = Icons.Default.PersonAdd,
+                    onClick = onFollowClick,
+                    borderColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(48.dp)
+                )
+                ButtonWithIcon(
+                    text = stringResource(R.string.resenar),
+                    icon = Icons.Outlined.Edit,
+                    onClick = onWriteReviewClick,
+                    borderColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(48.dp)
+                )
+            }
         }
         item { RatingChartSection() }
         item {
@@ -85,7 +105,8 @@ fun BodyStudentDetailPreview() {
                 reviews = localReviewsProvider.allReviews,
                 onBackClick = {},
                 onFollowClick = {},
-                onReviewClick = {}
+                onReviewClick = {},
+                onWriteReviewClick = {}
             )
         }
     }
@@ -100,15 +121,27 @@ fun StudentDetailScreen(
     studentId: String,
     onBackClick: () -> Unit,
     onReviewClick: (String) -> Unit,
+    onWriteReviewClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
-
 ) {
     val state by studentDetailViewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        studentDetailViewModel.getStudentById(studentId)
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner, studentId) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                studentDetailViewModel.getStudentById(studentId)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
     }
 
+    LaunchedEffect(studentId) {
+        studentDetailViewModel.getStudentById(studentId)
+    }
 
     if(state.student == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
@@ -121,8 +154,8 @@ fun StudentDetailScreen(
             onBackClick = onBackClick,
             onFollowClick = { /* Handle follow */ },
             onReviewClick = onReviewClick,
+            onWriteReviewClick = { onWriteReviewClick(state.student!!.id) },
             modifier = modifier
-            )
-        }
-
+        )
+    }
 }

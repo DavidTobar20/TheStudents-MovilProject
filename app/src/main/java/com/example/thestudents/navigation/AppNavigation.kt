@@ -52,11 +52,12 @@ const val REVIEW_ID_ARG = "reviewId"
 const val INSCRIPTION_ID_ARG = "inscriptionId"
 
 /** Determina qué pestaña debe marcarse como activa en la barra inferior. */
-fun selectedTabFor(route: String?): String? = when (route) {
-    Screen.EditProfile.route,
-    Screen.CommentsReview.route,
-    Screen.StudentDetail.route,
-    Screen.WriteReview.route -> Screen.Profile.route
+fun selectedTabFor(route: String?): String? = when {
+    route == null -> null
+    route == Screen.EditProfile.route -> Screen.Profile.route
+    route.startsWith("comments_review") || route == Screen.CommentsReview.route -> Screen.Profile.route
+    route.startsWith("student_detail") || route == Screen.StudentDetail.route -> Screen.Profile.route
+    route.startsWith("write_review") || route == Screen.WriteReview.route -> Screen.Profile.route
     else -> route
 }
 
@@ -233,6 +234,9 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             onBackClick = { navController.popBackStack() },
             onEditProfileClick = { navController.navigate(Screen.EditProfile.route) },
             onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
+            onEditReviewClick = { studentId, reviewId ->
+                navController.navigate(Screen.WriteReview.createRoute(studentId, reviewId))
+            },
             logoutButtonPressed = {
                 navController.navigate(Screen.Login.route) {
                     popUpTo(0) { inclusive = true }
@@ -261,7 +265,8 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             studentDetailViewModel = studentDetailViewModel,
             studentId = studentId,
             onBackClick = { navController.popBackStack() },
-            onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) }
+            onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
+            onWriteReviewClick = { id -> navController.navigate(Screen.WriteReview.createRoute(id)) }
         )
     }
 
