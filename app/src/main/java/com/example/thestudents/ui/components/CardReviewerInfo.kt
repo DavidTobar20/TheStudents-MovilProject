@@ -22,6 +22,9 @@ import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+
 @Composable
 fun CardReviewerInfo(
     modifier: Modifier = Modifier,
@@ -39,9 +42,11 @@ fun CardReviewerInfo(
         ReviewerInfo(
             student = student,
             subtitle = subtitle,
-            onClick = onReviewerClick
+            onClick = onReviewerClick,
+            modifier = Modifier.weight(1f, fill = false)
         )
-        if(rating != null){
+        if (rating != null) {
+            Spacer(modifier = Modifier.width(8.dp))
             Box(
                 modifier = Modifier
                     .clip(CircleShape)

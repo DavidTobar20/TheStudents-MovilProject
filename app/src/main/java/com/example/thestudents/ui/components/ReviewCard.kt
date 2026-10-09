@@ -4,6 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,6 +37,7 @@ import com.example.thestudents.data.Review
 import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ReviewCard(
     modifier: Modifier = Modifier,
@@ -71,28 +74,38 @@ fun ReviewCard(
             Spacer(modifier = Modifier.height(16.dp))
 
             // REFERENCIA: A quién se le hizo la reseña y en qué materia
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = buildAnnotatedString {
-                        append(stringResource(R.string.reseno_a))
-                        withStyle(
-                            style = SpanStyle(
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        ) {
-                            append(review.reviewedStudent.name)
-                        }
-                    },
-                    fontSize = 13.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+            Text(
+                text = buildAnnotatedString {
+                    append(stringResource(R.string.reseno_a))
+                    append(" ")
+                    withStyle(
+                        style = SpanStyle(
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    ) {
+                        append(review.reviewedStudent.name)
+                    }
+                },
+                fontSize = 13.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
 
-                InfoTag(text = review.classReviewed)
-                InfoTag(text = review.periodReviewed)
+            if (review.classReviewed.isNotBlank() || review.periodReviewed.isNotBlank()) {
+                Spacer(modifier = Modifier.height(8.dp))
+
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    if (review.classReviewed.isNotBlank()) {
+                        InfoTag(text = review.classReviewed)
+                    }
+                    if (review.periodReviewed.isNotBlank()) {
+                        InfoTag(text = review.periodReviewed)
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
