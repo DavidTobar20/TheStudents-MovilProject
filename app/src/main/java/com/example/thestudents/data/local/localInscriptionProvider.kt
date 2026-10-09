@@ -8,6 +8,14 @@ object localInscriptionProvider {
     val currentUser = localStudentProvider.currentUser
 
     val inscriptions: List<Inscription> = listOf(
+        // Materia compartida universal en semilla oficial del backend en GitHub
+        Inscription(id = "i_bd1", student = currentUser, className = "Bases de Datos", period = "2026-1"),
+        Inscription(id = "i_bd2", student = students[1], className = "Bases de Datos", period = "2026-1"),
+        Inscription(id = "i_bd3", student = students[2], className = "Bases de Datos", period = "2026-1"),
+        Inscription(id = "i_bd4", student = students[3], className = "Bases de Datos", period = "2026-1"),
+        Inscription(id = "i_bd5", student = students[4], className = "Bases de Datos", period = "2026-1"),
+
+        // Materias locales / adicionales
         Inscription(id = "i1", student = currentUser, className = "Estructuras de Datos (ISIS1206)", period = "2025-1"),
         Inscription(id = "i2", student = currentUser, className = "Física Mecánica (FIS1027)", period = "2025-1"),
         Inscription(id = "i3", student = students[1], className = "Estructuras de Datos (ISIS1206)", period = "2025-1"),

@@ -2,6 +2,7 @@ package com.example.thestudents.data.datasource.services
 
 import com.example.thestudents.data.dtos.CreateReviewDto
 import com.example.thestudents.data.dtos.ReviewDto
+import com.example.thestudents.data.dtos.StudentDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -10,6 +11,12 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ReviewRetrofitService {
+
+    @GET("usuario")
+    suspend fun getAllUsers(): List<StudentDto>
+
+    @GET("usuario/{id}")
+    suspend fun getUserById(@Path("id") id: String): StudentDto
 
     @GET("resena/excluir/{student_id}")
     suspend fun getAllReviewsExcludingStudentId(@Path("student_id") studentId: String): List<ReviewDto>

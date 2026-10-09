@@ -39,6 +39,10 @@ class ProfileViewModel @Inject constructor(
             val baseStudent = localStudentProvider.currentUser
             val currentUserId = baseStudent.id
 
+            // Consultar datos reales del usuario desde el backend si está disponible
+            val userResult = reviewRepository.getUserById(currentUserId)
+            val effectiveStudent = userResult.getOrNull() ?: baseStudent
+
             // Consultar reseñas escritas y recibidas desde el backend vía Retrofit
             val writtenResult = reviewRepository.getReviewsByReviewerId(currentUserId)
             val receivedResult = reviewRepository.getReviewsByReviewedStudentId(currentUserId)
@@ -47,8 +51,10 @@ class ProfileViewModel @Inject constructor(
             val received = receivedResult.getOrDefault(emptyList())
 
             val authPhoto = authRepository.currentUser?.photoUrl?.toString()
-            val photoUrl = if (authPhoto.isNullOrEmpty()) defaultPhotoUrl else authPhoto
-            val student = baseStudent.copy(profileImage = photoUrl)
+            val photoUrl = if (authPhoto.isNullOrEmpty()) {
+                effectiveStudent.profileImage ?: defaultPhotoUrl
+            } else authPhoto
+            val student = effectiveStudent.copy(profileImage = photoUrl)
 
             val followersCount = localStudentProvider.getFollowersCount(currentUserId)
             val followingCount = localStudentProvider.getFollowingCount(currentUserId)

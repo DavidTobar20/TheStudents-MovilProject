@@ -48,6 +48,16 @@ class WriteReviewViewModel @Inject constructor(
             student?.program ?: ""
         }
 
+        viewModelScope.launch {
+            val userResult = reviewRepository.getUserById(studentId)
+            userResult.onSuccess { fetched ->
+                _uiState.update { state ->
+                    val updatedCourse = if (state.courseInfo.isBlank()) fetched.program else state.courseInfo
+                    state.copy(student = fetched, courseInfo = updatedCourse)
+                }
+            }
+        }
+
         if (reviewId != null) {
             _uiState.update {
                 it.copy(
@@ -128,8 +138,8 @@ class WriteReviewViewModel @Inject constructor(
                 }
             } else {
                 val shared = localInscriptionProvider.getSharedClassFor(currentUserId, student.id)
-                val materia = shared?.first ?: "Estructuras de Datos (ISIS1206)"
-                val periodo = shared?.second ?: "2025-1"
+                val materia = shared?.first ?: "Bases de Datos"
+                val periodo = shared?.second ?: "2026-1"
                 val ratingStr = if (currentState.rating > 0) currentState.rating.toString() else null
 
                 val result = reviewRepository.createReview(

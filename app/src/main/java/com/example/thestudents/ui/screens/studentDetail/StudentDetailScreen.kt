@@ -126,6 +126,19 @@ fun StudentDetailScreen(
 ) {
     val state by studentDetailViewModel.uiState.collectAsState()
 
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner, studentId) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                studentDetailViewModel.getStudentById(studentId)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     LaunchedEffect(studentId) {
         studentDetailViewModel.getStudentById(studentId)
     }
