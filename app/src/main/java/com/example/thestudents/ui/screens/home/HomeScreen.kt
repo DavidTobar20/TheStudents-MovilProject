@@ -34,7 +34,7 @@ fun HomeScreen(
     onReviewClick: (String) -> Unit,
     onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel = viewModel()
+    homeViewModel: HomeViewModel
 ) {
 
     val state by homeViewModel.uiState.collectAsState()
