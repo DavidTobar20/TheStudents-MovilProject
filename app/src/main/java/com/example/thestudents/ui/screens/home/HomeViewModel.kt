@@ -67,19 +67,21 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
             val result = reviewRepository.getAllReviewsExcludingStudentId("1")
-            result.onSuccess { reviews ->
+            if (result.isSuccess) {
+                val reviews = result.getOrNull()
                 _uiState.update {
                     it.copy(
-                        followedReviews = reviews,
+                        followedReviews = reviews ?: emptyList(),
                         isLoading = false,
                         errorMessage = null
                     )
                 }
-            }.onFailure { error ->
+            }else {
+                val error = result.exceptionOrNull()
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        errorMessage = error.message ?: "Error al cargar las reseñas"
+                        errorMessage = error?.message ?: "Error al cargar las reseñas"
                     )
                 }
             }

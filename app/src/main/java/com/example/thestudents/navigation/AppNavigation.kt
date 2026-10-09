@@ -49,6 +49,7 @@ import com.example.thestudents.ui.screens.writeReview.WriteReviewViewModel
 // --- CONSTANTES DE NAVEGACIÓN ---
 const val STUDENT_ID_ARG = "studentId"
 const val REVIEW_ID_ARG = "reviewId"
+const val INSCRIPTION_ID_ARG = "inscriptionId"
 
 /** Determina qué pestaña debe marcarse como activa en la barra inferior. */
 fun selectedTabFor(route: String?): String? = when {
@@ -72,14 +73,8 @@ sealed class Screen(val route: String) {
     data object EditProfile : Screen("edit_profile")
     data object Reviews : Screen("reviews")
 
-    data object WriteReview : Screen("write_review/{$STUDENT_ID_ARG}?$REVIEW_ID_ARG={$REVIEW_ID_ARG}") {
-        fun createRoute(studentId: String, reviewId: String? = null): String {
-            return if (reviewId != null) {
-                "write_review/$studentId?$REVIEW_ID_ARG=$reviewId"
-            } else {
-                "write_review/$studentId"
-            }
-        }
+    data object WriteReview : Screen("write_review/{$INSCRIPTION_ID_ARG}") {
+        fun createRoute(inscriptionId: String) = "write_review/$inscriptionId"
     }
 
     data object StudentDetail : Screen("student_detail/{$STUDENT_ID_ARG}") {
@@ -216,24 +211,20 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
 
     composable(
         route = Screen.WriteReview.route,
-        arguments = listOf(
-            navArgument(STUDENT_ID_ARG) { type = NavType.StringType },
-            navArgument(REVIEW_ID_ARG) {
-                type = NavType.StringType
-                nullable = true
-                defaultValue = null
-            }
-        )
+        arguments = listOf(navArgument(INSCRIPTION_ID_ARG) { type = NavType.StringType })
     ) { backStackEntry ->
-        val studentId = backStackEntry.arguments?.getString(STUDENT_ID_ARG) ?: ""
-        val reviewId = backStackEntry.arguments?.getString(REVIEW_ID_ARG)
+        val inscriptionId = backStackEntry.arguments?.getString(INSCRIPTION_ID_ARG) ?: ""
         val writeReviewViewModel: WriteReviewViewModel = hiltViewModel()
         WriteReviewScreen(
             writeReviewViewModel = writeReviewViewModel,
-            studentId = studentId,
-            reviewId = reviewId,
+            inscriptionId = inscriptionId,
             onBackClick = { navController.popBackStack() },
-            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
+            onNavigateToHome = {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Home.route) { inclusive = true }
+                }
+            }
         )
     }
 
