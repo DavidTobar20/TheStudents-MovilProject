@@ -1,6 +1,7 @@
 package com.example.thestudents.data.injection
 
 import com.example.thestudents.data.datasource.services.ReviewRetrofitService
+import com.example.thestudents.data.datasource.services.UserRetrofitService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +29,12 @@ object AppModule {
     @Provides
     fun provideReviewRetrofitService(retrofit: Retrofit): ReviewRetrofitService {
         return retrofit.create(ReviewRetrofitService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserRetrofitService(retrofit: Retrofit): UserRetrofitService {
+        return retrofit.create(UserRetrofitService::class.java)
     }
 
 
