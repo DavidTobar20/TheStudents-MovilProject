@@ -139,6 +139,8 @@
     <string name="calificacion_opcional">CALIFICACIÓN (OPCIONAL)</string>
     <string name="tu_nombre_no_aparecer_en_la_resena">Tu nombre no aparecerá en la reseña</string>
     <string name="nueva_resena">Nueva Reseña</string>
+    <string name="actualizar_resena">Actualizar Reseña</string>
+    <string name="actualizar_resena_mayuscula">ACTUALIZAR RESEÑA</string>
 
     <!-- Inicio (Continuación) -->
     <string name="aun_no_hay_resenas_de_las_personas_que_sigues_comienza_a_explorar_para_seguir_a_tus_companeros">Aún no hay reseñas de las personas que sigues. ¡Comienza a explorar para seguir a tus compañeros!</string>

@@ -43,6 +43,8 @@ import com.example.thestudents.ui.screens.splash.SplashScreen
 import com.example.thestudents.ui.screens.splash.SplashViewModel
 import com.example.thestudents.ui.screens.studentDetail.StudentDetailScreen
 import com.example.thestudents.ui.screens.studentDetail.StudentDetailViewModel
+import com.example.thestudents.ui.screens.updateReview.UpdateReviewScreen
+import com.example.thestudents.ui.screens.updateReview.UpdateReviewViewModel
 import com.example.thestudents.ui.screens.writeReview.WriteReviewScreen
 import com.example.thestudents.ui.screens.writeReview.WriteReviewViewModel
 
@@ -56,7 +58,8 @@ fun selectedTabFor(route: String?): String? = when (route) {
     Screen.EditProfile.route,
     Screen.CommentsReview.route,
     Screen.StudentDetail.route,
-    Screen.WriteReview.route -> Screen.Profile.route
+    Screen.WriteReview.route,
+    Screen.UpdateReview.route -> Screen.Profile.route
     else -> route
 }
 
@@ -74,6 +77,10 @@ sealed class Screen(val route: String) {
 
     data object WriteReview : Screen("write_review/{$INSCRIPTION_ID_ARG}") {
         fun createRoute(inscriptionId: String) = "write_review/$inscriptionId"
+    }
+
+    data object UpdateReview : Screen("update_review/{$REVIEW_ID_ARG}") {
+        fun createRoute(reviewId: String) = "update_review/$reviewId"
     }
 
     data object StudentDetail : Screen("student_detail/{$STUDENT_ID_ARG}") {
@@ -224,6 +231,21 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
                     popUpTo(Screen.Home.route) { inclusive = true }
                 }
             }
+        )
+    }
+
+    composable(
+        route = Screen.UpdateReview.route,
+        arguments = listOf(navArgument(REVIEW_ID_ARG) { type = NavType.StringType })
+    ) { backStackEntry ->
+        val reviewId = backStackEntry.arguments?.getString(REVIEW_ID_ARG) ?: ""
+        val updateReviewViewModel: UpdateReviewViewModel = hiltViewModel()
+        UpdateReviewScreen(
+            updateReviewViewModel = updateReviewViewModel,
+            reviewId = reviewId,
+            onBackClick = { navController.popBackStack() },
+            onUpdateSuccess = { navController.popBackStack() },
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
         )
     }
 
