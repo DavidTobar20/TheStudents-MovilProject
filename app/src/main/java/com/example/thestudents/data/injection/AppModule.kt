@@ -38,7 +38,8 @@ object AppModule {
         return retrofit.create(UserRetrofitService::class.java)
     }
 
-
+    @Singleton
+    @Provides
     fun provideInscripcionRetrofitService(retrofit: Retrofit): InscripcionRetrofitService {
         return retrofit.create(InscripcionRetrofitService::class.java)
     }

@@ -13,6 +13,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,6 +48,8 @@ fun BodyProfile(
     onBackClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     onReviewClick: (String) -> Unit,
+    onEditReviewClick: (String) -> Unit = {},
+    onDeleteReviewClick: (String) -> Unit = {},
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -113,7 +116,9 @@ fun BodyProfile(
             if (reviews.isEmpty()) {
                 item {
                     Text(
-                        text = if (selectedTab == ProfileTab.RECEIVED) "No has recibido reseñas aún" else "No has escrito reseñas aún",
+                        text = if (selectedTab == ProfileTab.RECEIVED) stringResource(R.string.no_has_recibido_resenas_aun) else stringResource(
+                            R.string.no_has_escrito_resenas_aun
+                        ),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(24.dp),
@@ -122,11 +127,13 @@ fun BodyProfile(
                     )
                 }
             } else {
-                items(reviews) { review ->
+                items(reviews, key = { it.id }) { review ->
                     ReviewItem(
                         review = review,
                         isWrittenTab = selectedTab == ProfileTab.WRITTEN,
-                        onClick = { onReviewClick(review.id) }
+                        onClick = { onReviewClick(review.id) },
+                        onEditClick = { onEditReviewClick(review.id) },
+                        onDeleteClick = { onDeleteReviewClick(review.id) }
                     )
                 }
             }
@@ -169,6 +176,7 @@ fun ProfileScreen(
     onBackClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     onReviewClick: (String) -> Unit,
+    onEditReviewClick: (String) -> Unit,
     logoutButtonPressed: () -> Unit,
     profileViewModel: ProfileViewModel,
     modifier: Modifier = Modifier
@@ -178,39 +186,56 @@ fun ProfileScreen(
         profileViewModel.loadProfile()
     }
 
-    if (state.student == null && state.isLoading) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
+    val userProfile = state.userProfile
+    when {
+        state.isLoading && userProfile == null -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
-    } else if (state.student == null) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = "Usuario no encontrado")
+        userProfile == null -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = state.errorMessage ?: "Usuario no encontrado",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
-    } else {
-        BodyProfile(
-            student = state.student!!,
-            email = state.email,
-            reviews = state.reviews,
-            selectedTab = state.selectedTab,
-            followersCount = state.followersCount,
-            followingCount = state.followingCount,
-            reviewsCount = state.reviewsCount,
-            onTabSelected = { profileViewModel.onTabSelected(it) },
-            onBackClick = onBackClick,
-            onEditProfileClick = onEditProfileClick,
-            onReviewClick = onReviewClick,
-            onLogoutClick = {
-                profileViewModel.logout()
-                logoutButtonPressed()
-            },
-            modifier = modifier
-        )
+        else -> {
+            val student = userProfile.student
+            val reviews = if (state.selectedTab == ProfileTab.RECEIVED) userProfile.receivedReviews else userProfile.createdReviews
+
+            BodyProfile(
+                student = student,
+                email = state.email,
+                reviews = reviews,
+                selectedTab = state.selectedTab,
+                followersCount = state.followersCount,
+                followingCount = state.followingCount,
+                reviewsCount = state.reviewsCount,
+                onTabSelected = { profileViewModel.onTabSelected(it) },
+                onBackClick = onBackClick,
+                onEditProfileClick = onEditProfileClick,
+                onReviewClick = onReviewClick,
+                onEditReviewClick = onEditReviewClick,
+                onDeleteReviewClick = { profileViewModel.deleteReview(it) },
+                onLogoutClick = {
+                    profileViewModel.logout()
+                    logoutButtonPressed()
+                },
+                modifier = modifier
+            )
+        }
     }
 }
 
@@ -224,6 +249,7 @@ fun FullProfileScreenPreview() {
                 onBackClick = {},
                 onEditProfileClick = {},
                 onReviewClick = {},
+                onEditReviewClick = {},
                 logoutButtonPressed = {},
                 profileViewModel = viewModel()
             )

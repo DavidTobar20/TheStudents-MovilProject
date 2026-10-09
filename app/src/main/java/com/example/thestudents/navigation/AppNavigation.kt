@@ -233,6 +233,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             onBackClick = { navController.popBackStack() },
             onEditProfileClick = { navController.navigate(Screen.EditProfile.route) },
             onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
+            onEditReviewClick = { reviewId -> /* Pendiente navegación a editar reseña */ },
             logoutButtonPressed = {
                 navController.navigate(Screen.Login.route) {
                     popUpTo(0) { inclusive = true }

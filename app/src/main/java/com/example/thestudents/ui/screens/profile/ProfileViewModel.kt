@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.data.repository.ReviewRepository
+import com.example.thestudents.data.repository.UserRepository
 import com.example.thestudents.ui.screens.profile.components.ProfileTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val userRepository: UserRepository,
     private val reviewRepository: ReviewRepository
 ): ViewModel() {
 
@@ -39,40 +41,43 @@ class ProfileViewModel @Inject constructor(
             val baseStudent = localStudentProvider.currentUser
             val currentUserId = baseStudent.id
 
-            // Consultar reseñas escritas y recibidas desde el backend vía Retrofit
-            val writtenResult = reviewRepository.getReviewsByReviewerId(currentUserId)
-            val receivedResult = reviewRepository.getReviewsByReviewedStudentId(currentUserId)
+            val result = userRepository.getUserProfile(currentUserId)
 
-            val written = writtenResult.getOrDefault(emptyList())
-            val received = receivedResult.getOrDefault(emptyList())
+            if (result.isSuccess) {
+                val profile = result.getOrNull()
+                val currentEmail = authRepository.currentUser?.email ?: ""
+                val authPhoto = authRepository.currentUser?.photoUrl?.toString()
+                val photoUrl = if (authPhoto.isNullOrEmpty()) defaultPhotoUrl else authPhoto
 
-            val authPhoto = authRepository.currentUser?.photoUrl?.toString()
-            val photoUrl = if (authPhoto.isNullOrEmpty()) defaultPhotoUrl else authPhoto
-            val student = baseStudent.copy(profileImage = photoUrl)
+                val updatedProfile = profile?.let {
+                    it.copy(student = it.student.copy(profileImage = photoUrl))
+                }
 
-            val followersCount = localStudentProvider.getFollowersCount(currentUserId)
-            val followingCount = localStudentProvider.getFollowingCount(currentUserId)
-            val totalReviewsCount = written.size + received.size
+                val followers = localStudentProvider.getFollowersCount(currentUserId)
+                val following = localStudentProvider.getFollowingCount(currentUserId)
+                val totalReviews = (profile?.receivedReviews?.size ?: 0) + (profile?.createdReviews?.size ?: 0)
 
-            val currentTab = _uiState.value.selectedTab
-            val activeReviews = if (currentTab == ProfileTab.RECEIVED) received else written
-
-            val error = if (writtenResult.isFailure && receivedResult.isFailure) {
-                writtenResult.exceptionOrNull()?.message ?: "Error al cargar reseñas"
-            } else null
-
-            _uiState.update {
-                it.copy(
-                    student = student,
-                    writtenReviews = written,
-                    receivedReviews = received,
-                    reviews = activeReviews,
-                    followersCount = followersCount,
-                    followingCount = followingCount,
-                    reviewsCount = totalReviewsCount,
-                    isLoading = false,
-                    errorMessage = error
-                )
+                _uiState.update {
+                    it.copy(
+                        userProfile = updatedProfile,
+                        email = currentEmail,
+                        followersCount = followers,
+                        followingCount = following,
+                        reviewsCount = totalReviews,
+                        isLoading = false,
+                        errorMessage = null
+                    )
+                }
+            } else {
+                val error = result.exceptionOrNull()
+                val currentEmail = authRepository.currentUser?.email ?: ""
+                _uiState.update {
+                    it.copy(
+                        email = currentEmail,
+                        isLoading = false,
+                        errorMessage = error?.message ?: "Error al cargar el perfil"
+                    )
+                }
             }
         }
     }
@@ -83,11 +88,35 @@ class ProfileViewModel @Inject constructor(
 
     fun onTabSelected(tab: ProfileTab) {
         _uiState.update { state ->
-            val activeReviews = if (tab == ProfileTab.RECEIVED) state.receivedReviews else state.writtenReviews
-            state.copy(
-                selectedTab = tab,
-                reviews = activeReviews
-            )
+            state.copy(selectedTab = tab)
         }
     }
+
+    fun deleteReview(reviewId: String) {
+        viewModelScope.launch {
+            val result = reviewRepository.deleteReview(reviewId)
+            if (result.isSuccess) {
+                _uiState.update { state ->
+                    val profile = state.userProfile ?: return@update state
+                    val updatedCreated = profile.createdReviews.filter { it.id != reviewId }
+                    val updatedReceived = profile.receivedReviews.filter { it.id != reviewId }
+                    val updatedProfile = profile.copy(
+                        createdReviews = updatedCreated,
+                        receivedReviews = updatedReceived
+                    )
+                    val newReviewsCount = updatedCreated.size + updatedReceived.size
+
+                    state.copy(
+                        userProfile = updatedProfile,
+                        reviewsCount = newReviewsCount
+                    )
+                }
+            } else {
+                _uiState.update {
+                    it.copy(errorMessage = "Error al eliminar la reseña")
+                }
+            }
+        }
+    }
+
 }

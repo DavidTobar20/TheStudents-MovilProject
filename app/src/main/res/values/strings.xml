@@ -114,6 +114,8 @@
     <string name="siguiendo_mayuscula">SIGUIENDO</string>
     <string name="editar_perfil">Editar perfil</string>
     <string name="cerrar_sesion">Cerrar Sesión</string>
+    <string name="no_has_recibido_resenas_aun">No has recibido reseñas aún</string>
+    <string name="no_has_escrito_resenas_aun">No has escrito reseñas aún</string>
 
 
     <!-- Edición Perfil -->

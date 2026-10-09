@@ -1,6 +1,7 @@
 package com.example.thestudents.ui.screens.reviews
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,14 +9,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.data.CourseSection
 import com.example.thestudents.data.local.localCourseSectionProvider
 import com.example.thestudents.ui.screens.reviews.components.CourseSectionCard
@@ -26,26 +32,57 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
 @Composable
 fun BodyReviews(
     sections: List<CourseSection>,
+    isLoading: Boolean,
+    errorMessage: String?,
     onStudentClick: (String) -> Unit,
     onWriteReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 24.dp),
-        contentPadding = PaddingValues(bottom = 24.dp)
-    ) {
-        item {
-            Spacer(modifier = Modifier.height(24.dp))
-            HeaderReviews()
+    when {
+        isLoading -> {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
-        items(sections, key = { it.title }) { section ->
-            CourseSectionCard(
-                section = section,
-                onStudentClick = onStudentClick,
-                onWriteReviewClick = onWriteReviewClick
-            )
+        errorMessage != null -> {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = errorMessage,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+        else -> {
+            LazyColumn(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp),
+                contentPadding = PaddingValues(bottom = 24.dp)
+            ) {
+                item {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    HeaderReviews()
+                }
+                items(sections, key = { it.title }) { section ->
+                    CourseSectionCard(
+                        section = section,
+                        onStudentClick = onStudentClick,
+                        onWriteReviewClick = onWriteReviewClick
+                    )
+                }
+            }
         }
     }
 }
@@ -58,6 +95,8 @@ fun BodyReviewsPreview() {
         Surface {
             BodyReviews(
                 sections = localCourseSectionProvider.sections.take(1),
+                isLoading = false,
+                errorMessage = null,
                 onStudentClick = {},
                 onWriteReviewClick = {}
             )
@@ -65,10 +104,6 @@ fun BodyReviewsPreview() {
     }
 }
 
-/**
- * Pantalla de resenas. No tiene estado propio; las secciones llegan como parametro para poder
- * cambiarlas en previews y pruebas sin tocar el proveedor.
- */
 @Composable
 fun ReviewsScreen(
     onStudentClick: (String) -> Unit,
@@ -80,6 +115,8 @@ fun ReviewsScreen(
 
     BodyReviews(
         sections = state.sections,
+        isLoading = state.isLoading,
+        errorMessage = state.errorMessage,
         onStudentClick = onStudentClick,
         onWriteReviewClick = onWriteReviewClick,
         modifier = modifier

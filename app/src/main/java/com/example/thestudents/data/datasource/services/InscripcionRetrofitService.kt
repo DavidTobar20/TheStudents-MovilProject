@@ -6,8 +6,9 @@ import retrofit2.http.Path
 
 interface InscripcionRetrofitService {
 
-    @GET("inscripcion/usuario/{usuario_id}")
-    suspend fun getInscripcionesPorUsuario(
-        @Path("usuario_id") usuarioId: String
-    ): InscripcionDto
+    @GET("inscripcion/companeros/{usuario_id}")
+    suspend fun getInscripcionesPorUsuario(@Path("usuario_id") usuarioId: String): List<InscripcionDto>
+
+    @GET("inscripcion/{id}")
+    suspend fun getInscripcionById(@Path("id") inscripcionId: String): InscripcionDto
 }

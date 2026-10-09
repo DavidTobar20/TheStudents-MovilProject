@@ -7,7 +7,12 @@ import javax.inject.Inject
 class InscripcionRetrofitDataSourceImpl @Inject constructor(
     private val service: InscripcionRetrofitService
 ) {
-    suspend fun getInscripcionesPorUsuario(usuarioId: String): InscripcionDto {
+    suspend fun getInscripcionesPorUsuario(usuarioId: String): List<InscripcionDto> {
         return service.getInscripcionesPorUsuario(usuarioId)
     }
+
+    suspend fun getInscripcionById(inscripcionId: String): InscripcionDto {
+        return service.getInscripcionById(inscripcionId)
+    }
+
 }
