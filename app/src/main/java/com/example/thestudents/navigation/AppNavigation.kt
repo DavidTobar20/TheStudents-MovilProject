@@ -51,11 +51,12 @@ const val STUDENT_ID_ARG = "studentId"
 const val REVIEW_ID_ARG = "reviewId"
 
 /** Determina qué pestaña debe marcarse como activa en la barra inferior. */
-fun selectedTabFor(route: String?): String? = when (route) {
-    Screen.EditProfile.route,
-    Screen.CommentsReview.route,
-    Screen.StudentDetail.route,
-    Screen.WriteReview.route -> Screen.Profile.route
+fun selectedTabFor(route: String?): String? = when {
+    route == null -> null
+    route == Screen.EditProfile.route -> Screen.Profile.route
+    route.startsWith("comments_review") || route == Screen.CommentsReview.route -> Screen.Profile.route
+    route.startsWith("student_detail") || route == Screen.StudentDetail.route -> Screen.Profile.route
+    route.startsWith("write_review") || route == Screen.WriteReview.route -> Screen.Profile.route
     else -> route
 }
 
@@ -71,8 +72,14 @@ sealed class Screen(val route: String) {
     data object EditProfile : Screen("edit_profile")
     data object Reviews : Screen("reviews")
 
-    data object WriteReview : Screen("write_review/{$STUDENT_ID_ARG}") {
-        fun createRoute(studentId: String) = "write_review/$studentId"
+    data object WriteReview : Screen("write_review/{$STUDENT_ID_ARG}?$REVIEW_ID_ARG={$REVIEW_ID_ARG}") {
+        fun createRoute(studentId: String, reviewId: String? = null): String {
+            return if (reviewId != null) {
+                "write_review/$studentId?$REVIEW_ID_ARG=$reviewId"
+            } else {
+                "write_review/$studentId"
+            }
+        }
     }
 
     data object StudentDetail : Screen("student_detail/{$STUDENT_ID_ARG}") {
@@ -209,13 +216,22 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
 
     composable(
         route = Screen.WriteReview.route,
-        arguments = listOf(navArgument(STUDENT_ID_ARG) { type = NavType.StringType })
+        arguments = listOf(
+            navArgument(STUDENT_ID_ARG) { type = NavType.StringType },
+            navArgument(REVIEW_ID_ARG) {
+                type = NavType.StringType
+                nullable = true
+                defaultValue = null
+            }
+        )
     ) { backStackEntry ->
         val studentId = backStackEntry.arguments?.getString(STUDENT_ID_ARG) ?: ""
+        val reviewId = backStackEntry.arguments?.getString(REVIEW_ID_ARG)
         val writeReviewViewModel: WriteReviewViewModel = hiltViewModel()
         WriteReviewScreen(
             writeReviewViewModel = writeReviewViewModel,
             studentId = studentId,
+            reviewId = reviewId,
             onBackClick = { navController.popBackStack() },
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
         )
@@ -227,6 +243,9 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             onBackClick = { navController.popBackStack() },
             onEditProfileClick = { navController.navigate(Screen.EditProfile.route) },
             onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
+            onEditReviewClick = { studentId, reviewId ->
+                navController.navigate(Screen.WriteReview.createRoute(studentId, reviewId))
+            },
             logoutButtonPressed = {
                 navController.navigate(Screen.Login.route) {
                     popUpTo(0) { inclusive = true }
@@ -255,7 +274,8 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             studentDetailViewModel = studentDetailViewModel,
             studentId = studentId,
             onBackClick = { navController.popBackStack() },
-            onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) }
+            onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
+            onWriteReviewClick = { id -> navController.navigate(Screen.WriteReview.createRoute(id)) }
         )
     }
 

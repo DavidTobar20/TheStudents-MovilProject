@@ -90,4 +90,25 @@ class ProfileViewModel @Inject constructor(
             )
         }
     }
+
+    fun deleteReview(reviewId: String) {
+        viewModelScope.launch {
+            val result = reviewRepository.deleteReview(reviewId)
+            if (result.isSuccess) {
+                _uiState.update { state ->
+                    val updatedWritten = state.writtenReviews.filter { it.id != reviewId }
+                    val activeReviews = if (state.selectedTab == ProfileTab.WRITTEN) updatedWritten else state.receivedReviews
+                    state.copy(
+                        writtenReviews = updatedWritten,
+                        reviews = activeReviews,
+                        reviewsCount = updatedWritten.size + state.receivedReviews.size
+                    )
+                }
+            } else {
+                _uiState.update {
+                    it.copy(errorMessage = "Error al eliminar la reseña")
+                }
+            }
+        }
+    }
 }

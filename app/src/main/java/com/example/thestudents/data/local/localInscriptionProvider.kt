@@ -37,4 +37,14 @@ object localInscriptionProvider {
             )
         }
     }
+
+    fun getSharedClassFor(userId1: String, userId2: String): Pair<String, String>? {
+        val u1Inscriptions = inscriptions.filter { it.student.id == userId1 }
+        val u2Inscriptions = inscriptions.filter { it.student.id == userId2 }
+        for (i1 in u1Inscriptions) {
+            val match = u2Inscriptions.find { it.className == i1.className && it.period == i1.period }
+            if (match != null) return i1.className to i1.period
+        }
+        return "Estructuras de Datos (ISIS1206)" to "2025-1"
+    }
 }
