@@ -8,18 +8,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.screens.profile.components.ProfileHeader
+import com.example.thestudents.ui.screens.profile.components.ProfileTab
+import com.example.thestudents.ui.screens.profile.components.ProfileTabs
 import com.example.thestudents.ui.screens.profile.components.RatingChartSection
 import com.example.thestudents.ui.screens.profile.components.ReviewItem
 import com.example.thestudents.ui.screens.profile.components.StatsSection
@@ -34,15 +35,23 @@ import com.example.thestudents.ui.utils.ButtonWithIcon
 fun BodyStudentDetail(
     student: Student,
     reviews: List<Review>,
+    selectedTab: ProfileTab,
+    onTabSelected: (ProfileTab) -> Unit,
     onBackClick: () -> Unit,
     onFollowClick: () -> Unit,
     onReviewClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    reviewsCount: Int = student.reviewsCount
 ) {
     LazyColumn(modifier = modifier.fillMaxSize()) {
         item { ProfileHeader(onBackClick = onBackClick) }
         item { UserInfoSection(student = student) }
-        item { StatsSection(student = student) }
+        item {
+            StatsSection(
+                student = student,
+                reviewsCount = reviewsCount
+            )
+        }
         item {
             ButtonWithIcon(
                 text = stringResource(R.string.seguir),
@@ -57,19 +66,35 @@ fun BodyStudentDetail(
         }
         item { RatingChartSection() }
         item {
-            Text(
-                text = stringResource(R.string.resenas_mayuscula),
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+            ProfileTabs(
+                selectedTab = selectedTab,
+                onTabSelected = onTabSelected
             )
         }
-        items(reviews, key = { it.id }) { review ->
-            ReviewItem(
-                review = review,
-                onClick = { onReviewClick(review.id) }
-            )
+        if (reviews.isEmpty()) {
+            item {
+                Text(
+                    text = if (selectedTab == ProfileTab.RECEIVED) {
+                        stringResource(R.string.no_tiene_recibidas_resenas_aun)
+                    } else {
+                        stringResource(R.string.no_tiene_escritas_resenas_aun)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        } else {
+            items(reviews, key = { it.id }) { review ->
+                ReviewItem(
+                    review = review,
+                    isWrittenTab = selectedTab == ProfileTab.WRITTEN,
+                    showActions = false,
+                    onClick = { onReviewClick(review.id) }
+                )
+            }
         }
     }
 }
@@ -80,9 +105,12 @@ fun BodyStudentDetail(
 fun BodyStudentDetailPreview() {
     TheStudentsTheme {
         Surface {
+            var selectedTab by rememberSaveable { mutableStateOf(ProfileTab.RECEIVED) }
             BodyStudentDetail(
                 student = localStudentProvider.students[1],
                 reviews = localReviewsProvider.allReviews,
+                selectedTab = selectedTab,
+                onTabSelected = { selectedTab = it },
                 onBackClick = {},
                 onFollowClick = {},
                 onReviewClick = {}
@@ -101,28 +129,32 @@ fun StudentDetailScreen(
     onBackClick: () -> Unit,
     onReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-
 ) {
     val state by studentDetailViewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(studentId) {
         studentDetailViewModel.getStudentById(studentId)
     }
 
-
-    if(state.student == null) {
+    if (state.isLoading && state.student == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
-            Text(text = "Estudiante no encontrado")
+            CircularProgressIndicator()
+        }
+    } else if (state.student == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
+            Text(text = stringResource(R.string.estudiante_no_encontrado))
         }
     } else {
         BodyStudentDetail(
             student = state.student!!,
             reviews = state.reviews,
+            selectedTab = state.selectedTab,
+            onTabSelected = studentDetailViewModel::onTabSelected,
             onBackClick = onBackClick,
             onFollowClick = { /* Handle follow */ },
             onReviewClick = onReviewClick,
-            modifier = modifier
-            )
-        }
-
+            modifier = modifier,
+            reviewsCount = state.reviewsCount
+        )
+    }
 }

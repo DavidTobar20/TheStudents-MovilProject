@@ -33,6 +33,7 @@ fun ReviewItem(
     modifier: Modifier = Modifier,
     review: Review,
     isWrittenTab: Boolean = false,
+    showActions: Boolean = isWrittenTab,
     onClick: () -> Unit = {},
     onEditClick: () -> Unit = {},
     onDeleteClick: () -> Unit = {}
@@ -84,7 +85,7 @@ fun ReviewItem(
                     fontStyle = FontStyle.Italic
                 )
             }
-            if (isWrittenTab) {
+            if (showActions) {
                 var menuExpanded by remember { mutableStateOf(false) }
                 var showDeleteDialog by remember { mutableStateOf(false) }
 

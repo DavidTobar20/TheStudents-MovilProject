@@ -152,6 +152,8 @@
     <string name="seguir">Seguir</string>
     <string name="estudiante_no_encontrado">Estudiante no encontrado</string>
     <string name="resena_no_encontrada">Reseña no encontrada</string>
+    <string name="no_tiene_recibidas_resenas_aun">No tiene reseñas recibidas aún</string>
+    <string name="no_tiene_escritas_resenas_aun">No tiene reseñas escritas aún</string>
 
     <plurals name="programa_y_resenas">
         <item quantity="one">%1$s · %2$d reseña</item>
