@@ -17,9 +17,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localReviewsProvider
-import com.example.thestudents.ui.theme.OnAvatar
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ProfileIcon
+
+import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
 fun ReviewerInfo(
@@ -43,19 +44,27 @@ fun ReviewerInfo(
                 .padding(end = 12.dp)
                 .size(40.dp)
         )
-        Column {
+        Column(
+            modifier = Modifier.weight(1f, fill = false)
+        ) {
             Text(
                 text = student.name,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
-            Text(
-                text = subtitle,
-                fontSize = 13.sp,
-                color = MaterialTheme.colorScheme.tertiary,
-                fontWeight = FontWeight.Medium
-            )
+            if (subtitle.isNotBlank()) {
+                Text(
+                    text = subtitle,
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    fontWeight = FontWeight.Medium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
 }

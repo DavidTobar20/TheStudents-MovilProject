@@ -34,7 +34,8 @@ fun InfoTag(
             text = text,
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.onSecondaryContainer
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
+            maxLines = 1
         )
     }
 }
