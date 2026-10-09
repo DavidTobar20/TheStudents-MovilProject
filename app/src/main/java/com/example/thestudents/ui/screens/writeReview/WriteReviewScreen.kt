@@ -130,14 +130,21 @@ fun BodyWriteReviewScreenPreview() {
 @Composable
 fun WriteReviewScreen(
     writeReviewViewModel: WriteReviewViewModel,
-    studentId: String,
+    inscriptionId: String,
     onBackClick: () -> Unit,
     onStudentClick: (String) -> Unit,
+    onNavigateToHome: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val state by writeReviewViewModel.uiState.collectAsState()
     LaunchedEffect(Unit) {
-        writeReviewViewModel.getStudentById(studentId)
+        writeReviewViewModel.getInscriptionById(inscriptionId)
+    }
+
+    LaunchedEffect(state.navigateToHome) {
+        if (state.navigateToHome) {
+            onNavigateToHome()
+        }
     }
 
     if (state.student == null) {
@@ -152,21 +159,33 @@ fun WriteReviewScreen(
             )
         }
     } else {
-        BodyWriteReviewScreen(
-            modifier = modifier,
-            rating = state.rating,
-            onRatingSelected = { writeReviewViewModel.updateRating(it) },
-            onReviewChange = { writeReviewViewModel.updateReview(it) },
-            onAnonymousChange = { writeReviewViewModel.updateIsAnonymous(it) },
-            review = state.review,
-            isAnonymous = state.isAnonymous,
-            onPublishClick = { /* Handle publish */ },
-            onBackClick = onBackClick,
-            onStudentClick = { onStudentClick(state.student!!.id) },
-            nameReviewed = state.student!!.name,
-            initialsReviewed = state.student!!.initials,
-            courseInfoReviewed = state.student!!.program,
-        )
+        Column(modifier = modifier.fillMaxSize()) {
+            BodyWriteReviewScreen(
+                modifier = Modifier.weight(1f),
+                rating = state.rating,
+                onRatingSelected = { writeReviewViewModel.updateRating(it) },
+                onReviewChange = { writeReviewViewModel.updateReview(it) },
+                onAnonymousChange = { writeReviewViewModel.updateIsAnonymous(it) },
+                review = state.review,
+                isAnonymous = state.isAnonymous,
+                onPublishClick = { writeReviewViewModel.createReview() },
+                onBackClick = onBackClick,
+                onStudentClick = { onStudentClick(state.student!!.id) },
+                nameReviewed = state.student!!.name,
+                initialsReviewed = state.student!!.initials,
+                courseInfoReviewed = "${state.className} • ${state.period}",
+            )
+            if (state.error != null) {
+                Text(
+                    text = state.error!!,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
     }
 }
 
@@ -177,9 +196,10 @@ fun WriteReviewScreenPreview() {
         Surface {
             WriteReviewScreen(
                 writeReviewViewModel = viewModel(),
-                studentId = "1",
+                inscriptionId = "i3",
                 onBackClick = {},
                 onStudentClick = {},
+                onNavigateToHome = {}
             )
         }
     }

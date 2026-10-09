@@ -43,7 +43,7 @@ fun CourseSectionCard(
                     ReviewStudentItem(
                         inscription = inscription,
                         onStudentClick = { onStudentClick(student.id) },
-                        onWriteReviewClick = { onWriteReviewClick(student.id) }
+                        onWriteReviewClick = { onWriteReviewClick(inscription.id) }
                     )
                     if (index < (section.inscriptions.size - 1)) {
                         HorizontalDivider(
