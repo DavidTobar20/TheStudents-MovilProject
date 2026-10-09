@@ -79,6 +79,10 @@ object localStudentProvider {
     
     // Simulación de seguidos: el usuario actual sigue a Valeria (2) y Daniel (3)
     val followingIds = setOf("2", "3")
+    val followersIds = setOf("2", "4") // Valeria y María siguen al usuario actual
+
+    fun getFollowersCount(studentId: String): Int = if (studentId == currentUser.id) followersIds.size else 2
+    fun getFollowingCount(studentId: String): Int = if (studentId == currentUser.id) followingIds.size else 2
 
     fun getStudentById(id: String): Student? = students.find { it.id == id }
 }

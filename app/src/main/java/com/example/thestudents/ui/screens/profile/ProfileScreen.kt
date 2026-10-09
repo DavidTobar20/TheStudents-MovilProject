@@ -40,6 +40,9 @@ fun BodyProfile(
     email: String,
     reviews: List<Review>,
     selectedTab: ProfileTab,
+    followersCount: Int,
+    followingCount: Int,
+    reviewsCount: Int,
     onTabSelected: (ProfileTab) -> Unit,
     onBackClick: () -> Unit,
     onEditProfileClick: () -> Unit,
@@ -63,7 +66,14 @@ fun BodyProfile(
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
-            item { StatsSection(student = student) }
+            item { 
+                StatsSection(
+                    student = student,
+                    followersCount = followersCount,
+                    followingCount = followingCount,
+                    reviewsCount = reviewsCount
+                ) 
+            }
             item {
                 Row(
                     modifier = Modifier
@@ -100,11 +110,25 @@ fun BodyProfile(
                     onTabSelected = onTabSelected
                 )
             }
-            items(reviews) { review ->
-                ReviewItem(
-                    review = review,
-                    onClick = { onReviewClick(review.id) }
-                )
+            if (reviews.isEmpty()) {
+                item {
+                    Text(
+                        text = if (selectedTab == ProfileTab.RECEIVED) "No has recibido reseñas aún" else "No has escrito reseñas aún",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            } else {
+                items(reviews) { review ->
+                    ReviewItem(
+                        review = review,
+                        isWrittenTab = selectedTab == ProfileTab.WRITTEN,
+                        onClick = { onReviewClick(review.id) }
+                    )
+                }
             }
         }
     }
@@ -123,6 +147,9 @@ fun BodyProfilePreview() {
                 email = "user@example.com",
                 reviews = localReviewsProvider.getReviewsForStudent(student.id),
                 selectedTab = selectedTab,
+                followersCount = 2,
+                followingCount = 2,
+                reviewsCount = 5,
                 onTabSelected = { selectedTab = it },
                 onBackClick = {},
                 onEditProfileClick = {},
@@ -147,21 +174,23 @@ fun ProfileScreen(
     modifier: Modifier = Modifier
 ) {
     val state by profileViewModel.uiState.collectAsState()
-    //recarga automáticamente la información del usuario y muestra la foto nueva al instante.
     LaunchedEffect(Unit) {
         profileViewModel.loadProfile()
     }
 
-    if (state.student == null) {
+    if (state.student == null && state.isLoading) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            if (state.isLoading) {
-                CircularProgressIndicator()
-            } else {
-                Text(text = "Usuario no encontrado")
-            }
+            CircularProgressIndicator()
+        }
+    } else if (state.student == null) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = "Usuario no encontrado")
         }
     } else {
         BodyProfile(
@@ -169,6 +198,9 @@ fun ProfileScreen(
             email = state.email,
             reviews = state.reviews,
             selectedTab = state.selectedTab,
+            followersCount = state.followersCount,
+            followingCount = state.followingCount,
+            reviewsCount = state.reviewsCount,
             onTabSelected = { profileViewModel.onTabSelected(it) },
             onBackClick = onBackClick,
             onEditProfileClick = onEditProfileClick,

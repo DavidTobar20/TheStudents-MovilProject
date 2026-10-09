@@ -4,8 +4,8 @@ import com.example.thestudents.data.Review
 import com.google.gson.annotations.SerializedName
 
 data class ReviewDto(
-    val id: Int,
-    val contenido: String,
+    val id: Int? = null,
+    val contenido: String? = null,
     val likes: Int? = 0,
     val disLikes: Int? = 0,
     val rating: String? = null,
@@ -22,16 +22,16 @@ data class ReviewDto(
 
 fun ReviewDto.toReview(): Review {
     return Review(
-        id = id.toString(),
+        id = (id ?: 0).toString(),
         reviewer = autor?.toStudent() ?: com.example.thestudents.data.local.localStudentProvider.currentUser,
         reviewedStudent = resenado?.toStudent() ?: com.example.thestudents.data.local.localStudentProvider.students[0],
-        classReviewed = materia ?: "",
-        periodReviewed = periodo ?: "",
-        content = contenido,
-        time = fechaCreacion ?: "",
+        classReviewed = materia.orEmpty(),
+        periodReviewed = periodo.orEmpty(),
+        content = contenido.orEmpty(),
+        time = fechaCreacion.orEmpty(),
         likes = likes ?: 0,
         disLikes = disLikes ?: 0,
-        rating = rating?.ifEmpty { null },
+        rating = if (rating.isNullOrBlank()) null else rating,
         comments = emptyList()
     )
 }

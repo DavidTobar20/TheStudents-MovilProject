@@ -21,6 +21,9 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
 fun StatsSection(
     student: Student,
     modifier: Modifier = Modifier,
+    followersCount: Int = student.followersCount,
+    followingCount: Int = student.followingCount,
+    reviewsCount: Int = student.reviewsCount,
 ) {
     Row(
         modifier = modifier
@@ -28,17 +31,17 @@ fun StatsSection(
             .padding(vertical = 24.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        StatItem("128", stringResource(R.string.seguidores_mayuscula))
+        StatItem(followersCount.toString(), stringResource(R.string.seguidores_mayuscula))
         VerticalDivider(
             modifier = Modifier.height(40.dp),
             color = MaterialTheme.colorScheme.outlineVariant
         )
-        StatItem("96", stringResource(R.string.siguiendo_mayuscula))
+        StatItem(followingCount.toString(), stringResource(R.string.siguiendo_mayuscula))
         VerticalDivider(
             modifier = Modifier.height(40.dp),
             color = MaterialTheme.colorScheme.outlineVariant
         )
-        StatItem(student.reviewsCount.toString(), stringResource(R.string.resenas_mayuscula))
+        StatItem(reviewsCount.toString(), stringResource(R.string.resenas_mayuscula))
     }
 }
 
