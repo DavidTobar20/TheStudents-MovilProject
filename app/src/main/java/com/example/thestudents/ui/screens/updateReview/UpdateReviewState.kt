@@ -1,14 +1,16 @@
 package com.example.thestudents.ui.screens.updateReview
 
-import com.example.thestudents.data.Review
+import com.example.thestudents.data.Student
 
 data class UpdateReviewState(
     val reviewId: String = "",
-    val review: Review? = null,
+    val student: Student? = null,
+    val className: String = "",
+    val period: String = "",
     val rating: Int = 0,
-    val reviewContent: String = "",
+    val review: String = "",
     val isAnonymous: Boolean = false,
+    val navigateToProfile: Boolean = false,
     val isLoading: Boolean = false,
-    val isSuccess: Boolean = false,
-    val errorMessage: String? = null
+    val error: String? = null
 )

@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -244,8 +243,12 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             updateReviewViewModel = updateReviewViewModel,
             reviewId = reviewId,
             onBackClick = { navController.popBackStack() },
-            onUpdateSuccess = { navController.popBackStack() },
-            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
+            onNavigateToProfile = {
+                navController.navigate(Screen.Profile.route) {
+                    popUpTo(Screen.Profile.route) { inclusive = true }
+                }
+            }
         )
     }
 
@@ -255,7 +258,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             onBackClick = { navController.popBackStack() },
             onEditProfileClick = { navController.navigate(Screen.EditProfile.route) },
             onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
-            onEditReviewClick = { reviewId -> /* Pendiente navegación a editar reseña */ },
+            onEditReviewClick = { reviewId -> navController.navigate(Screen.UpdateReview.createRoute(reviewId)) },
             logoutButtonPressed = {
                 navController.navigate(Screen.Login.route) {
                     popUpTo(0) { inclusive = true }

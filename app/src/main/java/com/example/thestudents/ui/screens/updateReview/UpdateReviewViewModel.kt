@@ -19,28 +19,34 @@ class UpdateReviewViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UpdateReviewState())
     val uiState: StateFlow<UpdateReviewState> = _uiState.asStateFlow()
 
+    fun updateRating(input: Int) {
+        _uiState.update { it.copy(rating = input) }
+    }
+
     fun loadReview(reviewId: String) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null, reviewId = reviewId) }
+            _uiState.update { it.copy(isLoading = true, error = null, reviewId = reviewId) }
             val result = reviewRepository.getReviewById(reviewId)
             if (result.isSuccess) {
-                val review = result.getOrNull()
-                if (review != null) {
-                    val initialRating = review.rating?.toDoubleOrNull()?.toInt() ?: 0
+                val reviewData = result.getOrNull()
+                if (reviewData != null) {
+                    val initialRating = reviewData.rating?.toDoubleOrNull()?.toInt() ?: 0
                     _uiState.update {
                         it.copy(
-                            review = review,
+                            student = reviewData.reviewedStudent,
+                            className = reviewData.classReviewed,
+                            period = reviewData.periodReviewed,
                             rating = initialRating,
-                            reviewContent = review.content,
+                            review = reviewData.content,
                             isLoading = false,
-                            errorMessage = null
+                            error = null
                         )
                     }
                 } else {
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            errorMessage = "Reseña no encontrada"
+                            error = "Reseña no encontrada"
                         )
                     }
                 }
@@ -49,43 +55,39 @@ class UpdateReviewViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        errorMessage = errorMsg
+                        error = errorMsg
                     )
                 }
             }
         }
     }
 
-    fun updateRating(input: Int) {
-        _uiState.update { it.copy(rating = input) }
-    }
-
-    fun updateReviewContent(input: String) {
-        _uiState.update { it.copy(reviewContent = input) }
+    fun updateReview(input: String) {
+        _uiState.update { it.copy(review = input) }
     }
 
     fun updateIsAnonymous(input: Boolean) {
         _uiState.update { it.copy(isAnonymous = input) }
     }
 
-    fun submitUpdateReview(onSuccess: () -> Unit) {
+    fun updateReview() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-            val current = _uiState.value
+            _uiState.update { it.copy(isLoading = true, error = null) }
+            val state = _uiState.value
+            val ratingStr = if (state.rating > 0) state.rating.toString() else null
+            val estadoStr = if (state.isAnonymous) "anonimo" else "activo"
+
             val result = reviewRepository.updateReview(
-                reviewId = current.reviewId,
-                rating = current.rating.toString(),
-                contenido = current.reviewContent,
-                estado = if (current.isAnonymous) "anonimo" else "activo"
+                reviewId = state.reviewId,
+                rating = ratingStr,
+                contenido = state.review,
+                estado = estadoStr
             )
 
             if (result.isSuccess) {
-                _uiState.update { it.copy(isLoading = false, isSuccess = true) }
-                onSuccess()
+                _uiState.update { it.copy(isLoading = false, navigateToProfile = true, error = null) }
             } else {
-                val errorMsg = result.exceptionOrNull()?.message ?: "Error al actualizar la reseña"
-                _uiState.update { it.copy(isLoading = false, errorMessage = errorMsg) }
-                onSuccess()
+                _uiState.update { it.copy(isLoading = false, error = result.exceptionOrNull()?.message) }
             }
         }
     }

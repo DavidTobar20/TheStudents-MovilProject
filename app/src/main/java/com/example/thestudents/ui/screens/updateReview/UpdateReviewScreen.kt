@@ -1,6 +1,5 @@
 package com.example.thestudents.ui.screens.updateReview
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -25,34 +27,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
-import com.example.thestudents.ui.screens.updateReview.components.UpdateReviewAnonymousCard
-import com.example.thestudents.ui.screens.updateReview.components.UpdateReviewHeader
 import com.example.thestudents.ui.screens.writeReview.components.RatingCard
 import com.example.thestudents.ui.screens.writeReview.components.ReviewField
+import com.example.thestudents.ui.screens.writeReview.components.ReviewHeader
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ButtonWithoutIcon
 import com.example.thestudents.ui.utils.HeaderBack
+import com.example.thestudents.ui.utils.SettingSwitchRow
 
 @Composable
 fun BodyUpdateReviewScreen(
+    modifier: Modifier = Modifier,
     rating: Int,
     onRatingSelected: (Int) -> Unit,
-    reviewContent: String,
-    onReviewContentChange: (String) -> Unit,
-    isAnonymous: Boolean,
+    onReviewChange: (String) -> Unit,
     onAnonymousChange: (Boolean) -> Unit,
-    nameReviewed: String,
-    initialsReviewed: String,
-    courseInfoReviewed: String,
-    profileImageReviewed: String?,
+    review: String,
+    isAnonymous: Boolean,
     onUpdateClick: () -> Unit,
     onBackClick: () -> Unit,
     onStudentClick: () -> Unit,
+    nameReviewed: String,
+    initialsReviewed: String,
+    courseInfoReviewed: String,
     isLoading: Boolean = false,
-    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         HeaderBack(
             title = stringResource(R.string.actualizar_resena),
@@ -64,11 +65,10 @@ fun BodyUpdateReviewScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            UpdateReviewHeader(
+            ReviewHeader(
                 name = nameReviewed,
                 initials = initialsReviewed,
                 courseInfo = courseInfoReviewed,
-                profileImage = profileImageReviewed,
                 onAvatarClick = onStudentClick
             )
             RatingCard(
@@ -76,15 +76,26 @@ fun BodyUpdateReviewScreen(
                 onRatingSelected = onRatingSelected
             )
             ReviewField(
-                review = reviewContent,
-                onReviewChange = onReviewContentChange
+                review = review,
+                onReviewChange = onReviewChange
             )
-            UpdateReviewAnonymousCard(
-                isAnonymous = isAnonymous,
-                onAnonymousChange = onAnonymousChange
-            )
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp, horizontal = 16.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                SettingSwitchRow(
+                    modifier = Modifier.padding(16.dp),
+                    title = stringResource(R.string.publicar_de_forma_anonima),
+                    description = stringResource(R.string.tu_nombre_no_aparecer_en_la_resena),
+                    checked = isAnonymous,
+                    onCheckedChange = onAnonymousChange
+                )
+            }
         }
-
         if (isLoading) {
             Box(
                 modifier = Modifier
@@ -108,28 +119,24 @@ fun BodyUpdateReviewScreen(
     }
 }
 
-@Preview(name = "Claro", showBackground = true)
-@Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun BodyUpdateReviewScreenPreview() {
     TheStudentsTheme {
-        Surface {
-            BodyUpdateReviewScreen(
-                rating = 4,
-                onRatingSelected = {},
-                reviewContent = "Excelente compañero de trabajo, muy responsable y puntual.",
-                onReviewContentChange = {},
-                isAnonymous = false,
-                onAnonymousChange = {},
-                nameReviewed = "Valeria Gómez",
-                initialsReviewed = "VG",
-                courseInfoReviewed = "Matemáticas Discretas (MATE120) · 2025-3",
-                profileImageReviewed = null,
-                onUpdateClick = {},
-                onBackClick = {},
-                onStudentClick = {}
-            )
-        }
+        BodyUpdateReviewScreen(
+            rating = 4,
+            onRatingSelected = {},
+            onReviewChange = {},
+            onAnonymousChange = {},
+            review = "Excelente compañero de trabajo, muy responsable y puntual.",
+            isAnonymous = false,
+            onUpdateClick = {},
+            onBackClick = {},
+            onStudentClick = {},
+            nameReviewed = "Laura Martínez",
+            initialsReviewed = "LM",
+            courseInfoReviewed = "Estructuras de Datos (ISIS1206) • 2025-2",
+        )
     }
 }
 
@@ -138,19 +145,23 @@ fun UpdateReviewScreen(
     updateReviewViewModel: UpdateReviewViewModel,
     reviewId: String,
     onBackClick: () -> Unit,
-    onUpdateSuccess: () -> Unit,
-    onStudentClick: (String) -> Unit = {},
+    onStudentClick: (String) -> Unit,
+    onNavigateToProfile: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val state by updateReviewViewModel.uiState.collectAsState()
-
     LaunchedEffect(reviewId) {
         updateReviewViewModel.loadReview(reviewId)
     }
 
-    val review = state.review
+    LaunchedEffect(state.navigateToProfile) {
+        if (state.navigateToProfile) {
+            onNavigateToProfile()
+        }
+    }
+
     when {
-        state.isLoading && review == null -> {
+        state.isLoading && state.student == null -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -158,7 +169,7 @@ fun UpdateReviewScreen(
                 CircularProgressIndicator()
             }
         }
-        review == null -> {
+        state.student == null -> {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -166,7 +177,7 @@ fun UpdateReviewScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = state.errorMessage ?: stringResource(R.string.resena_no_encontrada),
+                    text = state.error ?: stringResource(R.string.resena_no_encontrada),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.error,
                     textAlign = TextAlign.Center
@@ -174,32 +185,39 @@ fun UpdateReviewScreen(
             }
         }
         else -> {
-            val reviewedStudent = review.reviewedStudent
-            BodyUpdateReviewScreen(
-                modifier = modifier,
-                rating = state.rating,
-                onRatingSelected = { updateReviewViewModel.updateRating(it) },
-                reviewContent = state.reviewContent,
-                onReviewContentChange = { updateReviewViewModel.updateReviewContent(it) },
-                isAnonymous = state.isAnonymous,
-                onAnonymousChange = { updateReviewViewModel.updateIsAnonymous(it) },
-                nameReviewed = reviewedStudent.name,
-                initialsReviewed = reviewedStudent.initials,
-                courseInfoReviewed = "${review.classReviewed} · ${review.periodReviewed}",
-                profileImageReviewed = reviewedStudent.profileImage,
-                onUpdateClick = {
-                    updateReviewViewModel.submitUpdateReview(onSuccess = onUpdateSuccess)
-                },
-                onBackClick = onBackClick,
-                onStudentClick = { onStudentClick(reviewedStudent.id) },
-                isLoading = state.isLoading
-            )
+            Column(modifier = modifier.fillMaxSize()) {
+                BodyUpdateReviewScreen(
+                    modifier = Modifier.weight(1f),
+                    rating = state.rating,
+                    onRatingSelected = { updateReviewViewModel.updateRating(it) },
+                    onReviewChange = { updateReviewViewModel.updateReview(it) },
+                    onAnonymousChange = { updateReviewViewModel.updateIsAnonymous(it) },
+                    review = state.review,
+                    isAnonymous = state.isAnonymous,
+                    onUpdateClick = { updateReviewViewModel.updateReview() },
+                    onBackClick = onBackClick,
+                    onStudentClick = { onStudentClick(state.student!!.id) },
+                    nameReviewed = state.student!!.name,
+                    initialsReviewed = state.student!!.initials,
+                    courseInfoReviewed = "${state.className} • ${state.period}",
+                    isLoading = state.isLoading
+                )
+                if (state.error != null) {
+                    Text(
+                        text = state.error!!,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
         }
     }
 }
 
-@Preview(name = "Claro", showBackground = true, showSystemUi = true)
-@Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 fun UpdateReviewScreenPreview() {
     TheStudentsTheme {
@@ -208,7 +226,8 @@ fun UpdateReviewScreenPreview() {
                 updateReviewViewModel = viewModel(),
                 reviewId = "1",
                 onBackClick = {},
-                onUpdateSuccess = {}
+                onStudentClick = {},
+                onNavigateToProfile = {}
             )
         }
     }
