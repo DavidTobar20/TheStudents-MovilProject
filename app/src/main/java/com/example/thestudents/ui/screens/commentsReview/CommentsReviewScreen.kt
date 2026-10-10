@@ -42,17 +42,11 @@ import com.example.thestudents.ui.utils.HeaderBack
 
 /**
  * Contenido de los comentarios de una resena.
- *
- * La cabecera y la caja de comentario van dentro del contenido, no como topBar y bottomBar de un
- * Scaffold propio: el unico Scaffold de la app esta en AppNavigation. La lista de comentarios
- * toma el espacio sobrante con weight, asi que la caja de escribir queda anclada abajo igual que
- * antes.
  */
 @Composable
 fun BodyCommentsReviewScreen(
     commentator: Student,
     review: Review,
-    onBackClick: () -> Unit,
     onStudentClick: (String) -> Unit,
     isLiked: Boolean,
     isDisliked: Boolean,
@@ -67,65 +61,55 @@ fun BodyCommentsReviewScreen(
     onSendCommentClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        modifier = modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.surfaceContainerHigh
-    ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            HeaderBack(
-                title = stringResource(R.string.resena),
-                onBackClick = onBackClick
-            )
+    Column(modifier = modifier.fillMaxSize()) {
+        ReviewCard(
+            review = review,
+            isLiked = isLiked,
+            isDisliked = isDisliked,
+            onLikeClick = onLikeClick,
+            onDislikeClick = onDislikeClick,
+            onReviewerClick = review.reviewer.id
+                .takeIf { it.isNotBlank() }
+                ?.let { id -> { onStudentClick(id) } },
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        )
 
-            ReviewCard(
-                review = review,
-                isLiked = isLiked,
-                isDisliked = isDisliked,
-                onLikeClick = onLikeClick,
-                onDislikeClick = onDislikeClick,
-                onReviewerClick = review.reviewer.id
-                    .takeIf { it.isNotBlank() }
-                    ?.let { id -> { onStudentClick(id) } },
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            )
+        Text(
+            text = stringResource(R.string.comentarios, review.comments.size),
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        )
 
-            Text(
-                text = stringResource(R.string.comentarios, review.comments.size),
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            )
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(horizontal = 16.dp),
-                contentPadding = PaddingValues(bottom = 16.dp)
-            ) {
-                itemsIndexed(review.comments) { index, comment ->
-                    CommentItem(
-                        comment = comment,
-                        isLiked = index in likedComments,
-                        isDisliked = index in dislikedComments,
-                        onLikeClick = { onCommentLikeClick(index) },
-                        onDislikeClick = { onCommentDislikeClick(index) },
-                        onCommentatorClick = comment.commentator.id
-                            .takeIf { it.isNotBlank() }
-                            ?.let { id -> { onStudentClick(id) } },
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(horizontal = 16.dp),
+            contentPadding = PaddingValues(bottom = 16.dp)
+        ) {
+            itemsIndexed(review.comments) { index, comment ->
+                CommentItem(
+                    comment = comment,
+                    isLiked = index in likedComments,
+                    isDisliked = index in dislikedComments,
+                    onLikeClick = { onCommentLikeClick(index) },
+                    onDislikeClick = { onCommentDislikeClick(index) },
+                    onCommentatorClick = comment.commentator.id
+                        .takeIf { it.isNotBlank() }
+                        ?.let { id -> { onStudentClick(id) } },
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
             }
-
-            CommentInputFieldBar(
-                commentText = commentInputText,
-                onCommentChange = onCommentTextChange,
-                onSendClick = onSendCommentClick,
-                commentator = commentator
-            )
         }
+
+        CommentInputFieldBar(
+            commentText = commentInputText,
+            onCommentChange = onCommentTextChange,
+            onSendClick = onSendCommentClick,
+            commentator = commentator
+        )
     }
 }
 
@@ -141,7 +125,6 @@ fun BodyCommentsReviewScreenPreview() {
             BodyCommentsReviewScreen(
                 commentator = localStudentProvider.currentUser,
                 review = localReviewsProvider.allReviews[1],
-                onBackClick = {},
                 onStudentClick = {},
                 isLiked = isLiked,
                 isDisliked = isDisliked,
@@ -161,10 +144,6 @@ fun BodyCommentsReviewScreenPreview() {
 
 /**
  * Pantalla de comentarios de una resena.
- *
- * Es la duena de todo el estado de interaccion: el texto en curso, el voto sobre la resena y el
- * voto sobre cada comentario. Antes los votos de los comentarios estaban fijos en false dentro
- * del contenido, asi que los botones no reaccionaban.
  */
 @Composable
 fun CommentsReviewScreen(
@@ -174,7 +153,6 @@ fun CommentsReviewScreen(
     onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     val state by commentsReviewViewModel.uiState.collectAsState()
 
     LaunchedEffect(reviewId) {
@@ -183,73 +161,71 @@ fun CommentsReviewScreen(
     }
 
     val review = state.review
-    if (review == null) {
-        // Mientras carga o si falla, se deja la cabecera para poder volver atras.
-        Surface(
-            modifier = modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.surfaceContainerHigh
-        ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                HeaderBack(
-                    title = stringResource(R.string.resena),
-                    onBackClick = onBackClick
-                )
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        HeaderBack(
+            title = stringResource(R.string.resena),
+            onBackClick = onBackClick
+        )
+
+        when {
+            state.isLoading && review == null -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(32.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    val error = state.errorMessage
-                    if (error != null) {
-                        Text(
-                            text = error,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.error,
-                            textAlign = TextAlign.Center
-                        )
-                    } else {
-                        CircularProgressIndicator()
-                    }
+                    CircularProgressIndicator()
                 }
             }
+            review == null -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = state.errorMessage ?: stringResource(R.string.resena_no_encontrada),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+            else -> {
+                BodyCommentsReviewScreen(
+                    commentator = state.commentator,
+                    review = review,
+                    onStudentClick = onStudentClick,
+                    isLiked = state.isLiked,
+                    isDisliked = state.isDisliked,
+                    onLikeClick = { commentsReviewViewModel.updateIsLiked() },
+                    onDislikeClick = { commentsReviewViewModel.updateIsDisliked() },
+                    likedComments = state.likedComments,
+                    dislikedComments = state.dislikedComments,
+                    onCommentLikeClick = { commentsReviewViewModel.updateLikedComments(it) },
+                    onCommentDislikeClick = { commentsReviewViewModel.updateDislikedComments(it) },
+                    commentInputText = state.commentInputText,
+                    onCommentTextChange = { commentsReviewViewModel.updateCommentInputText(it) },
+                    onSendCommentClick = onBackClick
+                )
+            }
         }
-        return
     }
-
-    BodyCommentsReviewScreen(
-        commentator = state.commentator,
-        review = review,
-        onBackClick = onBackClick,
-        onStudentClick = onStudentClick,
-        isLiked = state.isLiked,
-        isDisliked = state.isDisliked,
-        onLikeClick = { commentsReviewViewModel.updateIsLiked() },
-        onDislikeClick = { commentsReviewViewModel.updateIsDisliked() },
-        likedComments = state.likedComments,
-        dislikedComments = state.dislikedComments,
-        onCommentLikeClick = { commentsReviewViewModel.updateLikedComments(it) },
-        onCommentDislikeClick = { commentsReviewViewModel.updateDislikedComments(it) },
-        commentInputText = state.commentInputText,
-        onCommentTextChange = { commentsReviewViewModel.updateCommentInputText(it) },
-        onSendCommentClick = onBackClick,
-        modifier = modifier
-    )
 }
-
 
 @Preview(name = "Claro", showBackground = true, showSystemUi = true)
 @Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, showSystemUi = true)
 @Composable
 fun CommentsReviewScreenPreview() {
     TheStudentsTheme {
-        Surface {
-            CommentsReviewScreen(
-                commentsReviewViewModel = viewModel(),
-                reviewId = "1",
-                onBackClick = {},
-                onStudentClick = {}
-            )
-        }
+        CommentsReviewScreen(
+            commentsReviewViewModel = viewModel(),
+            reviewId = "1",
+            onBackClick = {},
+            onStudentClick = {}
+        )
     }
 }

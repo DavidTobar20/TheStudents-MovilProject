@@ -26,8 +26,12 @@ import androidx.compose.ui.unit.dp
 import com.example.thestudents.R
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.local.localReviewsProvider
+import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.components.ReviewCard
 import com.example.thestudents.ui.screens.home.components.HomeTopBar
+import com.example.thestudents.ui.screens.profile.components.ProfileHeader
+import com.example.thestudents.ui.screens.profile.components.ProfileTab
+import com.example.thestudents.ui.screens.studentDetail.BodyStudentDetail
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
@@ -37,43 +41,13 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel
 ) {
-
     val state by homeViewModel.uiState.collectAsState()
 
-    BodyHomeScreen(
-        followedReviews = state.followedReviews,
-        isLoading = state.isLoading,
-        errorMessage = state.errorMessage,
-        onLikeClick = { index -> homeViewModel.updateLikedReviews(index) },
-        onDislikeClick = { index -> homeViewModel.updateDislikedReviews(index) },
-        onCommentClick = onReviewClick,
-        onCardClick = onReviewClick,
-        onReviewerClick = onStudentClick,
-        isLiked = { index -> homeViewModel.reviewIsLiked(index) },
-        isDisliked = { index -> homeViewModel.reviewIsDisliked(index) },
-        modifier = modifier
-    )
-}
-
-@Composable
-fun BodyHomeScreen(
-    followedReviews: List<Review>,
-    isLoading: Boolean = false,
-    errorMessage: String? = null,
-    onLikeClick: (Int) -> Unit,
-    onDislikeClick: (Int) -> Unit,
-    onCommentClick: (String) -> Unit,
-    onCardClick: (String) -> Unit,
-    onReviewerClick: (String) -> Unit,
-    isLiked: (Int) -> Boolean,
-    isDisliked: (Int) -> Boolean,
-    modifier: Modifier = Modifier
-) {
     Column(modifier = modifier.fillMaxSize()) {
         HomeTopBar()
 
         when {
-            isLoading -> {
+            state.isLoading -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -83,7 +57,7 @@ fun BodyHomeScreen(
                     CircularProgressIndicator()
                 }
             }
-            errorMessage != null -> {
+            state.errorMessage != null -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -91,49 +65,76 @@ fun BodyHomeScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = errorMessage,
+                        text = state.errorMessage!!,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.error,
                         textAlign = TextAlign.Center
                     )
                 }
             }
-            followedReviews.isEmpty() -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(32.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.aun_no_hay_resenas_de_las_personas_que_sigues_comienza_a_explorar_para_seguir_a_tus_companeros),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
             else -> {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(bottom = 16.dp)
-                ) {
-                    item {
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
-                    itemsIndexed(followedReviews) { index, review ->
-                        ReviewCard(
-                            review = review,
-                            isLiked = isLiked(index),
-                            isDisliked = isDisliked(index),
-                            onLikeClick = { onLikeClick(index) },
-                            onDislikeClick = { onDislikeClick(index) },
-                            onCommentClick = { onCommentClick(review.id) },
-                            onCardClick = { onCardClick(review.id) },
-                            onReviewerClick = { onReviewerClick(review.reviewer.id) },
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                        )
-                    }
+                BodyHomeScreen(
+                    followedReviews = state.followedReviews,
+                    onLikeClick = { index -> homeViewModel.updateLikedReviews(index) },
+                    onDislikeClick = { index -> homeViewModel.updateDislikedReviews(index) },
+                    onCommentClick = onReviewClick,
+                    onCardClick = onReviewClick,
+                    onReviewerClick = onStudentClick,
+                    isLiked = { index -> homeViewModel.reviewIsLiked(index) },
+                    isDisliked = { index -> homeViewModel.reviewIsDisliked(index) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun BodyHomeScreen(
+    followedReviews: List<Review>,
+    onLikeClick: (Int) -> Unit,
+    onDislikeClick: (Int) -> Unit,
+    onCommentClick: (String) -> Unit,
+    onCardClick: (String) -> Unit,
+    onReviewerClick: (String) -> Unit,
+    isLiked: (Int) -> Boolean,
+    isDisliked: (Int) -> Boolean,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier.fillMaxSize()) {
+        if (followedReviews.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.aun_no_hay_resenas_de_las_personas_que_sigues_comienza_a_explorar_para_seguir_a_tus_companeros),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 16.dp)
+            ) {
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                itemsIndexed(followedReviews, key = { _, review -> review.id }) { index, review ->
+                    ReviewCard(
+                        review = review,
+                        isLiked = isLiked(index),
+                        isDisliked = isDisliked(index),
+                        onLikeClick = { onLikeClick(index) },
+                        onDislikeClick = { onDislikeClick(index) },
+                        onCommentClick = { onCommentClick(review.id) },
+                        onCardClick = { onCardClick(review.id) },
+                        onReviewerClick = { onReviewerClick(review.reviewer.id) },
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
                 }
             }
         }
@@ -141,35 +142,32 @@ fun BodyHomeScreen(
 }
 
 @Preview(name = "Claro", showBackground = true, showSystemUi = true)
+@Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, showSystemUi = true)
 @Composable
-fun HomeScreenPreview() {
-    TheStudentsTheme(darkTheme = false) {
-        Surface {
-            BodyHomeScreen(
-                followedReviews = localReviewsProvider.allReviews,
-                isLoading = false,
-                errorMessage = null,
-                onLikeClick = {},
-                onDislikeClick = {},
-                onCommentClick = {},
-                onCardClick = {},
-                onReviewerClick = {},
-                isLiked = { false },
-                isDisliked = { false }
-            )
-        }
+fun BodyHomeScreenPreview() {
+    TheStudentsTheme {
+        BodyHomeScreen(
+            followedReviews = localReviewsProvider.allReviews,
+            onLikeClick = {},
+            onDislikeClick = {},
+            onCommentClick = {},
+            onCardClick = {},
+            onReviewerClick = {},
+            isLiked = { false },
+            isDisliked = { false }
+        )
     }
 }
 
+@Preview(name = "Claro", showBackground = true, showSystemUi = true)
 @Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, showSystemUi = true)
 @Composable
-fun HomeScreenDarkPreview() {
-    TheStudentsTheme(darkTheme = true) {
-        Surface {
+fun HomeScreenPreview() {
+    TheStudentsTheme {
+        Column(modifier = Modifier.fillMaxSize()) {
+            HomeTopBar()
             BodyHomeScreen(
                 followedReviews = localReviewsProvider.allReviews,
-                isLoading = false,
-                errorMessage = null,
                 onLikeClick = {},
                 onDislikeClick = {},
                 onCommentClick = {},
