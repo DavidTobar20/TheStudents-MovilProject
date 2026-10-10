@@ -32,57 +32,26 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
 @Composable
 fun BodyReviews(
     sections: List<CourseSection>,
-    isLoading: Boolean,
-    errorMessage: String?,
     onStudentClick: (String) -> Unit,
     onWriteReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    when {
-        isLoading -> {
-            Box(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(32.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 24.dp),
+        contentPadding = PaddingValues(bottom = 24.dp)
+    ) {
+        item {
+            Spacer(modifier = Modifier.height(24.dp))
+            HeaderReviews()
         }
-        errorMessage != null -> {
-            Box(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(32.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = errorMessage,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.error,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-        else -> {
-            LazyColumn(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp),
-                contentPadding = PaddingValues(bottom = 24.dp)
-            ) {
-                item {
-                    Spacer(modifier = Modifier.height(24.dp))
-                    HeaderReviews()
-                }
-                items(sections, key = { it.title }) { section ->
-                    CourseSectionCard(
-                        section = section,
-                        onStudentClick = onStudentClick,
-                        onWriteReviewClick = onWriteReviewClick
-                    )
-                }
-            }
+        items(sections, key = { it.title }) { section ->
+            CourseSectionCard(
+                section = section,
+                onStudentClick = onStudentClick,
+                onWriteReviewClick = onWriteReviewClick
+            )
         }
     }
 }
@@ -95,8 +64,6 @@ fun BodyReviewsPreview() {
         Surface {
             BodyReviews(
                 sections = localCourseSectionProvider.sections.take(1),
-                isLoading = false,
-                errorMessage = null,
                 onStudentClick = {},
                 onWriteReviewClick = {}
             )
@@ -113,14 +80,41 @@ fun ReviewsScreen(
 ) {
     val state by reviewsViewModel.uiState.collectAsState()
 
-    BodyReviews(
-        sections = state.sections,
-        isLoading = state.isLoading,
-        errorMessage = state.errorMessage,
-        onStudentClick = onStudentClick,
-        onWriteReviewClick = onWriteReviewClick,
-        modifier = modifier
-    )
+    when {
+        state.isLoading -> {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        state.errorMessage != null -> {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = state.errorMessage ?: "",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+        else -> {
+            BodyReviews(
+                sections = state.sections,
+                onStudentClick = onStudentClick,
+                onWriteReviewClick = onWriteReviewClick,
+                modifier = modifier
+            )
+        }
+    }
 }
 
 @Preview(name = "Claro", showBackground = true, showSystemUi = true)

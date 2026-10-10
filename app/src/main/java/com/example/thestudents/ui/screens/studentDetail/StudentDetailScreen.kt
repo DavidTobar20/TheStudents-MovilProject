@@ -41,6 +41,7 @@ fun BodyStudentDetail(
     onFollowClick: () -> Unit,
     onReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier,
+    onStudentClick: (String) -> Unit = {},
     reviewsCount: Int = student.reviewsCount
 ) {
     LazyColumn(modifier = modifier.fillMaxSize()) {
@@ -92,7 +93,8 @@ fun BodyStudentDetail(
                     review = review,
                     isWrittenTab = selectedTab == ProfileTab.WRITTEN,
                     showActions = false,
-                    onClick = { onReviewClick(review.id) }
+                    onClick = { onReviewClick(review.id) },
+                    onStudentClick = onStudentClick
                 )
             }
         }
@@ -128,6 +130,7 @@ fun StudentDetailScreen(
     studentId: String,
     onBackClick: () -> Unit,
     onReviewClick: (String) -> Unit,
+    onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state by studentDetailViewModel.uiState.collectAsState()
@@ -153,6 +156,7 @@ fun StudentDetailScreen(
             onBackClick = onBackClick,
             onFollowClick = { /* Handle follow */ },
             onReviewClick = onReviewClick,
+            onStudentClick = onStudentClick,
             modifier = modifier,
             reviewsCount = state.reviewsCount
         )

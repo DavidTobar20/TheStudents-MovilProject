@@ -2,6 +2,7 @@ package com.example.thestudents.data.datasource.services
 
 import com.example.thestudents.data.dtos.CreateReviewDto
 import com.example.thestudents.data.dtos.ReviewDto
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -29,8 +30,10 @@ interface ReviewRetrofitService {
     @PUT("resena/{review_id}")
     suspend fun updateReview(@Path("review_id") reviewId: String, @Body review: CreateReviewDto): Unit
 
+    // Response<Unit> y no Unit: con Retrofit 2.9 un 204 (sin cuerpo) en una funcion suspend que
+    // devuelve Unit lanza una excepcion aunque el backend si haya borrado la resena.
     @DELETE("resena/{review_id}")
-    suspend fun deleteReview(@Path("review_id") reviewId: String): Unit
+    suspend fun deleteReview(@Path("review_id") reviewId: String): Response<Unit>
 
 
 

@@ -4,6 +4,7 @@ import com.example.thestudents.data.datasource.ReviewRemoteDataSource
 import com.example.thestudents.data.datasource.services.ReviewRetrofitService
 import com.example.thestudents.data.dtos.CreateReviewDto
 import com.example.thestudents.data.dtos.ReviewDto
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class ReviewRetrofitDataSourceImpl @Inject constructor(
@@ -37,6 +38,7 @@ class ReviewRetrofitDataSourceImpl @Inject constructor(
     }
 
     override suspend fun deleteReview(reviewId: String) {
-        service.deleteReview(reviewId)
+        val response = service.deleteReview(reviewId)
+        if (!response.isSuccessful) throw HttpException(response)
     }
 }
