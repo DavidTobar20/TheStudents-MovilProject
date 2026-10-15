@@ -1,0 +1,172 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">TheStudents</string>
+
+
+    <!-- Compartidos por varias pantallas -->
+    <string name="the_students_mayuscula">THE STUDENTS</string>
+    <string name="resenas_mayuscula">RESEÑAS</string>
+    <string name="resenar">RESEÑAR</string>
+
+    <!-- Para campo contraseñas -->
+    <string name="ocultar_contrasena">Ocultar contraseña</string>
+    <string name="mostrar_contrasena">Mostrar contraseña</string>
+
+    <!-- Barra navegación -->
+    <string name="perfil">Perfil</string>
+
+    <!-- Notificaciones -->
+    <string name="notificaciones_mayuscula">NOTIFICACIONES</string>
+    <string name="notificaciones">Notificaciones</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="rechazar">Rechazar</string>
+    <string name="ver_resena_completa">Ver reseña completa</string>
+    <string name="ver_comentario">Ver comentario</string>
+    <string name="calificado_en">te ha calificado en</string>
+    <string name="le_dio_me_gusta">le dio \"Me Gusta\" a tu reseña sobre</string>
+    <string name="solicitud_seguimiento">te envió una solicitud de seguimiento</string>
+    <string name="hace_tiempo">Hace %1$s</string>
+    <string name="estrellas">%1$d estrellas</string>
+    <string name="back">Back</string>
+    <string name="guardar">Guardar</string>
+    <string name="cambiar_foto">Cambiar foto de perfil</string>
+    <string name="nombre_completo_mayuscula">NOMBRE COMPLETO</string>
+    <string name="nombre_de_usuario_mayuscula">NOMBRE DE USUARIO</string>
+    <string name="carrera_programa_mayuscula">CARRERA / PROGRAMA</string>
+    <string name="semestre_mayuscula">SEMESTRE</string>
+    <string name="biografia_mayuscula">BIOGRAFÍA</string>
+    <string name="preferencias_mayuscula">PREFERENCIAS</string>
+    <string name="mostrar_resenas_perfil">Mostrar reseñas en mi perfil</string>
+    <string name="descripcion_mostrar_resenas">Tus reseñas recibidas serán visibles</string>
+    <string name="notificaciones_resenas">Notificaciones de nuevas reseñas</string>
+    <string name="descripcion_notificaciones">Recibe alertas cuando alguien te reseñe</string>
+    <string name="guardar_cambios_mayuscula">GUARDAR CAMBIOS</string>
+    <string name="inicio">Inicio</string>
+    <string name="explorar">Explorar</string>
+    <string name="comentarios">COMENTARIOS (%1$d)</string>
+    <string name="sin_notificaciones">No tienes notificaciones por ahora.</string>
+    <string name="repite_tu_contrase_a">Repite tu contraseña</string>
+    <string name="confirma_tu_contrase_a">Confirma tu contraseña</string>
+    <string name="crea_una_contrase_a_segura">Crea una contraseña segura</string>
+    <string name="crea_tu_contrase_a">Crea tu contraseña</string>
+    <string name="nombre_universidad_edu_co">nombre@universidad.edu.co</string>
+    <string name="ingresa_tus_apellidos_completos">Ingresa tus apellidos completos</string>
+    <string name="apellidos">Apellidos</string>
+    <string name="ingresa_tus_nombres_completos">Ingresa tus nombres completos</string>
+    <string name="nombres">Nombres</string>
+
+    <!-- Descripciones de contenido (accesibilidad) -->
+    <string name="atras">Atrás</string>
+    <string name="opciones">Opciones</string>
+    <string name="enviar_comentario">Enviar comentario</string>
+    <string name="imagen_de_perfil">Imagen de perfil</string>
+    <string name="logo_the_students">Logo The Students</string>
+
+    <!-- Buscar -->
+    <string name="buscar_estudiantes">BUSCAR ESTUDIANTES</string>
+    <string name="buscar_por_nombre_o_carrera" tools:ignore="TypographyEllipsis">Buscar por nombre o carrera...</string>
+    <string name="sugerencias_para_ti">Sugerencias para ti</string>
+    <string name="seguir_mayuscula">SEGUIR</string>
+
+    <!-- Pantalla para elegir a quien reseñar -->
+    <string name="resenar_companeros">RESEÑAR COMPAÑERO</string>
+    <string name="personas_con_quienes_has_compartido_clase">Personas con quienes has compartido clase</string>
+
+
+    <!-- Login y Registro -->
+    <string name="correo_institucional">Correo institucional</string>
+    <string name="cuenta_institucional_sso">Cuenta institucional (SSO)</string>
+    <string name="crear_cuenta">Crear cuenta</string>
+
+    <!-- Login -->
+    <string name="o_continua_con">o continúa con</string>
+    <string name="olvidaste_tu_contrasena">¿Olvidaste tu contraseña?</string>
+    <string name="contrasena">Contraseña</string>
+    <string name="ingresa_tu_contrasena">Ingresa tu contraseña</string>
+    <string name="inicia_sesion_para_continuar">Inicia sesión para continuar</string>
+    <string name="ingresar_mayuscula">INGRESAR</string>
+    <string name="no_tienes_una_cuenta">"¿No tienes una cuenta? "</string>
+    <string name="ejemplo_email">nombre@universidad.edu.co</string>
+
+
+    <!-- Registro -->
+    <string name="crear_nueva_cuenta">Crear nueva cuenta</string>
+    <string name="registrate_beneficios">Regístrate para acceder a los beneficios de tu cuenta institucional.</string>
+    <string name="ya_tienes_una_cuenta">"¿Ya tienes una cuenta? "</string>
+    <string name="inicia_sesion">Inicia sesión</string>
+    <string name="o_registrate_con">" o regístrate con "</string>
+    <string name="acepto_los">"Acepto los "</string>
+    <string name="terminos_de_servicio">Términos de Servicio</string>
+    <string name="y_la">" y la "</string>
+    <string name="politica_de_privacidad">Política de Privacidad</string>
+
+    <!-- Comentarios a reseñas -->
+    <string name="escribe_un_comentario" tools:ignore="TypographyEllipsis">Escribe un comentario...</string>
+    <string name="resena">Reseña</string>
+
+    <!-- Perfil -->
+    <string name="perfil_mayuscula">PERFIL</string>
+    <string name="recibidas">Recibidas</string>
+    <string name="programa_y_semestre">%1$s · Sem. %2$d</string>
+    <string name="resena_curso_y_fecha">%1$s, %2$s  ·  %3$s</string>
+    <string name="contenido_citado">“%1$s”</string>
+    <string name="escritas">Escritas</string>
+    <string name="seguidores_mayuscula">SEGUIDORES</string>
+    <string name="siguiendo_mayuscula">SIGUIENDO</string>
+    <string name="editar_perfil">Editar perfil</string>
+    <string name="cerrar_sesion">Cerrar Sesión</string>
+    <string name="no_has_recibido_resenas_aun">No has recibido reseñas aún</string>
+    <string name="no_has_escrito_resenas_aun">No has escrito reseñas aún</string>
+
+
+    <!-- Edición Perfil -->
+    <string name="editar_perfil_mayuscula">EDITAR PERFIL</string>
+    <string name="semestre_numero">Semestre %1$d</string>
+    <string name="contador_caracteres">%1$d/%2$d</string>
+
+    <!-- Notificaciones -->
+    <string name="materia_con_codigo">Materia: %1$s (%2$s)</string>
+    <string name="nuevo_comentario_detalle">Nuevo comentario de compañero en \"%1$s\". Snippet: \"%2$s\"</string>
+
+    <!-- Inicio -->
+    <string name="home_screen">Home Screen</string>
+    <string name="resenas_recientes">RESEÑAS RECIENTES</string>
+    <string name="materia">Materia</string>
+
+    <!-- Escribir Reseña -->
+    <string name="publicar_resena">PUBLICAR RESEÑA</string>
+    <string name="publicar_de_forma_anonima">Publicar de forma anónima</string>
+    <string name="resena_mayuscula">RESEÑA</string>
+    <string name="calificacion_opcional">CALIFICACIÓN (OPCIONAL)</string>
+    <string name="tu_nombre_no_aparecer_en_la_resena">Tu nombre no aparecerá en la reseña</string>
+    <string name="nueva_resena">Nueva Reseña</string>
+    <string name="actualizar_resena">Actualizar Reseña</string>
+    <string name="actualizar_resena_mayuscula">ACTUALIZAR RESEÑA</string>
+
+    <!-- Inicio (Continuación) -->
+    <string name="aun_no_hay_resenas_de_las_personas_que_sigues_comienza_a_explorar_para_seguir_a_tus_companeros">Aún no hay reseñas de las personas que sigues. ¡Comienza a explorar para seguir a tus compañeros!</string>
+
+    <!-- Components -->
+    <string name="reseno_a">"reseñó a "</string>
+
+    <!-- Perfil otro estudiante -->
+    <string name="seguir">Seguir</string>
+    <string name="estudiante_no_encontrado">Estudiante no encontrado</string>
+    <string name="resena_no_encontrada">Reseña no encontrada</string>
+    <string name="no_tiene_recibidas_resenas_aun">No tiene reseñas recibidas aún</string>
+    <string name="no_tiene_escritas_resenas_aun">No tiene reseñas escritas aún</string>
+    <string name="usuario">Usuario</string>
+    <string name="ingresa_tu_nombre_de_usuario">Ingresa tu nombre de usuario</string>
+
+    <plurals name="programa_y_resenas">
+        <item quantity="one">%1$s · %2$d reseña</item>
+        <item quantity="other">%1$s · %2$d reseñas</item>
+    </plurals>
+    <plurals name="resenas_count">
+        <item quantity="one">%1$d reseña</item>
+        <item quantity="other">%1$d reseñas</item>
+    </plurals>
+    <plurals name="comentario_con_estrellas">
+        <item quantity="one">. \"%1$s\" (con %2$d estrella)</item>
+        <item quantity="other">. \"%1$s\" (con %2$d estrellas)</item>
+    </plurals>
+</resources>

@@ -1,0 +1,67 @@
+[versions]
+agp = "9.3.3"
+kotlin = "2.4.10"
+coreKtx = "1.15.0"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+appcompat = "1.7.0"
+material = "1.12.0"
+composeBom = "2024.12.01"
+activityCompose = "1.10.0"
+navigation = "2.8.7"
+material3 = "1.4.0"
+foundation = "1.12.0"
+
+# Firebase / Hilt: versiones alineadas con AGP 9 + Kotlin 2.4.10
+googleServices = "4.5.0"
+googleKotlinKsp = "2.3.12"  # KSP usa versionado propio; las 2.0.x-1.0.x no soportan Kotlin 2.4
+firebaseCrashlytics = "3.0.8"
+firebaseBom = "34.19.0"     # el BOM fija las versiones de auth/firestore/analytics/crashlytics
+dagger = "2.60.1"           # 2.5x rompe con AGP 9 (usa la API BaseExtension ya eliminada)
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
+
+dagger-hilt = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
+# Procesador de anotaciones de Hilt: se consume vía KSP, no kapt
+dagger-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "dagger" }
+hilt-compose-navigation = { module = "androidx.hilt:hilt-navigation-compose", version = "1.4.0" }
+
+# Sin version: la resuelve el BOM
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-auth = { module = "com.google.firebase:firebase-auth" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+firebase-storage = { module = "com.google.firebase:firebase-storage" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+
+dagger = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
+google-ksp = { id = "com.google.devtools.ksp", version.ref = "googleKotlinKsp" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+

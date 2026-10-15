@@ -1,0 +1,281 @@
+package com.example.thestudents.ui.screens.profile
+
+import android.content.res.Configuration
+import android.widget.Toast
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.thestudents.R
+import com.example.thestudents.data.Review
+import com.example.thestudents.data.Student
+import com.example.thestudents.data.local.localReviewsProvider
+import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.ui.screens.profile.components.ProfileHeader
+import com.example.thestudents.ui.screens.profile.components.ProfileTab
+import com.example.thestudents.ui.screens.profile.components.ProfileTabs
+import com.example.thestudents.ui.screens.profile.components.RatingChartSection
+import com.example.thestudents.ui.screens.profile.components.ReviewItem
+import com.example.thestudents.ui.screens.profile.components.StatsSection
+import com.example.thestudents.ui.screens.profile.components.UserInfoSection
+import com.example.thestudents.ui.theme.TheStudentsTheme
+import com.example.thestudents.ui.utils.ButtonWithIcon
+
+/**
+ * Contenido del perfil. Sin estado propio: la pestana activa y las resenas llegan desde arriba.
+ */
+@Composable
+fun BodyProfile(
+    student: Student,
+    email: String,
+    reviews: List<Review>,
+    selectedTab: ProfileTab,
+    followersCount: Int,
+    followingCount: Int,
+    reviewsCount: Int,
+    onTabSelected: (ProfileTab) -> Unit,
+    onBackClick: () -> Unit,
+    onEditProfileClick: () -> Unit,
+    onReviewClick: (String) -> Unit,
+    onEditReviewClick: (String) -> Unit = {},
+    onDeleteReviewClick: (String) -> Unit = {},
+    onStudentClick: (String) -> Unit = {},
+    onLogoutClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.fillMaxSize()) {
+        ProfileHeader(onBackClick = onBackClick)
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            item { 
+                UserInfoSection(
+                    student = student
+                ) 
+            }
+            item {
+                Text(
+                    text = "Email: $email",
+                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
+            item { 
+                StatsSection(
+                    student = student,
+                    followersCount = followersCount,
+                    followingCount = followingCount,
+                    reviewsCount = reviewsCount
+                ) 
+            }
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    ButtonWithIcon(
+                        text = stringResource(R.string.editar_perfil),
+                        icon = Icons.Outlined.Edit,
+                        onClick = onEditProfileClick,
+                        borderColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(48.dp)
+                    )
+                    ButtonWithIcon(
+                        text = stringResource(R.string.cerrar_sesion),
+                        icon = Icons.AutoMirrored.Filled.Logout,
+                        onClick = onLogoutClick,
+                        borderColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(48.dp)
+                    )
+                }
+            }
+            item { RatingChartSection() }
+            item {
+                ProfileTabs(
+                    selectedTab = selectedTab,
+                    onTabSelected = onTabSelected
+                )
+            }
+            if (reviews.isEmpty()) {
+                item {
+                    Text(
+                        text = if (selectedTab == ProfileTab.RECEIVED) stringResource(R.string.no_has_recibido_resenas_aun) else stringResource(
+                            R.string.no_has_escrito_resenas_aun
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            } else {
+                items(reviews.size) { index ->
+                    ReviewItem(
+                        review = reviews[index],
+                        isWrittenTab = selectedTab == ProfileTab.WRITTEN,
+                        onClick = { onReviewClick(reviews[index].id) },
+                        onEditClick = { onEditReviewClick(reviews[index].id) },
+                        onDeleteClick = { onDeleteReviewClick(reviews[index].id) },
+                        onStudentClick = onStudentClick
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview(name = "Claro", showBackground = true)
+@Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Composable
+fun BodyProfilePreview() {
+    TheStudentsTheme {
+        Surface {
+            var selectedTab by rememberSaveable { mutableStateOf(ProfileTab.RECEIVED) }
+            val student = localStudentProvider.currentUser
+            BodyProfile(
+                student = student,
+                email = "user@example.com",
+                reviews = localReviewsProvider.getReviewsForStudent(student.id),
+                selectedTab = selectedTab,
+                followersCount = 2,
+                followingCount = 2,
+                reviewsCount = 5,
+                onTabSelected = { selectedTab = it },
+                onBackClick = {},
+                onEditProfileClick = {},
+                onReviewClick = {},
+                onLogoutClick = {}
+            )
+        }
+    }
+}
+
+/**
+ * Pantalla de perfil. Guarda la pestana activa y traduce los gestos a llamadas de navegacion,
+ * que le llegan como lambdas: no conoce el NavController.
+ */
+@Composable
+fun ProfileScreen(
+    onBackClick: () -> Unit,
+    onEditProfileClick: () -> Unit,
+    onReviewClick: (String) -> Unit,
+    onEditReviewClick: (String) -> Unit,
+    onStudentClick: (String) -> Unit,
+    logoutButtonPressed: () -> Unit,
+    profileViewModel: ProfileViewModel,
+    modifier: Modifier = Modifier
+) {
+    val state by profileViewModel.uiState.collectAsState()
+    LaunchedEffect(Unit) {
+        profileViewModel.loadProfile()
+    }
+
+    // Cuando el backend confirma que se elimino una resena, se recarga el perfil para que la
+    // lista y los contadores queden igual que en el servidor, sin salir de la pantalla.
+    LaunchedEffect(state.reviewDeleted) {
+        if (state.reviewDeleted) {
+            profileViewModel.loadProfile()
+            profileViewModel.onReviewDeletedHandled()
+        }
+    }
+
+    val context = LocalContext.current
+    LaunchedEffect(state.deleteErrorMessage) {
+        state.deleteErrorMessage?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            profileViewModel.onDeleteErrorShown()
+        }
+    }
+
+    val userProfile = state.userProfile
+    when {
+        state.isLoading && userProfile == null -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        userProfile == null -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(32.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = state.errorMessage ?: "Usuario no encontrado",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+        else -> {
+            val student = userProfile.student
+            val reviews = if (state.selectedTab == ProfileTab.RECEIVED) userProfile.receivedReviews else userProfile.createdReviews
+
+            BodyProfile(
+                student = student,
+                email = state.email,
+                reviews = reviews,
+                selectedTab = state.selectedTab,
+                followersCount = state.followersCount,
+                followingCount = state.followingCount,
+                reviewsCount = state.reviewsCount,
+                onTabSelected = { profileViewModel.onTabSelected(it) },
+                onBackClick = onBackClick,
+                onEditProfileClick = onEditProfileClick,
+                onReviewClick = onReviewClick,
+                onEditReviewClick = onEditReviewClick,
+                onDeleteReviewClick = { profileViewModel.deleteReview(it) },
+                onStudentClick = onStudentClick,
+                onLogoutClick = {
+                    profileViewModel.logout()
+                    logoutButtonPressed()
+                },
+                modifier = modifier
+            )
+        }
+    }
+}
+
+@Preview(name = "Claro", showBackground = true, showSystemUi = true)
+@Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, showSystemUi = true)
+@Composable
+fun FullProfileScreenPreview() {
+    TheStudentsTheme {
+        Surface {
+            ProfileScreen(
+                onBackClick = {},
+                onEditProfileClick = {},
+                onReviewClick = {},
+                onEditReviewClick = {},
+                onStudentClick = {},
+                logoutButtonPressed = {},
+                profileViewModel = viewModel()
+            )
+        }
+    }
+}

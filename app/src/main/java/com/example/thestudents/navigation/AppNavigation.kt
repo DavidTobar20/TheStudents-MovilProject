@@ -1,0 +1,309 @@
+package com.example.thestudents.navigation
+
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.example.thestudents.R
+import com.example.thestudents.ui.screens.commentsReview.CommentsReviewScreen
+import com.example.thestudents.ui.screens.commentsReview.CommentsReviewViewModel
+import com.example.thestudents.ui.screens.editarPerfil.EditarPerfilScreen
+import com.example.thestudents.ui.screens.editarPerfil.EditarPerfilViewModel
+import com.example.thestudents.ui.screens.home.HomeScreen
+import com.example.thestudents.ui.screens.home.HomeViewModel
+import com.example.thestudents.ui.screens.login.LoginScreen
+import com.example.thestudents.ui.screens.login.LoginViewModel
+import com.example.thestudents.ui.screens.notifications.NotificationsScreen
+import com.example.thestudents.ui.screens.notifications.NotificationsViewModel
+import com.example.thestudents.ui.screens.profile.ProfileScreen
+import com.example.thestudents.ui.screens.profile.ProfileViewModel
+import com.example.thestudents.ui.screens.register.RegisterScreen
+import com.example.thestudents.ui.screens.register.RegisterViewModel
+import com.example.thestudents.ui.screens.reviews.ReviewsScreen
+import com.example.thestudents.ui.screens.reviews.ReviewsViewModel
+import com.example.thestudents.ui.screens.search.SearchScreen
+import com.example.thestudents.ui.screens.search.SearchViewModel
+import com.example.thestudents.ui.screens.splash.SplashScreen
+import com.example.thestudents.ui.screens.splash.SplashViewModel
+import com.example.thestudents.ui.screens.studentDetail.StudentDetailScreen
+import com.example.thestudents.ui.screens.studentDetail.StudentDetailViewModel
+import com.example.thestudents.ui.screens.updateReview.UpdateReviewScreen
+import com.example.thestudents.ui.screens.updateReview.UpdateReviewViewModel
+import com.example.thestudents.ui.screens.writeReview.WriteReviewScreen
+import com.example.thestudents.ui.screens.writeReview.WriteReviewViewModel
+
+// --- CONSTANTES DE NAVEGACIÓN ---
+const val STUDENT_ID_ARG = "studentId"
+const val REVIEW_ID_ARG = "reviewId"
+const val INSCRIPTION_ID_ARG = "inscriptionId"
+
+/** Determina qué pestaña debe marcarse como activa en la barra inferior. */
+fun selectedTabFor(route: String?): String? = when (route) {
+    Screen.EditProfile.route,
+    Screen.CommentsReview.route,
+    Screen.StudentDetail.route,
+    Screen.WriteReview.route,
+    Screen.UpdateReview.route -> Screen.Profile.route
+    else -> route
+}
+
+// --- ESTRUCTURA DE RUTAS ---
+sealed class Screen(val route: String) {
+    data object Splash : Screen("splash")
+    data object Login : Screen("login")
+    data object Register : Screen("register")
+    data object Home : Screen("home")
+    data object Search : Screen("search")
+    data object Notifications : Screen("notifications")
+    data object Profile : Screen("profile")
+    data object EditProfile : Screen("edit_profile")
+    data object Reviews : Screen("reviews")
+
+    data object WriteReview : Screen("write_review/{$INSCRIPTION_ID_ARG}") {
+        fun createRoute(inscriptionId: String) = "write_review/$inscriptionId"
+    }
+
+    data object UpdateReview : Screen("update_review/{$REVIEW_ID_ARG}") {
+        fun createRoute(reviewId: String) = "update_review/$reviewId"
+    }
+
+    data object StudentDetail : Screen("student_detail/{$STUDENT_ID_ARG}") {
+        fun createRoute(studentId: String) = "student_detail/$studentId"
+    }
+
+    data object CommentsReview : Screen("comments_review/{$REVIEW_ID_ARG}") {
+        fun createRoute(reviewId: String) = "comments_review/$reviewId"
+    }
+}
+
+/**
+ * Estructura para los items de la barra de navegacion inferior.
+ */
+data class BottomNavItem(
+    val iconFilled: ImageVector,
+    val iconOutline: ImageVector,
+    val labelRes: Int,
+    val route: String
+)
+
+val bottomNavItems = listOf(
+    BottomNavItem(Icons.Filled.Home, Icons.Outlined.Home, R.string.inicio, Screen.Home.route),
+    BottomNavItem(Icons.Filled.Search, Icons.Outlined.Search, R.string.explorar, Screen.Search.route),
+    BottomNavItem(Icons.Filled.Notifications, Icons.Outlined.Notifications, R.string.notificaciones, Screen.Notifications.route),
+    BottomNavItem(Icons.Filled.Person, Icons.Outlined.Person, R.string.perfil, Screen.Profile.route)
+)
+
+// --- COMPOSABLE PRINCIPAL DE NAVEGACIÓN ---
+
+@Composable
+fun AppNavigation(
+    modifier: Modifier = Modifier,
+    navController: NavHostController
+) {
+    NavHost(
+        navController = navController,
+        startDestination = Screen.Splash.route,
+        modifier = modifier
+    ) {
+        composable(Screen.Splash.route) {
+            val splashViewModel: SplashViewModel = hiltViewModel()
+            SplashScreen(
+                navigateToHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                navigateToStart = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                splashViewModel = splashViewModel
+            )
+        }
+        authGraph(navController)
+        mainGraph(navController)
+    }
+}
+
+// --- NAVEGACIÓN ENTRE TABS ---
+
+fun NavHostController.navigateToTab(route: String) {
+    navigate(route) {
+        popUpTo(graph.startDestinationId) { saveState = true }
+        launchSingleTop = true
+        restoreState = true
+    }
+}
+
+// --- GRAFO DE AUTENTICACIÓN ---
+private fun NavGraphBuilder.authGraph(navController: NavHostController) {
+    composable(Screen.Login.route) {
+        val loginViewModel: LoginViewModel = hiltViewModel()
+        LoginScreen(
+            onLoginSuccess = {
+                navController.navigateToTab(Screen.Home.route)
+            },
+            onCreateAccountClick = { navController.navigate(Screen.Register.route) },
+            loginViewModel = loginViewModel
+        )
+    }
+
+    composable(Screen.Register.route) {
+        val registerViewModel: RegisterViewModel = hiltViewModel()
+        RegisterScreen(
+            onRegisterClick = {
+                navController.navigateToTab(Screen.Home.route)
+            },
+            onSsoClick = { /* Pendiente */ },
+            onNavigateToLogin = { navController.popBackStack() },
+            registerViewModel = registerViewModel
+        )
+    }
+}
+
+
+// --- GRAFO PRINCIPAL DE LA APLICACIÓN ---
+private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
+    composable(Screen.Home.route) {
+        val homeViewModel: HomeViewModel = hiltViewModel()
+        HomeScreen(
+            onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
+            homeViewModel = homeViewModel
+        )
+    }
+
+    composable(Screen.Search.route) {
+        val searchViewModel: SearchViewModel = hiltViewModel()
+        SearchScreen(
+            searchViewModel = searchViewModel,
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
+        )
+    }
+
+    composable(Screen.Notifications.route) {
+        val notificationsViewModel: NotificationsViewModel = hiltViewModel()
+        NotificationsScreen(
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
+            notificationsViewModel = notificationsViewModel
+        )
+    }
+
+    composable(Screen.Reviews.route) {
+        val reviewsViewModel: ReviewsViewModel = hiltViewModel()
+        ReviewsScreen(
+            reviewsViewModel = reviewsViewModel,
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
+            onWriteReviewClick = { id -> navController.navigate(Screen.WriteReview.createRoute(id)) }
+        )
+    }
+
+    composable(
+        route = Screen.WriteReview.route,
+        arguments = listOf(navArgument(INSCRIPTION_ID_ARG) { type = NavType.StringType })
+    ) { backStackEntry ->
+        val inscriptionId = backStackEntry.arguments?.getString(INSCRIPTION_ID_ARG) ?: ""
+        val writeReviewViewModel: WriteReviewViewModel = hiltViewModel()
+        WriteReviewScreen(
+            writeReviewViewModel = writeReviewViewModel,
+            inscriptionId = inscriptionId,
+            onBackClick = { navController.popBackStack() },
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
+            onNavigateToHome = {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Home.route) { inclusive = true }
+                }
+            }
+        )
+    }
+
+    composable(
+        route = Screen.UpdateReview.route,
+        arguments = listOf(navArgument(REVIEW_ID_ARG) { type = NavType.StringType })
+    ) { backStackEntry ->
+        val reviewId = backStackEntry.arguments?.getString(REVIEW_ID_ARG) ?: ""
+        val updateReviewViewModel: UpdateReviewViewModel = hiltViewModel()
+        UpdateReviewScreen(
+            updateReviewViewModel = updateReviewViewModel,
+            reviewId = reviewId,
+            onBackClick = { navController.popBackStack() },
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
+            onNavigateToProfile = {
+                navController.navigate(Screen.Profile.route) {
+                    popUpTo(Screen.Profile.route) { inclusive = true }
+                }
+            }
+        )
+    }
+
+    composable(Screen.Profile.route) {
+        val profileViewModel: ProfileViewModel = hiltViewModel()
+        ProfileScreen(
+            onBackClick = { navController.popBackStack() },
+            onEditProfileClick = { navController.navigate(Screen.EditProfile.route) },
+            onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
+            onEditReviewClick = { reviewId -> navController.navigate(Screen.UpdateReview.createRoute(reviewId)) },
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
+            logoutButtonPressed = {
+                navController.navigate(Screen.Login.route) {
+                    popUpTo(0) { inclusive = true }
+                }
+            },
+            profileViewModel = profileViewModel
+        )
+    }
+
+    composable(Screen.EditProfile.route) {
+        val editarPerfilViewModel : EditarPerfilViewModel  = hiltViewModel()
+        EditarPerfilScreen(
+            editarPerfilViewModel = editarPerfilViewModel,
+            onBackClick = { navController.popBackStack() },
+            onSaveClick = { navController.popBackStack() }
+        )
+    }
+
+    composable(
+        route = Screen.StudentDetail.route,
+        arguments = listOf(navArgument(STUDENT_ID_ARG) { type = NavType.StringType })
+    ) { backStackEntry ->
+        val studentId = backStackEntry.arguments?.getString(STUDENT_ID_ARG) ?: ""
+        val studentDetailViewModel: StudentDetailViewModel = hiltViewModel()
+        StudentDetailScreen(
+            studentDetailViewModel = studentDetailViewModel,
+            studentId = studentId,
+            onBackClick = { navController.popBackStack() },
+            onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
+        )
+    }
+
+    composable(
+        route = Screen.CommentsReview.route,
+        arguments = listOf(navArgument(REVIEW_ID_ARG) { type = NavType.StringType })
+    ) { backStackEntry ->
+        val reviewId = backStackEntry.arguments?.getString(REVIEW_ID_ARG) ?: ""
+        val commentsReviewViewModel : CommentsReviewViewModel = hiltViewModel()
+        CommentsReviewScreen(
+            commentsReviewViewModel = commentsReviewViewModel,
+            reviewId = reviewId,
+            onBackClick = { navController.popBackStack() },
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
+        )
+    }
+}
