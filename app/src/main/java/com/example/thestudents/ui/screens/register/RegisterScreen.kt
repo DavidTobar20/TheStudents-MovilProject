@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
@@ -14,7 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -64,6 +67,8 @@ fun RegisterScreen(
         onNamesChange = { registerViewModel.onNamesChange(it) },
         lastNames = state.lastNames,
         onLastNamesChange = { registerViewModel.onLastNamesChange(it) },
+        userName = state.userName,
+        onUserNameChange = { registerViewModel.onUserNameChange(it) },
         email = state.email,
         onEmailChange = { registerViewModel.onEmailChange(it) },
         password = state.password,
@@ -88,6 +93,8 @@ fun RegisterBody(
     onNamesChange: (String) -> Unit,
     lastNames: String,
     onLastNamesChange: (String) -> Unit,
+    userName: String,
+    onUserNameChange: (String) -> Unit,
     email: String,
     onEmailChange: (String) -> Unit,
     password: String,
@@ -134,6 +141,19 @@ fun RegisterBody(
                 label = stringResource(R.string.apellidos),
                 placeholder = stringResource(R.string.ingresa_tus_apellidos_completos),
                 leadingIcon = Icons.Default.Person,
+                isPasswordField = false,
+                isPasswordVisible = false,
+                onPasswordToggle = {}
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextFieldWhitIcon(
+                value = userName,
+                onValueChange = onUserNameChange,
+                label = stringResource(R.string.usuario),
+                placeholder = stringResource(R.string.ingresa_tu_nombre_de_usuario),
+                leadingIcon = Icons.Default.AccountBox,
                 isPasswordField = false,
                 isPasswordVisible = false,
                 onPasswordToggle = {}
@@ -222,12 +242,40 @@ fun RegisterBody(
 @Preview(name = "Oscuro", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun RegisterScreenPreview() {
+    var names by remember { mutableStateOf("") }
+    var lastNames by remember { mutableStateOf("") }
+    var userName by remember { mutableStateOf("")}
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var isPasswordVisible by remember { mutableStateOf(false) }
+    var termsAccepted by remember { mutableStateOf(false) }
+
     TheStudentsTheme {
-        RegisterScreen(
-            onRegisterClick = {},
-            onSsoClick = {},
-            onNavigateToLogin = {},
-            registerViewModel = viewModel()
-        )
+        Surface {
+            RegisterBody(
+                names = names,
+                onNamesChange = { names = it },
+                lastNames = lastNames,
+                onLastNamesChange = { lastNames = it },
+                userName = userName,
+                onUserNameChange = { userName = it },
+                email = email,
+                onEmailChange = { email = it },
+                password = password,
+                onPasswordChange = { password = it },
+                confirmPassword = confirmPassword,
+                onConfirmPasswordChange = { confirmPassword = it },
+                isPasswordVisible = isPasswordVisible,
+                onPasswordToggle = { isPasswordVisible = !isPasswordVisible },
+                isConfirmPasswordVisible = isPasswordVisible,
+                onConfirmPasswordToggle = { isPasswordVisible = !isPasswordVisible },
+                termsAccepted = termsAccepted,
+                onTermsAcceptedChange = { termsAccepted = it },
+                onRegisterClick = {},
+                onSsoClick = {},
+                onNavigateToLogin = {}
+            )
+        }
     }
 }

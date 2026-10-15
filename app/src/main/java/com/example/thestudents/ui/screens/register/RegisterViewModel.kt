@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import android.util.Log
 import com.example.thestudents.data.repository.AuthRepository
+import com.example.thestudents.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow(RegisterState())
     val uiState: StateFlow<RegisterState> = _uiState
@@ -41,6 +43,9 @@ class RegisterViewModel @Inject constructor(
 
     fun onLastNamesChange(newLastNames: String) {
         _uiState.update { it.copy(lastNames = newLastNames) }
+    }
+    fun onUserNameChange(newUserName: String) {
+        _uiState.update { it.copy(userName = newUserName) }
     }
 
     fun onEmailChange(newEmail: String) {
@@ -74,6 +79,8 @@ class RegisterViewModel @Inject constructor(
         val email = _uiState.value.email
         val password = _uiState.value.password
         val confirmPassword = _uiState.value.confirmPassword
+        val userName = _uiState.value.userName
+
 
         if (names.isEmpty() || lastNames.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             _errorMessage.value = "Todos los campos son obligatorios"
@@ -87,6 +94,12 @@ class RegisterViewModel @Inject constructor(
                 val result = authRepository.signUp(email, password)
                 if (result.isSuccess) {
                     _navigateToHome.value = true
+                    val userId = authRepository.currentUser?.uid ?: throw Exception("No se pudo obtener el usuario actual")
+                    userRepository.registerUser(
+                        username = userName,
+                        name = names,
+                        apellido = lastNames,
+                        userId = userId)
                 } else {
                     _errorMessage.value = result.exceptionOrNull()?.message ?: "Error al registrar la cuenta"
                     _mostrarMensajeError.value = true

@@ -1,4 +1,4 @@
-package com.example.thestudents.navigation
+ package com.example.thestudents.navigation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

@@ -2,7 +2,7 @@ package com.example.thestudents.data.repository
 
 import retrofit2.HttpException
 import com.example.thestudents.data.Review
-import com.example.thestudents.data.datasource.impl.ReviewRetrofitDataSourceImpl
+import com.example.thestudents.data.datasource.impl.retrofit.ReviewRetrofitDataSourceImpl
 import com.example.thestudents.data.dtos.CreateReviewDto
 import com.example.thestudents.data.dtos.toReview
 import javax.inject.Inject

@@ -2,7 +2,7 @@ package com.example.thestudents.data.repository
 
 import com.example.thestudents.data.CourseSection
 import com.example.thestudents.data.Inscription
-import com.example.thestudents.data.datasource.impl.InscripcionRetrofitDataSourceImpl
+import com.example.thestudents.data.datasource.impl.retrofit.InscripcionRetrofitDataSourceImpl
 import com.example.thestudents.data.dtos.toInscription
 import javax.inject.Inject
 
