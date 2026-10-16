@@ -20,11 +20,27 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getReviewsByReviewedStudentId(reviewedStudentId: String): List<ReviewDto> {
-        TODO("Not yet implemented")
+        val snapshot = db.collection("reviews")
+            .whereEqualTo("resenadoId", reviewedStudentId)
+            .get()
+            .await()
+        return snapshot.documents.map { doc ->
+            val review = doc.toObject(ReviewDto::class.java)
+                ?: throw Exception("Review not found")
+            review.copy(id = doc.id)
+        }
     }
 
     override suspend fun getReviewsByReviewerId(reviewerId: String): List<ReviewDto> {
-        TODO("Not yet implemented")
+        val snapshot = db.collection("reviews")
+            .whereEqualTo("autorId", reviewerId)
+            .get()
+            .await()
+        return snapshot.documents.map { doc ->
+            val review = doc.toObject(ReviewDto::class.java)
+                ?: throw Exception("Review not found")
+            review.copy(id = doc.id)
+        }
     }
 
     override suspend fun getReviewById(reviewId: String): ReviewDto {
