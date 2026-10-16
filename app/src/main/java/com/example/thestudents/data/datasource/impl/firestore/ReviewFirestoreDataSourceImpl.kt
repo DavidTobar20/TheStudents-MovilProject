@@ -11,7 +11,7 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
     private val db: FirebaseFirestore
 ): ReviewRemoteDataSource {
     override suspend fun getAllReviewsExcludingStudentId(studentId: String): List<ReviewDto> {
-        return emptyList()
+        return db.collection("reviews").get().await().toObjects(ReviewDto::class.java)
     }
 
     override suspend fun getReviewsByReviewedStudentId(reviewedStudentId: String): List<ReviewDto> {

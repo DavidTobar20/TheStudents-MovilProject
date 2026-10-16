@@ -6,7 +6,7 @@ import com.example.thestudents.ui.theme.avatarColorFor
 import com.google.gson.annotations.SerializedName
 
 data class StudentDto(
-    val id: Int? = null,
+    val id: String? = null,
     val correo: String? = null,
     @SerializedName("nombre_usuario")
     val nombreUsuario: String? = null,
@@ -21,12 +21,13 @@ data class StudentDto(
     val estado: String? = null,
     @SerializedName("fecha_creacion")
     val fechaCreacion: String? = null
+
 )
 
 fun StudentDto.toStudent(): Student {
     val usernameSafe = nombreUsuario.orEmpty()
     val nameSafe = nombre.orEmpty()
-    val idSafe = id?.toString() ?: "0"
+    val idSafe = id ?: "0"
 
     val parsedColor = try {
         if (!colorPerfil.isNullOrBlank()) {
