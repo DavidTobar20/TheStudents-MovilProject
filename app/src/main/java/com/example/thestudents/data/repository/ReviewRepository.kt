@@ -2,13 +2,14 @@ package com.example.thestudents.data.repository
 
 import retrofit2.HttpException
 import com.example.thestudents.data.Review
+import com.example.thestudents.data.datasource.impl.firestore.ReviewFirestoreDataSourceImpl
 import com.example.thestudents.data.datasource.impl.retrofit.ReviewRetrofitDataSourceImpl
 import com.example.thestudents.data.dtos.CreateReviewDto
 import com.example.thestudents.data.dtos.toReview
 import javax.inject.Inject
 
 class ReviewRepository @Inject constructor(
-    private val reviewRemoteDataSource: ReviewRetrofitDataSourceImpl
+    private val reviewRemoteDataSource: ReviewFirestoreDataSourceImpl
 ) {
 
     suspend fun getAllReviewsExcludingStudentId(studentId: String): Result<List<Review>> {
@@ -64,8 +65,8 @@ class ReviewRepository @Inject constructor(
     ): Result<Unit> {
         return try{
             val createReviewDto = CreateReviewDto(
-                autorId = autorId.toInt(),
-                resenadoId = resenadoId.toInt(),
+                autorId = autorId,
+                resenadoId = resenadoId,
                 materia = materia,
                 periodo = periodo,
                 rating = rating,

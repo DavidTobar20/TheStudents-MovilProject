@@ -11,7 +11,7 @@ class UserRetrofitDataSourceImpl @Inject constructor(
     private val service: UserRetrofitService
 ) : UserRemoteDataSource {
 
-    override suspend fun getUserProfile(studentId: String): UserDtoGeneric {
+    override suspend fun getUserProfile(studentId: String): UserProfileResponseDto {
         // En Retrofit (Express/Postgres), si viene un UID alfanumérico de Firebase,
         // se usa "1" para evitar que el backend SQL falle con IDs no numéricos (como en el min 27:01)
         val targetId = studentId.toIntOrNull()?.toString() ?: "1"

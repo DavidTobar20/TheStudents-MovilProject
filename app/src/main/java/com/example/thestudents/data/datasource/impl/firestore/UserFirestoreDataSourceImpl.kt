@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class UserFirestoreDataSourceImpl @Inject constructor(private val db: FirebaseFirestore) : UserRemoteDataSource {
 
-    override suspend fun getUserProfile(studentId: String): UserDtoGeneric {
+    override suspend fun getUserProfile(studentId: String): UserProfileFirestoreDto {
         val docRef = db.collection("users").document(studentId)
         val snapshot = docRef.get().await()
         if (!snapshot.exists()) {

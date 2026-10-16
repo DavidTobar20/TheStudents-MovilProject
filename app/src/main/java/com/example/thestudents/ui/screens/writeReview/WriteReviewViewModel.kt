@@ -2,7 +2,7 @@ package com.example.thestudents.ui.screens.writeReview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.data.repository.InscripcionRepository
 import com.example.thestudents.data.repository.ReviewRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class WriteReviewViewModel @Inject constructor(
     private val reviewRepository: ReviewRepository,
-    private val inscripcionRepository: InscripcionRepository
+    private val inscripcionRepository: InscripcionRepository,
+    private val authRepository: AuthRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow(WriteReviewState())
     val uiState: StateFlow<WriteReviewState> = _uiState
@@ -63,18 +64,19 @@ class WriteReviewViewModel @Inject constructor(
     }
 
     fun createReview() {
+        val userId = authRepository.currentUser?.uid ?: return
+        val resenadoId = _uiState.value.student?.id ?: run {
+            _uiState.update { it.copy(error = "Estudiante no válido") }
+            return
+        }
+
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
+            _uiState.update { it.copy(isLoading = true, error = null) }
             val state = _uiState.value
-            val autorId = localStudentProvider.currentUser.id
-            val resenadoId = state.student?.id ?: run {
-                _uiState.update { it.copy(isLoading = false) }
-                return@launch
-            }
             val ratingStr = if (state.rating > 0) state.rating.toString() else null
 
             val result = reviewRepository.createReview(
-                autorId = autorId,
+                autorId = userId,
                 resenadoId = resenadoId,
                 materia = state.className,
                 periodo = state.period,
