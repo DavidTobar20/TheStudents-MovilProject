@@ -18,6 +18,10 @@ class UserRetrofitDataSourceImpl @Inject constructor(
         return service.getUserProfile(targetId)
     }
 
+    override suspend fun getUserById(userId: String): UserDtoGeneric {
+        return getUserProfile(userId)
+    }
+
     override suspend fun registerUser(registerUserDto: RegisterUserDto, userId : String){
         //to-do
     }

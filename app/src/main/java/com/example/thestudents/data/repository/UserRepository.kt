@@ -25,6 +25,10 @@ class UserRepository @Inject constructor(
         }
     }
 
+    suspend fun getUserById(userId: String): Result<UserProfile> {
+        return getUserProfile(userId)
+    }
+
     suspend fun registerUser(username: String, name: String, apellido: String, userId: String) :Result<Unit>{
      return try{
          val registerUserDto = RegisterUserDto(username,name,apellido)

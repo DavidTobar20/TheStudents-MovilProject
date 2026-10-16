@@ -2,14 +2,21 @@ package com.example.thestudents.data.repository
 
 import retrofit2.HttpException
 import com.example.thestudents.data.Review
+import com.example.thestudents.data.datasource.AuthRemoteDataSource
+import com.example.thestudents.data.datasource.UserRemoteDataSource
 import com.example.thestudents.data.datasource.impl.firestore.ReviewFirestoreDataSourceImpl
+import com.example.thestudents.data.datasource.impl.firestore.UserFirestoreDataSourceImpl
 import com.example.thestudents.data.datasource.impl.retrofit.ReviewRetrofitDataSourceImpl
 import com.example.thestudents.data.dtos.CreateReviewDto
+import com.example.thestudents.data.dtos.CreateReviewUserDto
 import com.example.thestudents.data.dtos.toReview
 import javax.inject.Inject
 
 class ReviewRepository @Inject constructor(
-    private val reviewRemoteDataSource: ReviewFirestoreDataSourceImpl
+    private val reviewRemoteDataSource: ReviewFirestoreDataSourceImpl,
+    private val userRepository: UserRepository,
+    private val userRemoteDataSource: UserFirestoreDataSourceImpl,
+    private val authRemoteDataSource: AuthRemoteDataSource
 ) {
 
     suspend fun getAllReviewsExcludingStudentId(studentId: String): Result<List<Review>> {
@@ -17,10 +24,9 @@ class ReviewRepository @Inject constructor(
             val reviewsDto = reviewRemoteDataSource.getAllReviewsExcludingStudentId(studentId)
             val reviews = reviewsDto.map { it.toReview() }
             Result.success(reviews)
-        } catch (e: HttpException){
+        } catch (e: HttpException) {
             Result.failure(e)
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
@@ -45,7 +51,7 @@ class ReviewRepository @Inject constructor(
         }
     }
 
-    suspend fun getReviewById(reviewId: String) : Result<Review> {
+    suspend fun getReviewById(reviewId: String): Result<Review> {
         return try {
             val reviewDto = reviewRemoteDataSource.getReviewById(reviewId)
             val review = reviewDto.toReview()
@@ -63,7 +69,18 @@ class ReviewRepository @Inject constructor(
         rating: String?,
         contenido: String
     ): Result<Unit> {
-        return try{
+        return try {
+            val userResult = userRepository.getUserById(autorId)
+            val userProfile = userResult.getOrNull()
+            val student = userProfile?.student
+            val photoUrl = authRemoteDataSource.currentUser?.photoUrl?.toString() ?: student?.profileImage
+
+            val createReviewUserDto = CreateReviewUserDto(
+                name = student?.name,
+                username = student?.username,
+                profileImage = photoUrl
+            )
+
             val createReviewDto = CreateReviewDto(
                 autorId = autorId,
                 resenadoId = resenadoId,
@@ -71,12 +88,12 @@ class ReviewRepository @Inject constructor(
                 periodo = periodo,
                 rating = rating,
                 contenido = contenido,
-                estado = null
+                estado = null,
+                user = createReviewUserDto
             )
             reviewRemoteDataSource.createReview(createReviewDto)
             Result.success(Unit)
-
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
@@ -112,5 +129,4 @@ class ReviewRepository @Inject constructor(
             Result.failure(e)
         }
     }
-
 }

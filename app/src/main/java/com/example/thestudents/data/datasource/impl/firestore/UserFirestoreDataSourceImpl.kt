@@ -21,6 +21,10 @@ class UserFirestoreDataSourceImpl @Inject constructor(private val db: FirebaseFi
         return userDto.copy(id = snapshot.id)
     }
 
+    override suspend fun getUserById(userId: String): UserDtoGeneric {
+        return getUserProfile(userId)
+    }
+
     override suspend fun registerUser(
         registerUserDto: RegisterUserDto,
         userId: String
