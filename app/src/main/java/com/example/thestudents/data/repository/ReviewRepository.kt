@@ -70,13 +70,13 @@ class ReviewRepository @Inject constructor(
     ): Result<Unit> {
         return try {
 
-            val user = userRemoteDataSource.getUserProfile(autorId)
+            val autor = userRemoteDataSource.getUserProfile(autorId)
             val photoUrl = authRemoteDataSource.currentUser?.photoUrl?.toString()
 
             val createReviewUserDto = CreateReviewUserDto(
-                name = user.name,
-                username = user.userName,
-                profileImage = photoUrl
+                nombre = autor.name,
+                nombreUsuario = autor.userName,
+                fotoUrl = photoUrl
             )
 
             val createReviewDto = CreateReviewDto(
@@ -87,7 +87,7 @@ class ReviewRepository @Inject constructor(
                 rating = rating,
                 contenido = contenido,
                 estado = null,
-                user = createReviewUserDto
+                autor = createReviewUserDto
             )
             reviewRemoteDataSource.createReview(createReviewDto)
             Result.success(Unit)
