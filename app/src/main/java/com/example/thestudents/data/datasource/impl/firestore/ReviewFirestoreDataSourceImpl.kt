@@ -11,7 +11,12 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
     private val db: FirebaseFirestore
 ): ReviewRemoteDataSource {
     override suspend fun getAllReviewsExcludingStudentId(studentId: String): List<ReviewDto> {
-        return db.collection("reviews").get().await().toObjects(ReviewDto::class.java)
+        val snapshot = db.collection("reviews").get().await()
+        return snapshot.documents.map { doc ->
+            val review = doc.toObject(ReviewDto::class.java)
+                ?: throw Exception("Review not found")
+            review.copy(id = doc.id)
+        }
     }
 
     override suspend fun getReviewsByReviewedStudentId(reviewedStudentId: String): List<ReviewDto> {
@@ -23,7 +28,7 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getReviewById(reviewId: String): ReviewDto {
-        TODO("Not yet implemented")
+        return db.collection("reviews").document(reviewId).get().await().toObject(ReviewDto::class.java) ?: throw Exception("Reseña no encontrada")
     }
 
     override suspend fun createReview(review: CreateReviewDto) {
