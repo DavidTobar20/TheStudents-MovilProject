@@ -3,7 +3,9 @@ package com.example.thestudents.ui.screens.commentsReview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.data.repository.ReviewRepository
+import com.example.thestudents.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,14 +15,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CommentsReviewViewModel @Inject constructor(
-    private val reviewRepository: ReviewRepository
+    private val reviewRepository: ReviewRepository,
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CommentsReviewState())
     val uiState : StateFlow<CommentsReviewState> = _uiState
 
-    fun getReviewById(id: String) {
-        // Si ya esta cargada esta misma resena (por ejemplo al rotar la pantalla), no se pide otra vez.
-        if (_uiState.value.review?.id == id) return
+    fun getReviewById(id: String, forceReload: Boolean = false) {
+        if (!forceReload && _uiState.value.review?.id == id) return
 
         _uiState.update {
             it.copy(
@@ -52,7 +55,35 @@ class CommentsReviewViewModel @Inject constructor(
     }
 
     fun getCommentator() {
-        _uiState.update { it.copy(commentator = localStudentProvider.currentUser) }
+        viewModelScope.launch {
+            val currentUserId = authRepository.currentUser?.uid
+            val authPhoto = authRepository.currentUser?.photoUrl?.toString()
+            if (currentUserId != null) {
+                val profileResult = userRepository.getUserProfile(currentUserId)
+                val student = profileResult.getOrNull()?.student
+                if (student != null) {
+                    val photo = if (!authPhoto.isNullOrBlank()) authPhoto else student.profileImage
+                    _uiState.update { it.copy(commentator = student.copy(profileImage = photo)) }
+                    return@launch
+                }
+            }
+            val fallback = localStudentProvider.currentUser
+            val photo = if (!authPhoto.isNullOrBlank()) authPhoto else fallback.profileImage
+            _uiState.update { it.copy(commentator = fallback.copy(profileImage = photo)) }
+        }
+    }
+
+    fun sendComment(reviewId: String) {
+        val text = _uiState.value.commentInputText.trim()
+        if (text.isBlank()) return
+
+        viewModelScope.launch {
+            val result = reviewRepository.addComment(reviewId, text)
+            if (result.isSuccess) {
+                _uiState.update { it.copy(commentInputText = "") }
+                getReviewById(reviewId, forceReload = true)
+            }
+        }
     }
 
     fun updateCommentInputText(text: String) {

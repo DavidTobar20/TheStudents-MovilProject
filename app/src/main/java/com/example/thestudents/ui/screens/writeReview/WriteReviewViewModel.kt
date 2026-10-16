@@ -81,7 +81,8 @@ class WriteReviewViewModel @Inject constructor(
                 materia = state.className,
                 periodo = state.period,
                 rating = ratingStr,
-                contenido = state.review
+                contenido = state.review,
+                resenadoStudent = state.student
             )
 
             if (result.isSuccess) {

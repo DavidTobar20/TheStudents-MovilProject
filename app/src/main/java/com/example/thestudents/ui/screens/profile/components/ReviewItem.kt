@@ -43,6 +43,11 @@ fun ReviewItem(
 ) {
     val displayStudent = if (isWrittenTab) review.reviewedStudent else review.reviewer
     val displayName = if (isWrittenTab) "Para: ${review.reviewedStudent.name}" else review.reviewer.name
+    val avatarImage = if (isWrittenTab) {
+        review.reviewer.profileImage?.takeIf { it.isNotBlank() } ?: displayStudent.profileImage
+    } else {
+        displayStudent.profileImage?.takeIf { it.isNotBlank() } ?: review.reviewedStudent.profileImage
+    }
 
     // En "Escritas" se muestra a quien se resenó; en "Recibidas", a quien escribió la resena.
     // Tocar su foto o su nombre abre su perfil.
@@ -62,7 +67,7 @@ fun ReviewItem(
         Row(verticalAlignment = Alignment.Top) {
             ProfileIcon(
                 initials = displayStudent.initials,
-                profileImage = displayStudent.profileImage,
+                profileImage = avatarImage,
                 backgroundColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 14.sp,

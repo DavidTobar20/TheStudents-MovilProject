@@ -209,7 +209,7 @@ fun CommentsReviewScreen(
                     onCommentDislikeClick = { commentsReviewViewModel.updateDislikedComments(it) },
                     commentInputText = state.commentInputText,
                     onCommentTextChange = { commentsReviewViewModel.updateCommentInputText(it) },
-                    onSendCommentClick = onBackClick
+                    onSendCommentClick = { commentsReviewViewModel.sendComment(reviewId) }
                 )
             }
         }

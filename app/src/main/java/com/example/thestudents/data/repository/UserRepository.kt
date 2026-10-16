@@ -36,4 +36,8 @@ class UserRepository @Inject constructor(
      }
 
     }
+
+    suspend fun updateUserPhoto(userId: String, photoUrl: String) {
+        userRemoteDataSource.updateUserPhoto(userId, photoUrl)
+    }
 }

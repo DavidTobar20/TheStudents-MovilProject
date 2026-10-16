@@ -3,6 +3,7 @@ package com.example.thestudents.data.dtos
 import com.google.gson.annotations.SerializedName
 
 data class CreateReviewUserDto(
+    val id: String? = null,
     val nombre: String? = null,
     val nombreUsuario: String? = null,
     val fotoUrl: String? = null
@@ -20,5 +21,7 @@ data class CreateReviewDto(
     val rating: String?,
     val estado: String?,
 
-    var autor: CreateReviewUserDto? = null
+    var autor: CreateReviewUserDto? = null,
+    var resenado: CreateReviewUserDto? = null,
+    var comentarios: List<CommentDto>? = null
 )

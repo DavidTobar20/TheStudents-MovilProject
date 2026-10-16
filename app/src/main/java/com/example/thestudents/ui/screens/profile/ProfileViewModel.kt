@@ -46,10 +46,34 @@ class ProfileViewModel @Inject constructor(
                 val profile = result.getOrNull()
                 val currentEmail = authRepository.currentUser?.email ?: ""
                 val authPhoto = authRepository.currentUser?.photoUrl?.toString()
-                val photoUrl = if (authPhoto.isNullOrEmpty()) defaultPhotoUrl else authPhoto
+                val photoUrl = when {
+                    !authPhoto.isNullOrEmpty() -> authPhoto
+                    !profile?.student?.profileImage.isNullOrEmpty() -> profile!!.student.profileImage!!
+                    else -> defaultPhotoUrl
+                }
 
-                val updatedProfile = profile?.let {
-                    it.copy(student = it.student.copy(profileImage = photoUrl))
+                if (!authPhoto.isNullOrEmpty() && profile?.student?.profileImage != authPhoto) {
+                    userRepository.updateUserPhoto(currentUserId, authPhoto)
+                }
+
+                val updatedProfile = profile?.let { prof ->
+                    prof.copy(
+                        student = prof.student.copy(profileImage = photoUrl),
+                        createdReviews = prof.createdReviews.map { rev ->
+                            rev.copy(reviewer = rev.reviewer.copy(profileImage = photoUrl))
+                        },
+                        receivedReviews = prof.receivedReviews.map { rev ->
+                            val reviewerPhoto = if (rev.reviewer.id == currentUserId) {
+                                photoUrl
+                            } else {
+                                rev.reviewer.profileImage ?: defaultPhotoUrl
+                            }
+                            rev.copy(
+                                reviewer = rev.reviewer.copy(profileImage = reviewerPhoto),
+                                reviewedStudent = rev.reviewedStudent.copy(profileImage = photoUrl)
+                            )
+                        }
+                    )
                 }
 
                 val followers = localStudentProvider.getFollowersCount(currentUserId)

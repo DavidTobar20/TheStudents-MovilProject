@@ -1,13 +1,42 @@
 package com.example.thestudents.data.dtos
 
+import com.example.thestudents.data.Comment
 import com.example.thestudents.data.Review
 import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
+data class CommentDto(
+    val autor: StudentDto? = null,
+    val contenido: String? = null,
+    val likes: Int? = 0,
+    val disLikes: Int? = 0,
+    val fechaCreacion: String? = null
+) {
+    constructor() : this(
+        autor = null,
+        contenido = null,
+        likes = 0,
+        disLikes = 0,
+        fechaCreacion = null
+    )
+}
+
+fun CommentDto.toComment(): Comment {
+    return Comment(
+        commentator = autor?.toStudent() ?: com.example.thestudents.data.local.localStudentProvider.currentUser,
+        content = contenido.orEmpty(),
+        likes = likes ?: 0,
+        disLikes = disLikes ?: 0,
+        createdAt = formatReviewTime(fechaCreacion).ifEmpty { "Reciente" }
+    )
+}
+
 data class ReviewDto(
     val id: String? = null,
+    val autorId: String? = null,
+    val resenadoId: String? = null,
     val contenido: String? = null,
     val likes: Int? = 0,
     val disLikes: Int? = 0,
@@ -20,10 +49,13 @@ data class ReviewDto(
     val autor: StudentDto? = null,
     val resenado: StudentDto? = null,
     val materia: String? = null,
-    val periodo: String? = null
+    val periodo: String? = null,
+    val comentarios: List<CommentDto>? = null
 ) {
     constructor() : this(
         id = null,
+        autorId = null,
+        resenadoId = null,
         contenido = null,
         likes = 0,
         disLikes = 0,
@@ -34,7 +66,8 @@ data class ReviewDto(
         autor = null,
         resenado = null,
         materia = null,
-        periodo = null
+        periodo = null,
+        comentarios = null
     )
 }
 
@@ -56,10 +89,18 @@ fun formatReviewTime(rawTime: String?): String {
 }
 
 fun ReviewDto.toReview(): Review {
+    val reviewerStudent = autor?.copy(id = autor.id ?: autorId)?.toStudent()
+        ?: com.example.thestudents.data.local.localStudentProvider.students.find { it.id == autorId }
+        ?: com.example.thestudents.data.local.localStudentProvider.currentUser
+
+    val reviewedStudentObj = resenado?.copy(id = resenado.id ?: resenadoId)?.toStudent()
+        ?: com.example.thestudents.data.local.localStudentProvider.students.find { it.id == resenadoId }
+        ?: com.example.thestudents.data.local.localStudentProvider.students[0]
+
     return Review(
         id = id ?: "0",
-        reviewer = autor?.toStudent() ?: com.example.thestudents.data.local.localStudentProvider.currentUser,
-        reviewedStudent = resenado?.toStudent() ?: com.example.thestudents.data.local.localStudentProvider.students[0],
+        reviewer = reviewerStudent,
+        reviewedStudent = reviewedStudentObj,
         classReviewed = materia.orEmpty(),
         periodReviewed = periodo.orEmpty(),
         content = contenido.orEmpty(),
@@ -67,6 +108,7 @@ fun ReviewDto.toReview(): Review {
         likes = likes ?: 0,
         disLikes = disLikes ?: 0,
         rating = if (rating.isNullOrBlank()) null else rating,
-        comments = emptyList()
+        comments = comentarios?.map { it.toComment() }
+            ?: com.example.thestudents.data.local.localCommentsProvider.allComments
     )
 }

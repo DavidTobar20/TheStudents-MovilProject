@@ -21,8 +21,21 @@ data class StudentDto(
     val estado: String? = null,
     @SerializedName("fecha_creacion")
     val fechaCreacion: String? = null
-
-)
+) {
+    constructor() : this(
+        id = null,
+        correo = null,
+        nombreUsuario = null,
+        nombre = null,
+        biografia = null,
+        fotoUrl = null,
+        colorPerfil = null,
+        carrera = null,
+        semestre = null,
+        estado = null,
+        fechaCreacion = null
+    )
+}
 
 fun StudentDto.toStudent(): Student {
     val usernameSafe = nombreUsuario.orEmpty()
