@@ -16,11 +16,13 @@ data class UserProfileFirestoreDto(
     val biografia: String? = null,
     val carrera: String? = null,
     val semestre: Int? = null,
-    val fotoUrl: String? = null
+    val fotoUrl: String? = null,
+    val receivedReviews: List<ReviewDto> = emptyList(),
+    val createdReviews: List<ReviewDto> = emptyList()
 ) : UserDtoGeneric() {
 
-    // Constructor sin argumentos requerido para la deserialización automática en Firestore
-    constructor() : this(null, null, null, null, null, null, null, null)
+
+    constructor() : this(null, null, null, null, null, null, null, null, emptyList(), emptyList())
 
     override fun toUserProfile(): UserProfile {
         val fullName = if (!apellido.isNullOrBlank()) "${name.orEmpty()} $apellido".trim() else name.orEmpty()
@@ -48,8 +50,8 @@ data class UserProfileFirestoreDto(
 
         return UserProfile(
             student = student,
-            receivedReviews = emptyList(),
-            createdReviews = emptyList()
+            receivedReviews = receivedReviews.map { it.toReview() },
+            createdReviews = createdReviews.map { it.toReview() }
         )
     }
 }

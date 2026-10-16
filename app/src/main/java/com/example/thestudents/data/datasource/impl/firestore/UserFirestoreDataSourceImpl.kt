@@ -18,7 +18,29 @@ class UserFirestoreDataSourceImpl @Inject constructor(private val db: FirebaseFi
         }
         val userDto = snapshot.toObject(UserProfileFirestoreDto::class.java)
             ?: throw Exception("No se pudo deserializar el usuario de Firestore")
-        return userDto.copy(id = snapshot.id)
+
+
+        val createdSnapshot = db.collection("reviews")
+            .whereEqualTo("autorId", studentId)
+            .get()
+            .await()
+        val createdReviews = createdSnapshot.documents.mapNotNull { doc ->
+            doc.toObject(com.example.thestudents.data.dtos.ReviewDto::class.java)?.copy(id = doc.id)
+        }
+
+        val receivedSnapshot = db.collection("reviews")
+            .whereEqualTo("resenadoId", studentId)
+            .get()
+            .await()
+        val receivedReviews = receivedSnapshot.documents.mapNotNull { doc ->
+            doc.toObject(com.example.thestudents.data.dtos.ReviewDto::class.java)?.copy(id = doc.id)
+        }
+
+        return userDto.copy(
+            id = snapshot.id,
+            receivedReviews = receivedReviews,
+            createdReviews = createdReviews
+        )
     }
 
     override suspend fun registerUser(
