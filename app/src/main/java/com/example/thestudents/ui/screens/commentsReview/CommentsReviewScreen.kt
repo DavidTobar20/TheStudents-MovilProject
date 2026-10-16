@@ -89,7 +89,7 @@ fun BodyCommentsReviewScreen(
                 .padding(horizontal = 16.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            itemsIndexed(review.comments) { index, comment ->
+            itemsIndexed(review.comments, key = { index, comment -> "${comment.commentator.id}_$index" }) { index, comment ->
                 CommentItem(
                     comment = comment,
                     isLiked = index in likedComments,

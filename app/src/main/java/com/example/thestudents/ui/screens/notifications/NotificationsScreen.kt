@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -59,7 +59,7 @@ fun BodyNotifications(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(bottom = 16.dp)
             ) {
-                items(notifications, key = { it.id }) { notification ->
+                itemsIndexed(notifications, key = { index, notification -> "${notification.id}_$index" }) { _, notification ->
                     NotificationItem(
                         notification = notification,
                         onAcceptClick = { onAcceptClick(notification.id) },

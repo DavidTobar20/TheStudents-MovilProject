@@ -3,7 +3,7 @@ package com.example.thestudents.ui.screens.studentDetail
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material3.*
@@ -89,7 +89,7 @@ fun BodyStudentDetail(
                 )
             }
         } else {
-            items(reviews, key = { it.id }) { review ->
+            itemsIndexed(reviews, key = { index, review -> "${review.id}_$index" }) { _, review ->
                 ReviewItem(
                     review = review,
                     isWrittenTab = selectedTab == ProfileTab.WRITTEN,

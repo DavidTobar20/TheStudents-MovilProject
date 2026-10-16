@@ -14,7 +14,6 @@ import javax.inject.Inject
 
 class ReviewRepository @Inject constructor(
     private val reviewRemoteDataSource: ReviewFirestoreDataSourceImpl,
-    private val userRepository: UserRepository,
     private val userRemoteDataSource: UserFirestoreDataSourceImpl,
     private val authRemoteDataSource: AuthRemoteDataSource
 ) {
@@ -70,14 +69,13 @@ class ReviewRepository @Inject constructor(
         contenido: String
     ): Result<Unit> {
         return try {
-            val userResult = userRepository.getUserById(autorId)
-            val userProfile = userResult.getOrNull()
-            val student = userProfile?.student
-            val photoUrl = authRemoteDataSource.currentUser?.photoUrl?.toString() ?: student?.profileImage
+
+            val user = userRemoteDataSource.getUserProfile(autorId)
+            val photoUrl = authRemoteDataSource.currentUser?.photoUrl?.toString()
 
             val createReviewUserDto = CreateReviewUserDto(
-                name = student?.name,
-                username = student?.username,
+                name = user.name,
+                username = user.userName,
                 profileImage = photoUrl
             )
 

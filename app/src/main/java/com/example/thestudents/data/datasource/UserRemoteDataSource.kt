@@ -6,7 +6,6 @@ import com.example.thestudents.data.dtos.UserDtoGeneric
 interface UserRemoteDataSource {
 
     suspend fun getUserProfile(studentId: String): UserDtoGeneric
-    suspend fun getUserById(userId: String): UserDtoGeneric
     suspend fun registerUser(registerUserDto: RegisterUserDto, userId: String): Unit
 
 }

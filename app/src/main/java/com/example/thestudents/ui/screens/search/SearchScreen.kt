@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -29,7 +29,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localStudentProvider
-import com.example.thestudents.ui.screens.reviews.ReviewsViewModel
 import com.example.thestudents.ui.screens.search.components.HeaderSearch
 import com.example.thestudents.ui.screens.search.components.SearchBar
 import com.example.thestudents.ui.screens.search.components.StudentCard
@@ -68,7 +67,7 @@ fun BodySearch(
 
         Spacer(modifier = Modifier.height(8.dp))
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(students, key = { it.id }) { student -> 
+            itemsIndexed(students, key = { index, student -> "${student.id}_$index" }) { _, student -> 
                 StudentCard(
                     student = student,
                     onClick = { onStudentClick(student.id) },

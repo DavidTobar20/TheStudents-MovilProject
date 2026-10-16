@@ -123,7 +123,7 @@ fun BodyHomeScreen(
                 item {
                     Spacer(modifier = Modifier.height(8.dp))
                 }
-                itemsIndexed(followedReviews, key = { _, review -> review.id }) { index, review ->
+                itemsIndexed(followedReviews, key = { index, review -> "${review.id}_$index" }) { index, review ->
                     ReviewCard(
                         review = review,
                         isLiked = isLiked(index),

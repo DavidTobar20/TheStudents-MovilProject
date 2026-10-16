@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.outlined.Edit
@@ -116,7 +117,7 @@ fun BodyProfile(
                 )
             }
             if (reviews.isEmpty()) {
-                item {
+                item(key = "empty_reviews") {
                     Text(
                         text = if (selectedTab == ProfileTab.RECEIVED) stringResource(R.string.no_has_recibido_resenas_aun) else stringResource(
                             R.string.no_has_escrito_resenas_aun
@@ -129,13 +130,13 @@ fun BodyProfile(
                     )
                 }
             } else {
-                items(reviews.size) { index ->
+                itemsIndexed(reviews, key = { index, review -> "${review.id}_$index" }) { _, review ->
                     ReviewItem(
-                        review = reviews[index],
+                        review = review,
                         isWrittenTab = selectedTab == ProfileTab.WRITTEN,
-                        onClick = { onReviewClick(reviews[index].id) },
-                        onEditClick = { onEditReviewClick(reviews[index].id) },
-                        onDeleteClick = { onDeleteReviewClick(reviews[index].id) },
+                        onClick = { onReviewClick(review.id) },
+                        onEditClick = { onEditReviewClick(review.id) },
+                        onDeleteClick = { onDeleteReviewClick(review.id) },
                         onStudentClick = onStudentClick
                     )
                 }
