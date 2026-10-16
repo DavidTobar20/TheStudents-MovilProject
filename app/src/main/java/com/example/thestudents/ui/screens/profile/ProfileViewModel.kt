@@ -38,8 +38,7 @@ class ProfileViewModel @Inject constructor(
     fun loadProfile() {
         _uiState.update { it.copy(isLoading = true, errorMessage = null) }
         viewModelScope.launch {
-            val baseStudent = localStudentProvider.currentUser
-            val currentUserId = baseStudent.id
+            val currentUserId = authRepository.currentUser?.uid ?: localStudentProvider.currentUser.id
 
             val result = userRepository.getUserProfile(currentUserId)
 

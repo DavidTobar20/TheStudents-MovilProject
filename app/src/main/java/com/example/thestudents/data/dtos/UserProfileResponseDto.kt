@@ -1,15 +1,27 @@
 package com.example.thestudents.data.dtos
 
 import com.example.thestudents.data.Review
+import com.example.thestudents.data.UserProfile
 import com.google.gson.annotations.SerializedName
 
 data class UserProfileResponseDto(
     val usuario: StudentDto,
     @SerializedName("resenas_recibidas")
-    val resenasRecibidas: List<ReceivedReviewDto>,
+    val resenasRecibidas: List<ReceivedReviewDto> = emptyList(),
     @SerializedName("resenas_creadas")
-    val resenasCreadas: List<CreatedReviewDto>
-)
+    val resenasCreadas: List<CreatedReviewDto> = emptyList()
+) : UserDtoGeneric() {
+    override fun toUserProfile(): UserProfile {
+        val student = usuario.toStudent()
+        val received = resenasRecibidas.map { it.toReview(usuario) }
+        val created = resenasCreadas.map { it.toReview(usuario) }
+        return UserProfile(
+            student = student,
+            receivedReviews = received,
+            createdReviews = created
+        )
+    }
+}
 
 data class ReceivedReviewDto(
     val id: Int,

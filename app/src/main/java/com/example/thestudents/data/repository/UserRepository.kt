@@ -11,21 +11,14 @@ import javax.inject.Inject
 
 class UserRepository @Inject constructor(
     private val userRemoteDataSource: UserFirestoreDataSourceImpl
+    // Para probar con Retrofit, comentar la línea de arriba y descomentar la siguiente:
+    // private val userRemoteDataSource: UserRetrofitDataSourceImpl
 ) {
 
     suspend fun getUserProfile(studentId: String): Result<UserProfile> {
         return try {
             val response = userRemoteDataSource.getUserProfile(studentId)
-            val student = response.usuario.toStudent()
-            val receivedReviews = response.resenasRecibidas.map { it.toReview(response.usuario) }
-            val createdReviews = response.resenasCreadas.map { it.toReview(response.usuario) }
-
-            val profile = UserProfile(
-                student = student,
-                receivedReviews = receivedReviews,
-                createdReviews = createdReviews
-            )
-
+            val profile = response.toUserProfile()
             Result.success(profile)
         } catch (e: Exception) {
             Result.failure(e)
