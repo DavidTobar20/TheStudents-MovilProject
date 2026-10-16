@@ -15,7 +15,7 @@ import javax.inject.Inject
 class ReviewRepository @Inject constructor(
     private val reviewRemoteDataSource: ReviewFirestoreDataSourceImpl,
     private val userRepository: UserRepository,
-    private val userRemoteDataSource: UserFirestoreDataSourceImpl,
+    private val userRemoteDataSource: UserFirestoreDataSourceImpl
     private val authRemoteDataSource: AuthRemoteDataSource
 ) {
 
@@ -24,9 +24,10 @@ class ReviewRepository @Inject constructor(
             val reviewsDto = reviewRemoteDataSource.getAllReviewsExcludingStudentId(studentId)
             val reviews = reviewsDto.map { it.toReview() }
             Result.success(reviews)
-        } catch (e: HttpException) {
+        } catch (e: HttpException){
             Result.failure(e)
-        } catch (e: Exception) {
+        }
+        catch (e: Exception){
             Result.failure(e)
         }
     }
@@ -51,7 +52,7 @@ class ReviewRepository @Inject constructor(
         }
     }
 
-    suspend fun getReviewById(reviewId: String): Result<Review> {
+    suspend fun getReviewById(reviewId: String) : Result<Review> {
         return try {
             val reviewDto = reviewRemoteDataSource.getReviewById(reviewId)
             val review = reviewDto.toReview()
@@ -69,17 +70,17 @@ class ReviewRepository @Inject constructor(
         rating: String?,
         contenido: String
     ): Result<Unit> {
-        return try {
-            val userResult = userRepository.getUserById(autorId)
-            val userProfile = userResult.getOrNull()
-            val student = userProfile?.student
-            val photoUrl = authRemoteDataSource.currentUser?.photoUrl?.toString() ?: student?.profileImage
+        return try{
+
+            val user = userRepository.getUserById(autorId)
+            val photoUrl = authRemoteDataSource.currentUser?.photoUrl?.toString()
 
             val createReviewUserDto = CreateReviewUserDto(
-                name = student?.name,
-                username = student?.username,
+                name = user.
+                username = user.
                 profileImage = photoUrl
             )
+
 
             val createReviewDto = CreateReviewDto(
                 autorId = autorId,
@@ -88,12 +89,12 @@ class ReviewRepository @Inject constructor(
                 periodo = periodo,
                 rating = rating,
                 contenido = contenido,
-                estado = null,
-                user = createReviewUserDto
+                estado = null
             )
             reviewRemoteDataSource.createReview(createReviewDto)
             Result.success(Unit)
-        } catch (e: Exception) {
+
+        } catch (e: Exception){
             Result.failure(e)
         }
     }
@@ -129,4 +130,5 @@ class ReviewRepository @Inject constructor(
             Result.failure(e)
         }
     }
+
 }
