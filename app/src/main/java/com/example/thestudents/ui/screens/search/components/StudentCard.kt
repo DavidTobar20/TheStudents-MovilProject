@@ -24,6 +24,7 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ButtonWithoutIcon
 import com.example.thestudents.ui.utils.ProfileIcon
 import com.example.thestudents.ui.utils.StarsRating
+import kotlin.math.roundToInt
 
 @Composable
 fun StudentCard(
@@ -79,7 +80,7 @@ fun StudentCard(
                 Spacer(modifier = Modifier.height(4.dp))
                 StarsRating(
                     modifier = Modifier.size(16.dp),
-                    rating = student.rating.toInt(),
+                    rating = student.rating.roundToInt(),
                     onRatingSelected = null
                 )
             }
