@@ -7,7 +7,6 @@ import com.google.gson.annotations.SerializedName
 
 data class StudentDto(
     val id: Int? = null,
-    val correo: String? = null,
     @SerializedName("nombre_usuario")
     val nombreUsuario: String? = null,
     val nombre: String? = null,

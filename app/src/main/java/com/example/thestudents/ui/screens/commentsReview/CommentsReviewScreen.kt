@@ -196,7 +196,7 @@ fun CommentsReviewScreen(
             }
             else -> {
                 BodyCommentsReviewScreen(
-                    commentator = state.commentator,
+                    commentator = state.commentator ?: localStudentProvider.currentUser,
                     review = review,
                     onStudentClick = onStudentClick,
                     isLiked = state.isLiked,

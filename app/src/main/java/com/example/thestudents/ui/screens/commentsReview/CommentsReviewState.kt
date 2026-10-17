@@ -10,7 +10,7 @@ data class CommentsReviewState(
     val isDisliked: Boolean = false,
     val likedComments: Set<Int> = emptySet(),
     val dislikedComments: Set<Int> = emptySet(),
-    val commentator: Student = localStudentProvider.currentUser,
+    val commentator: Student? = null,
     // La resena se carga desde el backend con el id que llega por la ruta; ya no hay una fija.
     val review: Review? = null,
     val isLoading: Boolean = false,

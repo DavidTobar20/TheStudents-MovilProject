@@ -3,7 +3,9 @@ package com.example.thestudents.ui.screens.commentsReview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.data.repository.ReviewRepository
+import com.example.thestudents.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +15,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CommentsReviewViewModel @Inject constructor(
-    private val reviewRepository: ReviewRepository
+    private val reviewRepository: ReviewRepository,
+    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CommentsReviewState())
     val uiState : StateFlow<CommentsReviewState> = _uiState
@@ -22,37 +26,52 @@ class CommentsReviewViewModel @Inject constructor(
         // Si ya esta cargada esta misma resena (por ejemplo al rotar la pantalla), no se pide otra vez.
         if (_uiState.value.review?.id == id) return
 
-        _uiState.update {
-            it.copy(
-                isLoading = true,
-                errorMessage = null,
-                isLiked = false,
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, errorMessage = null, isLiked = false,
                 isDisliked = false,
                 likedComments = emptySet(),
-                dislikedComments = emptySet()
-            )
-        }
-        viewModelScope.launch {
+                dislikedComments = emptySet()) }
             val result = reviewRepository.getReviewById(id)
-            _uiState.update { state ->
-                result.fold(
-                    onSuccess = { review ->
-                        state.copy(review = review, isLoading = false, errorMessage = null)
-                    },
-                    onFailure = { error ->
-                        state.copy(
-                            review = null,
-                            isLoading = false,
-                            errorMessage = error.message ?: "Error al cargar la reseña"
-                        )
-                    }
-                )
+
+            if(result.isSuccess){
+                val review = result.getOrNull()
+                _uiState.update {
+                    it.copy(review = review, isLoading = false, errorMessage = null)
+                }
+            }else {
+                val error = result.exceptionOrNull()
+                _uiState.update {
+                    it.copy(isLoading = false,errorMessage = error?.message)
+                }
             }
         }
     }
 
     fun getCommentator() {
-        _uiState.update { it.copy(commentator = localStudentProvider.currentUser) }
+
+        viewModelScope.launch {
+            val result = userRepository.getUserById("1")
+
+            if(result.isSuccess){
+                val commentator = result.getOrNull()
+                val authPhoto = authRepository.currentUser?.photoUrl?.toString()
+
+                val updatedCommentator = if (!authPhoto.isNullOrEmpty()) {
+                    commentator?.copy(profileImage = authPhoto)
+                } else {
+                    commentator
+                }
+
+                _uiState.update {
+                    it.copy(commentator = updatedCommentator)
+                }
+            }else {
+                val error = result.exceptionOrNull()
+                _uiState.update {
+                    it.copy(errorMessage = error?.message)
+                }
+            }
+        }
     }
 
     fun updateCommentInputText(text: String) {

@@ -2,15 +2,20 @@ package com.example.thestudents.data.datasource.impl
 
 import com.example.thestudents.data.datasource.UserRemoteDataSource
 import com.example.thestudents.data.datasource.services.UserRetrofitService
-import com.example.thestudents.data.dtos.UserProfileResponseDto
+import com.example.thestudents.data.dtos.StudentDto
+import com.example.thestudents.data.dtos.UserProfileDto
 import javax.inject.Inject
 
 class UserRetrofitDataSourceImpl @Inject constructor(
     private val service: UserRetrofitService
 ) : UserRemoteDataSource {
 
-    override suspend fun getUserProfile(studentId: String): UserProfileResponseDto {
+    override suspend fun getUserProfile(studentId: String): UserProfileDto {
         return service.getUserProfile(studentId)
+    }
+
+    override suspend fun getStudentById(studentId: String): StudentDto {
+        return service.getStudentById(studentId)
     }
 
 }

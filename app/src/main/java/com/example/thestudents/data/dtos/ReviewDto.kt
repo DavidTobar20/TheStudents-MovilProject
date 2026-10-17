@@ -48,7 +48,7 @@ fun ReviewDto.toReview(): Review {
         classReviewed = materia.orEmpty(),
         periodReviewed = periodo.orEmpty(),
         content = contenido.orEmpty(),
-        time = formatReviewTime(fechaCreacion).orEmpty(),
+        time = formatReviewTime(fechaCreacion),
         likes = likes ?: 0,
         disLikes = disLikes ?: 0,
         rating = if (rating.isNullOrBlank()) null else rating,

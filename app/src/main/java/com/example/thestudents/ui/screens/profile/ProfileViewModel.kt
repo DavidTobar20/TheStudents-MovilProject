@@ -2,6 +2,7 @@ package com.example.thestudents.ui.screens.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.thestudents.data.UserProfile
 import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.data.repository.ReviewRepository
@@ -21,8 +22,6 @@ class ProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val reviewRepository: ReviewRepository
 ): ViewModel() {
-
-    private val defaultPhotoUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCq6qha5YiJYI4ZIs3Sug9cpBKz23j-X5kWIMC6qU0jA&s=10"
 
     private val _uiState = MutableStateFlow(
         ProfileState(
@@ -47,10 +46,13 @@ class ProfileViewModel @Inject constructor(
                 val profile = result.getOrNull()
                 val currentEmail = authRepository.currentUser?.email ?: ""
                 val authPhoto = authRepository.currentUser?.photoUrl?.toString()
-                val photoUrl = if (authPhoto.isNullOrEmpty()) defaultPhotoUrl else authPhoto
 
-                val updatedProfile = profile?.let {
-                    it.copy(student = it.student.copy(profileImage = photoUrl))
+                var updatedProfile = if (authPhoto != null){
+                    profile?.let {
+                        it.copy(student = it.student.copy(profileImage = authPhoto))
+                    }
+                } else {
+                    profile
                 }
 
                 val followers = localStudentProvider.getFollowersCount(currentUserId)
