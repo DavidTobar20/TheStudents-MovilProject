@@ -3,12 +3,11 @@ package com.example.thestudents.data.repository
 import android.util.Log
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.UserProfile
-enimport com.example.thestudents.data.datasource.impl.firestore.ReviewFirestoreDataSourceImpl
+import com.example.thestudents.data.datasource.impl.firestore.ReviewFirestoreDataSourceImpl
 import com.example.thestudents.data.datasource.impl.firestore.UserFirestoreDataSourceImpl
-import com.example.thestudents.data.datasource.impl.retrofit.UserRetrofitDataSourceImpl
+
 import com.example.thestudents.data.dtos.RegisterUserDto
-import com.example.thestudents.data.dtos.toReview
-import com.example.thestudents.data.dtos.toStudent
+
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
