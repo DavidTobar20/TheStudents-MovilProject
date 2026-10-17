@@ -22,8 +22,6 @@ class ProfileViewModel @Inject constructor(
     private val reviewRepository: ReviewRepository
 ): ViewModel() {
 
-    private val defaultPhotoUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCq6qha5YiJYI4ZIs3Sug9cpBKz23j-X5kWIMC6qU0jA&s=10"
-
     private val _uiState = MutableStateFlow(
         ProfileState(
             email = authRepository.currentUser?.email ?: ""
@@ -46,7 +44,7 @@ class ProfileViewModel @Inject constructor(
                 val profile = result.getOrNull()
                 val currentEmail = authRepository.currentUser?.email ?: ""
                 val authPhoto = authRepository.currentUser?.photoUrl?.toString()
-                val photoUrl = if (authPhoto.isNullOrEmpty()) defaultPhotoUrl else authPhoto
+                val photoUrl = if (authPhoto.isNullOrEmpty()) null else authPhoto
 
                 val updatedProfile = profile?.let {
                     it.copy(student = it.student.copy(profileImage = photoUrl))

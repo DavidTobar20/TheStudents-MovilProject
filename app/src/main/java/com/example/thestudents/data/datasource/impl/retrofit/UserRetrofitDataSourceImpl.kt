@@ -20,4 +20,8 @@ class UserRetrofitDataSourceImpl @Inject constructor(
     override suspend fun registerUser(registerUserDto: RegisterUserDto, userId : String){
         //to-do
     }
+
+    override suspend fun getAllUsers(): List<UserProfileResponseDto> {
+        TODO("El backend de Express no tiene un endpoint para listar usuarios")
+    }
 }
