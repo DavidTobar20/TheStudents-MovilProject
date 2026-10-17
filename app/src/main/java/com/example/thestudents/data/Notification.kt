@@ -15,5 +15,6 @@ data class Notification(
     val comment: String? = null,
     val reviewOf: String? = null,
     val courseCode: String? = null,
-    val snippet: String? = null
+    val snippet: String? = null,
+    val reviewId: String? = null
 )

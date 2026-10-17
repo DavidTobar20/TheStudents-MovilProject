@@ -201,6 +201,7 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         val notificationsViewModel: NotificationsViewModel = hiltViewModel()
         NotificationsScreen(
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
+            onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
             notificationsViewModel = notificationsViewModel
         )
     }

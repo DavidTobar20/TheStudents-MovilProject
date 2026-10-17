@@ -47,8 +47,9 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
         return db.collection("reviews").document(reviewId).get().await().toObject(ReviewDto::class.java) ?: throw Exception("Reseña no encontrada")
     }
 
-    override suspend fun createReview(review: CreateReviewDto) {
-        db.collection("reviews").add(review).await()
+    override suspend fun createReview(review: CreateReviewDto): String {
+        val docRef = db.collection("reviews").add(review).await()
+        return docRef.id // id de la reseña, para enlazarla desde la notificación
     }
 
     override suspend fun updateReview(

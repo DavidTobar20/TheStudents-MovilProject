@@ -96,7 +96,7 @@ class ReviewRepository @Inject constructor(
                 estado = null,
                 autor = createReviewUserDto
             )
-            reviewRemoteDataSource.createReview(createReviewDto)
+            val reviewId = reviewRemoteDataSource.createReview(createReviewDto)
 
             // Notificar al estudiante reseñado. Si falla, la reseña igual queda creada.
             try {
@@ -106,6 +106,7 @@ class ReviewRepository @Inject constructor(
                 val notificationDto = NotificationDto(
                     destinatarioId = resenadoId,
                     emisorId = autorId,
+                    resenaId = reviewId.ifBlank { null },
                     tipo = NotificationType.REVIEW.name,
                     materia = materia,
                     rating = rating?.toDoubleOrNull()?.toInt(),
