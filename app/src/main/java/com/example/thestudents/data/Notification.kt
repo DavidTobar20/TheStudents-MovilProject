@@ -5,7 +5,7 @@ enum class NotificationType {
 }
 
 data class Notification(
-    val id: Int,
+    val id: String,
     val student: Student,
     val type: NotificationType,
     val timeAgo: String,

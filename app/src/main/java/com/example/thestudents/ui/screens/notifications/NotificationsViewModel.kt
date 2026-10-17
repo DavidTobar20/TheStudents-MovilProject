@@ -1,16 +1,22 @@
 package com.example.thestudents.ui.screens.notifications
 
 import androidx.lifecycle.ViewModel
-import com.example.thestudents.data.local.localNotificationProvider
+import androidx.lifecycle.viewModelScope
+import com.example.thestudents.data.repository.AuthRepository
+import com.example.thestudents.data.repository.NotificationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NotificationsViewModel @Inject constructor(): ViewModel() {
+class NotificationsViewModel @Inject constructor(
+    private val notificationRepository: NotificationRepository,
+    private val authRepository: AuthRepository
+): ViewModel() {
     private val _uiState = MutableStateFlow(NotificationsState())
     val uiState: StateFlow<NotificationsState> = _uiState.asStateFlow()
 
@@ -19,35 +25,47 @@ class NotificationsViewModel @Inject constructor(): ViewModel() {
     }
 
     fun loadNotifications() {
-        _uiState.update { it.copy(isLoading = true) }
-        // Simulamos la carga con los datos locales
-        val notifications = localNotificationProvider.allNotifications
-        _uiState.update {
-            it.copy(
-                notifications = notifications,
-                isLoading = false
-            )
+        val userId = authRepository.currentUser?.uid
+        if (userId == null) {
+            _uiState.update { it.copy(isLoading = false, errorMessage = "No hay un usuario autenticado") }
+            return
+        }
+        _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+        viewModelScope.launch {
+            val result = notificationRepository.getNotifications(userId)
+            if (result.isSuccess) {
+                _uiState.update {
+                    it.copy(
+                        notifications = result.getOrNull() ?: emptyList(),
+                        isLoading = false
+                    )
+                }
+            } else {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = result.exceptionOrNull()?.message ?: "Error al cargar las notificaciones"
+                    )
+                }
+            }
         }
     }
 
-    fun onAcceptNotification(notificationId: Int) {
-        // Por ahora solo removemos de la lista localmente
+    // Aceptar o rechazar quita la notificacion de la lista y la borra de Firestore
+    fun onAcceptNotification(notificationId: String) {
+        removeNotification(notificationId)
+    }
+
+    fun onRejectNotification(notificationId: String) {
+        removeNotification(notificationId)
+    }
+
+    private fun removeNotification(notificationId: String) {
         _uiState.update { state ->
-            state.copy(
-                notifications = state.notifications.filter { it.id != notificationId }
-            )
+            state.copy(notifications = state.notifications.filter { it.id != notificationId })
         }
-    }
-
-    fun onRejectNotification(notificationId: Int) {
-        // Por ahora solo removemos de la lista localmente
-        _uiState.update { state ->
-            state.copy(
-                notifications = state.notifications.filter { it.id != notificationId }
-            )
+        viewModelScope.launch {
+            notificationRepository.deleteNotification(notificationId)
         }
-    }
-    init {
-
     }
 }

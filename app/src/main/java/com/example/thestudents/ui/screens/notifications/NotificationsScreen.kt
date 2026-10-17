@@ -35,8 +35,8 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
 @Composable
 fun BodyNotifications(
     notifications: List<Notification>,
-    onAcceptClick: (Int) -> Unit,
-    onRejectClick: (Int) -> Unit,
+    onAcceptClick: (String) -> Unit,
+    onRejectClick: (String) -> Unit,
     onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -117,8 +117,8 @@ fun BodyNotificationsEmptyPreview() {
 @Composable
 fun NotificationsScreen(
     modifier: Modifier = Modifier,
-    onAcceptClick: (Int) -> Unit = {},
-    onRejectClick: (Int) -> Unit = {},
+    onAcceptClick: (String) -> Unit = {},
+    onRejectClick: (String) -> Unit = {},
     onStudentClick: (String) -> Unit = {},
     notificationsViewModel: NotificationsViewModel
 ) {

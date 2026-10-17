@@ -1,21 +1,28 @@
 package com.example.thestudents.data.repository
 
+import android.util.Log
 import retrofit2.HttpException
+import com.example.thestudents.data.NotificationType
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.datasource.AuthRemoteDataSource
 import com.example.thestudents.data.datasource.UserRemoteDataSource
+import com.example.thestudents.data.datasource.impl.firestore.NotificationFirestoreDataSourceImpl
 import com.example.thestudents.data.datasource.impl.firestore.ReviewFirestoreDataSourceImpl
 import com.example.thestudents.data.datasource.impl.firestore.UserFirestoreDataSourceImpl
 import com.example.thestudents.data.datasource.impl.retrofit.ReviewRetrofitDataSourceImpl
 import com.example.thestudents.data.dtos.CreateReviewDto
 import com.example.thestudents.data.dtos.CreateReviewUserDto
+import com.example.thestudents.data.dtos.NotificationDto
+import com.example.thestudents.data.dtos.StudentDto
 import com.example.thestudents.data.dtos.toReview
+import com.google.firebase.Timestamp
 import javax.inject.Inject
 
 class ReviewRepository @Inject constructor(
     private val reviewRemoteDataSource: ReviewFirestoreDataSourceImpl,
     private val userRemoteDataSource: UserFirestoreDataSourceImpl,
-    private val authRemoteDataSource: AuthRemoteDataSource
+    private val authRemoteDataSource: AuthRemoteDataSource,
+    private val notificationRemoteDataSource: NotificationFirestoreDataSourceImpl
 ) {
 
     suspend fun getAllReviewsExcludingStudentId(studentId: String): Result<List<Review>> {
@@ -90,6 +97,32 @@ class ReviewRepository @Inject constructor(
                 autor = createReviewUserDto
             )
             reviewRemoteDataSource.createReview(createReviewDto)
+
+            // Notificar al estudiante reseñado. Si falla, la reseña igual queda creada.
+            try {
+                val nombreAutor = listOfNotNull(autor.name, autor.apellido)
+                    .filter { it.isNotBlank() }
+                    .joinToString(" ")
+                val notificationDto = NotificationDto(
+                    destinatarioId = resenadoId,
+                    emisorId = autorId,
+                    tipo = NotificationType.REVIEW.name,
+                    materia = materia,
+                    rating = rating?.toDoubleOrNull()?.toInt(),
+                    comentario = contenido,
+                    emisor = StudentDto(
+                        id = autorId,
+                        nombre = nombreAutor,
+                        nombreUsuario = autor.userName,
+                        fotoUrl = photoUrl
+                    ),
+                    fechaCreacion = Timestamp.now()
+                )
+                notificationRemoteDataSource.createNotification(notificationDto)
+            } catch (e: Exception) {
+                Log.d("ReviewRepository", "No se pudo crear la notificación: ${e.message}")
+            }
+
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

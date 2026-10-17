@@ -1,6 +1,7 @@
 package com.example.thestudents.data.repository
 
 import android.util.Log
+import com.example.thestudents.data.Student
 import com.example.thestudents.data.UserProfile
 import com.example.thestudents.data.datasource.impl.firestore.UserFirestoreDataSourceImpl
 import com.example.thestudents.data.datasource.impl.retrofit.UserRetrofitDataSourceImpl
@@ -35,5 +36,18 @@ class UserRepository @Inject constructor(
              Result.failure(e)
      }
 
+    }
+
+    // Todos los usuarios registrados, sin incluir al usuario actual
+    suspend fun getAllStudents(excludeId: String?): Result<List<Student>> {
+        return try {
+            val users = userRemoteDataSource.getAllUsers()
+            val students = users
+                .map { it.toUserProfile().student }
+                .filter { it.id != excludeId }
+            Result.success(students)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

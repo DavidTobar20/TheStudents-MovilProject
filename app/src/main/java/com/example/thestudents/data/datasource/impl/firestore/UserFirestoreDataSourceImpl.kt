@@ -50,4 +50,11 @@ class UserFirestoreDataSourceImpl @Inject constructor(private val db: FirebaseFi
         val docRef = db.collection("users").document(userId) // se crea un documento
         docRef.set(registerUserDto).await() // insertando el documento
     }
+
+    override suspend fun getAllUsers(): List<UserProfileFirestoreDto> {
+        val snapshot = db.collection("users").get().await()
+        return snapshot.documents.mapNotNull { doc ->
+            doc.toObject(UserProfileFirestoreDto::class.java)?.copy(id = doc.id)
+        }
+    }
 }
