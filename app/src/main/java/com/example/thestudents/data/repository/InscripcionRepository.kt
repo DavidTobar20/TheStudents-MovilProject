@@ -2,12 +2,13 @@ package com.example.thestudents.data.repository
 
 import com.example.thestudents.data.CourseSection
 import com.example.thestudents.data.Inscription
+import com.example.thestudents.data.datasource.impl.firestore.InscripcionFirestoreDataSourceImpl
 import com.example.thestudents.data.datasource.impl.retrofit.InscripcionRetrofitDataSourceImpl
 import com.example.thestudents.data.dtos.toInscription
 import javax.inject.Inject
 
 class InscripcionRepository @Inject constructor(
-    private val inscripcionRemoteDataSource: InscripcionRetrofitDataSourceImpl
+    private val inscripcionRemoteDataSource: InscripcionFirestoreDataSourceImpl
 ) {
 
     suspend fun getInscripcionesPorUsuario(usuarioId: String): Result<List<CourseSection>> {
