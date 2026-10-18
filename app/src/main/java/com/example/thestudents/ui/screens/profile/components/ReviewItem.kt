@@ -48,7 +48,6 @@ fun ReviewItem(
     // En "Escritas" se muestra a quien se resenó; en "Recibidas", a quien escribió la resena.
     // Tocar su foto o su nombre abre su perfil.
 
-    Log.d("ReviewFirestore", "writeReview.id: ${displayStudent.id}")
     val studentModifier =
         if (onStudentClick != null && displayStudent.id.isNotBlank()) {
             Modifier.clickable { onStudentClick(displayStudent.id) }

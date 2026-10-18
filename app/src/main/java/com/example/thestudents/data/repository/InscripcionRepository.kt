@@ -36,8 +36,6 @@ class InscripcionRepository @Inject constructor(
         return try {
             val response = inscripcionRemoteDataSource.getInscripcionById(inscripcionId)
             val inscription = response.toInscription()
-            val x = inscription.student.id
-            Log.d("ReviewFirestore", "InscriptionRepository.id: $x")
             Result.success(inscription)
         } catch (e: Exception) {
             Result.failure(e)

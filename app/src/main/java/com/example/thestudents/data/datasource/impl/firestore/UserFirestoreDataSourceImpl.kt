@@ -1,5 +1,6 @@
 package com.example.thestudents.data.datasource.impl.firestore
 
+import android.util.Log
 import com.example.thestudents.data.datasource.UserRemoteDataSource
 import com.example.thestudents.data.dtos.RegisterUserDto
 import com.example.thestudents.data.dtos.ReviewDto
@@ -36,7 +37,9 @@ class UserFirestoreDataSourceImpl @Inject constructor(
         } catch (e: Exception) {
             throw Exception("Error al obtener las reseñas creadas: ${e.message}")
         }
-        val createdReviews = snapshotReviews.documents.mapNotNull { it.toObject(ReviewDto::class.java) }
+        val createdReviews = snapshotReviews.documents.mapNotNull { doc ->
+            doc.toObject(ReviewDto::class.java)?.copy(id = doc.id)
+        }
 
         val docRefReceived = db.collection("reviews").whereEqualTo("resenado_id", studentId)
         val snapshotReceived = try {
@@ -44,7 +47,9 @@ class UserFirestoreDataSourceImpl @Inject constructor(
         } catch (e: Exception) {
             throw Exception("Error al obtener las reseñas recibidas: ${e.message}")
         }
-        val receivedReviews = snapshotReceived.documents.mapNotNull { it.toObject(ReviewDto::class.java) }
+        val receivedReviews = snapshotReceived.documents.mapNotNull { doc ->
+            doc.toObject(ReviewDto::class.java)?.copy(id = doc.id)
+        }
 
         return profileWithId.copy(
             resenas_creadas = createdReviews,

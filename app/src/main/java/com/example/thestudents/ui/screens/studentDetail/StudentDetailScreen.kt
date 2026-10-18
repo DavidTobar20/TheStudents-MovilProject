@@ -133,15 +133,16 @@ fun StudentDetailScreen(
 ) {
     val state by studentDetailViewModel.uiState.collectAsState()
 
-    LaunchedEffect(studentId) {
+    LaunchedEffect(Unit) {
         studentDetailViewModel.getStudentById(studentId)
     }
 
     Column(modifier = modifier.fillMaxSize()) {
         ProfileHeader(onBackClick = onBackClick)
 
+        val userProfile = state.userProfile
         when {
-            state.isLoading && state.student == null -> {
+            state.isLoading && userProfile == null -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -149,7 +150,7 @@ fun StudentDetailScreen(
                     CircularProgressIndicator()
                 }
             }
-            state.student == null -> {
+            userProfile == null -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -165,9 +166,12 @@ fun StudentDetailScreen(
                 }
             }
             else -> {
+                val student = userProfile.student
+                val reviews = if (state.selectedTab == ProfileTab.RECEIVED) userProfile.receivedReviews else userProfile.createdReviews
+
                 BodyStudentDetail(
-                    student = state.student!!,
-                    reviews = state.reviews,
+                    student = student,
+                    reviews = reviews,
                     selectedTab = state.selectedTab,
                     onTabSelected = studentDetailViewModel::onTabSelected,
                     onFollowClick = { /* Handle follow */ },

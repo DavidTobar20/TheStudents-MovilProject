@@ -37,9 +37,11 @@ class ProfileViewModel @Inject constructor(
 
             val result = userRepository.getUserProfile(currentUserId)
 
+            val currentEmail = authRepository.currentUser?.email ?: ""
+
             if (result.isSuccess) {
                 val profile = result.getOrNull()
-                val currentEmail = authRepository.currentUser?.email ?: ""
+
                 val authPhoto = authRepository.currentUser?.photoUrl?.toString()
 
                 var updatedProfile = if (authPhoto != null){
@@ -67,7 +69,6 @@ class ProfileViewModel @Inject constructor(
                 }
             } else {
                 val error = result.exceptionOrNull()
-                val currentEmail = authRepository.currentUser?.email ?: ""
                 _uiState.update {
                     it.copy(
                         email = currentEmail,

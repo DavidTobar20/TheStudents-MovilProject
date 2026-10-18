@@ -1,6 +1,5 @@
 package com.example.thestudents.data.datasource.impl.firestore
 
-import android.util.Log
 import com.example.thestudents.data.datasource.ReviewRemoteDataSource
 import com.example.thestudents.data.dtos.CreateReviewFirebaseDto
 import com.example.thestudents.data.dtos.CreateReviewGenericDto
@@ -27,7 +26,6 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
             reviewDto.copy(id = doc.id)
         }.filter { review ->
             val autorIdStr = review.autor?.id
-            Log.d("ReviewFirestore", "autorIdStr: $autorIdStr, studentId: $studentId")
             autorIdStr != studentId
         }
     }
