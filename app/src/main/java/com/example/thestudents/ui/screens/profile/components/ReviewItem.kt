@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.profile.components
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -46,6 +47,8 @@ fun ReviewItem(
 
     // En "Escritas" se muestra a quien se resenó; en "Recibidas", a quien escribió la resena.
     // Tocar su foto o su nombre abre su perfil.
+
+    Log.d("ReviewFirestore", "writeReview.id: ${displayStudent.id}")
     val studentModifier =
         if (onStudentClick != null && displayStudent.id.isNotBlank()) {
             Modifier.clickable { onStudentClick(displayStudent.id) }
@@ -63,7 +66,7 @@ fun ReviewItem(
             ProfileIcon(
                 initials = displayStudent.initials,
                 profileImage = displayStudent.profileImage,
-                backgroundColor = MaterialTheme.colorScheme.primary,
+                backgroundColor = displayStudent.profileColor,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 14.sp,
                 modifier = Modifier

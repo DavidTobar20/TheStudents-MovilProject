@@ -2,13 +2,14 @@ package com.example.thestudents.data.repository
 
 import retrofit2.HttpException
 import com.example.thestudents.data.Review
-import com.example.thestudents.data.datasource.impl.retrofit.ReviewRetrofitDataSourceImpl
-import com.example.thestudents.data.dtos.CreateReviewRetrofitDto
+import com.example.thestudents.data.datasource.impl.firestore.ReviewFirestoreDataSourceImpl
+import com.example.thestudents.data.dtos.CreateReviewFirebaseDto
+import com.example.thestudents.data.dtos.CreateReviewGenericDto
 import com.example.thestudents.data.dtos.toReview
 import javax.inject.Inject
 
 class ReviewRepository @Inject constructor(
-    private val reviewRemoteDataSource: ReviewRetrofitDataSourceImpl
+    private val reviewRemoteDataSource: ReviewFirestoreDataSourceImpl
 ) {
 
     suspend fun getAllReviewsExcludingStudentId(studentId: String): Result<List<Review>> {
@@ -18,8 +19,7 @@ class ReviewRepository @Inject constructor(
             Result.success(reviews)
         } catch (e: HttpException){
             Result.failure(e)
-        }
-        catch (e: Exception){
+        } catch (e: Exception){
             Result.failure(e)
         }
     }
@@ -63,9 +63,9 @@ class ReviewRepository @Inject constructor(
         contenido: String
     ): Result<Unit> {
         return try{
-            val createReviewDto = CreateReviewRetrofitDto(
-                autor_id = autorId.toInt(),
-                resenado_id = resenadoId.toInt(),
+            val createReviewDto = CreateReviewGenericDto(
+                autor_id = autorId,
+                resenado_id = resenadoId,
                 materia = materia,
                 periodo = periodo,
                 rating = rating,
@@ -85,7 +85,7 @@ class ReviewRepository @Inject constructor(
         contenido: String?
     ): Result<Unit> {
         return try {
-            val createReviewDto = CreateReviewRetrofitDto(
+            val createReviewDto = CreateReviewGenericDto(
                 autor_id = null,
                 resenado_id = null,
                 materia = null,
@@ -94,6 +94,7 @@ class ReviewRepository @Inject constructor(
                 rating = rating
             )
             reviewRemoteDataSource.updateReview(reviewId, createReviewDto)
+            Result.success(Unit)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

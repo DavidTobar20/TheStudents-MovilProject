@@ -3,15 +3,17 @@ package com.example.thestudents.data.dtos
 import com.example.thestudents.data.Inscription
 
 data class InscripcionDto(
-    val id: Int,
+    val id: String,
     val materia: String,
     val periodo: String,
     val usuario: StudentDto
-)
+) {
+    constructor() : this("", "", "", StudentDto())
+}
 
 fun InscripcionDto.toInscription(): Inscription {
     return Inscription(
-        id = id.toString(),
+        id = id,
         student = usuario.toStudent(),
         className = materia,
         period = periodo

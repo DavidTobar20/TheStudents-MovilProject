@@ -5,7 +5,7 @@ import com.example.thestudents.data.Student
 import com.example.thestudents.ui.theme.avatarColorFor
 
 data class StudentDto(
-    val id: Int? = null,
+    val id: String? = null,
     val nombre_usuario: String? = null,
     val nombre: String? = null,
     val biografia: String? = null,
@@ -18,7 +18,7 @@ data class StudentDto(
 fun StudentDto.toStudent(): Student {
     val usernameSafe = nombre_usuario.orEmpty()
     val nameSafe = nombre.orEmpty()
-    val idSafe = id?.toString() ?: "0"
+    val idSafe = id.orEmpty().ifEmpty { "0" }
 
     val parsedColor = try {
         if (!color_perfil.isNullOrBlank()) {

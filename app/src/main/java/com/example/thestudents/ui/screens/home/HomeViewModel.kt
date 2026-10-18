@@ -2,6 +2,7 @@ package com.example.thestudents.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.data.repository.ReviewRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val reviewRepository: ReviewRepository
+    private val reviewRepository: ReviewRepository,
+    private val authRepository: AuthRepository
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow<HomeState>(HomeState())
@@ -64,9 +66,12 @@ class HomeViewModel @Inject constructor(
     }
 
     fun loadReviews() {
+
+        val currentUserId = authRepository.currentUser?.uid ?: ""
+
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-            val result = reviewRepository.getAllReviewsExcludingStudentId("1")
+            val result = reviewRepository.getAllReviewsExcludingStudentId(currentUserId)
             if (result.isSuccess) {
                 val reviews = result.getOrNull()
                 _uiState.update {

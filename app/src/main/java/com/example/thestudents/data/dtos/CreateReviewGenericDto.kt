@@ -5,23 +5,23 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-interface CreateReviewGenericDto {
-    val autor_id: Int?
-    val resenado_id: Int?
-    val materia: String?
-    val periodo: String?
-    val contenido: String?
-    val rating: String?
-}
+data class CreateReviewGenericDto(
+    val autor_id: String? = null,
+    val resenado_id: String? = null,
+    val materia: String? = null,
+    val periodo: String? = null,
+    val contenido: String? = null,
+    val rating: String? = null
+)
 
 data class CreateReviewRetrofitDto(
-    override val autor_id: Int? = null,
-    override val resenado_id: Int? = null,
-    override val materia: String? = null,
-    override val periodo: String? = null,
-    override val contenido: String? = null,
-    override val rating: String? = null
-) : CreateReviewGenericDto
+    val autor_id: String? = null,
+    val resenado_id: String? = null,
+    val materia: String? = null,
+    val periodo: String? = null,
+    val contenido: String? = null,
+    val rating: String? = null
+)
 
 private fun currentIsoDate(): String {
     val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
@@ -30,13 +30,15 @@ private fun currentIsoDate(): String {
 }
 
 data class CreateReviewFirebaseDto(
-    override val autor_id: Int? = null,
-    override val resenado_id: Int? = null,
-    override val materia: String? = null,
-    override val periodo: String? = null,
-    override val contenido: String? = null,
-    override val rating: String? = null,
+    val autor_id: String? = null,
+    val resenado_id: String? = null,
+    val materia: String? = null,
+    val periodo: String? = null,
+    val contenido: String? = null,
+    val rating: String? = null,
     val likes: Int = 0,
     val disLikes: Int = 0,
-    val fechaCreacion: String = currentIsoDate()
-) : CreateReviewGenericDto
+    val fechaCreacion: String = currentIsoDate(),
+    val autor: StudentDto? = null,
+    val resenado: StudentDto? = null
+)

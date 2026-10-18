@@ -2,13 +2,13 @@ package com.example.thestudents.data.datasource
 
 import com.example.thestudents.data.dtos.RegisterUserDto
 import com.example.thestudents.data.dtos.StudentDto
-import com.example.thestudents.data.dtos.UserProfileDto
+import com.example.thestudents.data.dtos.UserProfileGenericDto
 
 interface UserRemoteDataSource {
 
-    suspend fun getUserProfile(studentId: String): UserProfileDto
+    suspend fun getUserProfile(studentId: String): UserProfileGenericDto
 
-    suspend fun getStudentById(studentId: String): StudentDto
+    suspend fun getUserById(studentId: String): StudentDto
 
     suspend fun registerUser(registerUserDto: RegisterUserDto, userId: String)
 

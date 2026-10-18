@@ -29,14 +29,30 @@ class ReviewRetrofitDataSourceImpl @Inject constructor(
     }
 
     override suspend fun createReview(review: CreateReviewGenericDto) {
-        service.createReview(review as CreateReviewRetrofitDto)
+        val retrofitDto = CreateReviewRetrofitDto(
+            autor_id = review.autor_id,
+            resenado_id = review.resenado_id,
+            materia = review.materia,
+            periodo = review.periodo,
+            contenido = review.contenido,
+            rating = review.rating
+        )
+        service.createReview(retrofitDto)
     }
 
     override suspend fun updateReview(
         reviewId: String,
         review: CreateReviewGenericDto
     ) {
-        service.updateReview(reviewId, review as CreateReviewRetrofitDto)
+        val retrofitDto = CreateReviewRetrofitDto(
+            autor_id = review.autor_id,
+            resenado_id = review.resenado_id,
+            materia = review.materia,
+            periodo = review.periodo,
+            contenido = review.contenido,
+            rating = review.rating
+        )
+        service.updateReview(reviewId, retrofitDto)
     }
 
     override suspend fun deleteReview(reviewId: String) {

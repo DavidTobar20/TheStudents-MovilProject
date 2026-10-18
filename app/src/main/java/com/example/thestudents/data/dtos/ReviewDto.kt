@@ -6,7 +6,7 @@ import java.util.Locale
 import java.util.TimeZone
 
 data class ReviewDto(
-    val id: Int? = null,
+    val id: String? = null,
     val contenido: String? = null,
     val likes: Int? = 0,
     val disLikes: Int? = 0,
@@ -37,7 +37,7 @@ fun formatReviewTime(rawTime: String?): String {
 
 fun ReviewDto.toReview(): Review {
     return Review(
-        id = (id ?: 0).toString(),
+        id = id.orEmpty(),
         reviewer = autor?.toStudent() ?: com.example.thestudents.data.local.localStudentProvider.currentUser,
         reviewedStudent = resenado?.toStudent() ?: com.example.thestudents.data.local.localStudentProvider.students[0],
         classReviewed = materia.orEmpty(),

@@ -3,14 +3,13 @@ package com.example.thestudents.data.repository
 import android.util.Log
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.UserProfile
-import com.example.thestudents.data.datasource.impl.retrofit.UserRetrofitDataSourceImpl
+import com.example.thestudents.data.datasource.impl.firestore.UserFirestoreDataSourceImpl
 import com.example.thestudents.data.dtos.RegisterUserDto
 import com.example.thestudents.data.dtos.toStudent
-import com.example.thestudents.data.dtos.toUserProfile
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
-    private val userRemoteDataSource: UserRetrofitDataSourceImpl
+    private val userRemoteDataSource: UserFirestoreDataSourceImpl
 ) {
 
     suspend fun getUserProfile(studentId: String): Result<UserProfile> {
@@ -27,7 +26,7 @@ class UserRepository @Inject constructor(
 
     suspend fun getUserById(studentId: String): Result<Student> {
         return try {
-            val response = userRemoteDataSource.getStudentById(studentId)
+            val response = userRemoteDataSource.getUserById(studentId)
 
             val student = response.toStudent()
 
