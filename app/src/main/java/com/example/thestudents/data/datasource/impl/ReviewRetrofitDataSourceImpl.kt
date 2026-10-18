@@ -2,7 +2,8 @@ package com.example.thestudents.data.datasource.impl
 
 import com.example.thestudents.data.datasource.ReviewRemoteDataSource
 import com.example.thestudents.data.datasource.services.ReviewRetrofitService
-import com.example.thestudents.data.dtos.CreateReviewDto
+import com.example.thestudents.data.dtos.CreateReviewGenericDto
+import com.example.thestudents.data.dtos.CreateReviewRetrofitDto
 import com.example.thestudents.data.dtos.ReviewDto
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -10,6 +11,7 @@ import javax.inject.Inject
 class ReviewRetrofitDataSourceImpl @Inject constructor(
     val service: ReviewRetrofitService
 ) : ReviewRemoteDataSource {
+
     override suspend fun getAllReviewsExcludingStudentId(studentId: String): List<ReviewDto> {
         return service.getAllReviewsExcludingStudentId(studentId)
     }
@@ -26,15 +28,15 @@ class ReviewRetrofitDataSourceImpl @Inject constructor(
         return service.getReviewById(reviewId)
     }
 
-    override suspend fun createReview(review: CreateReviewDto) {
-        service.createReview(review)
+    override suspend fun createReview(review: CreateReviewGenericDto) {
+        service.createReview(review as CreateReviewRetrofitDto)
     }
 
     override suspend fun updateReview(
         reviewId: String,
-        review: CreateReviewDto
+        review: CreateReviewGenericDto
     ) {
-        service.updateReview(reviewId, review)
+        service.updateReview(reviewId, review as CreateReviewRetrofitDto)
     }
 
     override suspend fun deleteReview(reviewId: String) {

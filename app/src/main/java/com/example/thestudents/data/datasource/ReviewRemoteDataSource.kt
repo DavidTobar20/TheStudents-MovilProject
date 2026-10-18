@@ -1,6 +1,6 @@
 package com.example.thestudents.data.datasource
 
-import com.example.thestudents.data.dtos.CreateReviewDto
+import com.example.thestudents.data.dtos.CreateReviewGenericDto
 import com.example.thestudents.data.dtos.ReviewDto
 
 interface ReviewRemoteDataSource {
@@ -13,9 +13,9 @@ interface ReviewRemoteDataSource {
 
     suspend fun getReviewById(reviewId: String): ReviewDto
 
-    suspend fun createReview(review: CreateReviewDto): Unit
+    suspend fun createReview(review: CreateReviewGenericDto): Unit
 
-    suspend fun updateReview(reviewId: String, review: CreateReviewDto): Unit
+    suspend fun updateReview(reviewId: String, review: CreateReviewGenericDto): Unit
 
     suspend fun deleteReview(reviewId: String): Unit
 

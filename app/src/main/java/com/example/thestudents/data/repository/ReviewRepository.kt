@@ -3,7 +3,7 @@ package com.example.thestudents.data.repository
 import retrofit2.HttpException
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.datasource.impl.ReviewRetrofitDataSourceImpl
-import com.example.thestudents.data.dtos.CreateReviewDto
+import com.example.thestudents.data.dtos.CreateReviewRetrofitDto
 import com.example.thestudents.data.dtos.toReview
 import javax.inject.Inject
 
@@ -63,7 +63,7 @@ class ReviewRepository @Inject constructor(
         contenido: String
     ): Result<Unit> {
         return try{
-            val createReviewDto = CreateReviewDto(
+            val createReviewDto = CreateReviewRetrofitDto(
                 autor_id = autorId.toInt(),
                 resenado_id = resenadoId.toInt(),
                 materia = materia,
@@ -85,7 +85,7 @@ class ReviewRepository @Inject constructor(
         contenido: String?
     ): Result<Unit> {
         return try {
-            val createReviewDto = CreateReviewDto(
+            val createReviewDto = CreateReviewRetrofitDto(
                 autor_id = null,
                 resenado_id = null,
                 materia = null,
