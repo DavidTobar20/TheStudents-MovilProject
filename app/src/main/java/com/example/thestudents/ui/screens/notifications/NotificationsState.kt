@@ -4,5 +4,6 @@ import com.example.thestudents.data.Notification
 
 data class NotificationsState(
     val notifications: List<Notification> = emptyList(),
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null
 )

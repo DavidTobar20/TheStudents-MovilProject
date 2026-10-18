@@ -23,11 +23,7 @@ class ProfileViewModel @Inject constructor(
     private val reviewRepository: ReviewRepository
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow(
-        ProfileState(
-            email = authRepository.currentUser?.email ?: ""
-        )
-    )
+    private val _uiState = MutableStateFlow(ProfileState())
     val uiState: StateFlow<ProfileState> = _uiState.asStateFlow()
 
     init {

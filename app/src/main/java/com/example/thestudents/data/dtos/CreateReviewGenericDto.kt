@@ -23,7 +23,7 @@ data class CreateReviewRetrofitDto(
     val rating: String? = null
 )
 
-private fun currentIsoDate(): String {
+fun currentIsoDate(): String {
     val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
     format.timeZone = TimeZone.getTimeZone("UTC")
     return format.format(Date())

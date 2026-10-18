@@ -5,7 +5,7 @@ import com.example.thestudents.ui.screens.profile.components.ProfileTab
 
 data class ProfileState(
     val userProfile: UserProfile? = null,
-    val email: String = "",
+    val email: String? = null,
     val selectedTab: ProfileTab = ProfileTab.WRITTEN,
     val followersCount: Int = 0,
     val followingCount: Int = 0,

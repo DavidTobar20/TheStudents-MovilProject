@@ -238,7 +238,7 @@ fun ProfileScreen(
 
             BodyProfile(
                 student = student,
-                email = state.email,
+                email = state.email ?: "",
                 reviews = reviews,
                 selectedTab = state.selectedTab,
                 followersCount = state.followersCount,

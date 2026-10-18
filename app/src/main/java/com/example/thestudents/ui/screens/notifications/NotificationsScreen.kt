@@ -35,9 +35,10 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
 @Composable
 fun BodyNotifications(
     notifications: List<Notification>,
-    onAcceptClick: (Int) -> Unit,
-    onRejectClick: (Int) -> Unit,
+    onAcceptClick: (String) -> Unit,
+    onRejectClick: (String) -> Unit,
     onStudentClick: (String) -> Unit,
+    onReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -59,13 +60,16 @@ fun BodyNotifications(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(bottom = 16.dp)
             ) {
-                items(notifications, key = { it.id }) { notification ->
+                items(notifications, key = { it.id ?: "" }) { notification ->
                     NotificationItem(
                         notification = notification,
-                        onAcceptClick = { onAcceptClick(notification.id) },
-                        onRejectClick = { onRejectClick(notification.id) },
-                        onViewDetailClick = { 
-                            onStudentClick(notification.student.id)
+                        onAcceptClick = { onAcceptClick(notification.id.orEmpty()) },
+                        onRejectClick = { onRejectClick(notification.id.orEmpty()) },
+                        onViewDetailClick = {
+                            // Si la notificacion trae la reseña, se abre; si no, el perfil de quien la envio
+                            val reviewId = notification.reviewId
+                            if (reviewId != null) onReviewClick(reviewId)
+                            else onStudentClick(notification.student.id)
                         },
                         onAvatarClick = {
                             onStudentClick(notification.student.id)
@@ -87,7 +91,8 @@ fun BodyNotificationsPreview() {
                 notifications = localNotificationProvider.allNotifications,
                 onAcceptClick = {},
                 onRejectClick = {},
-                onStudentClick = {}
+                onStudentClick = {},
+                onReviewClick = {}
             )
         }
     }
@@ -102,7 +107,8 @@ fun BodyNotificationsEmptyPreview() {
                 notifications = emptyList(),
                 onAcceptClick = {},
                 onRejectClick = {},
-                onStudentClick = {}
+                onStudentClick = {},
+                onReviewClick = {}
             )
         }
     }
@@ -117,13 +123,13 @@ fun BodyNotificationsEmptyPreview() {
 @Composable
 fun NotificationsScreen(
     modifier: Modifier = Modifier,
-    onAcceptClick: (Int) -> Unit = {},
-    onRejectClick: (Int) -> Unit = {},
+    onAcceptClick: (String) -> Unit = {},
+    onRejectClick: (String) -> Unit = {},
     onStudentClick: (String) -> Unit = {},
+    onReviewClick: (String) -> Unit = {},
     notificationsViewModel: NotificationsViewModel
 ) {
     val state by notificationsViewModel.uiState.collectAsState()
-
 
     BodyNotifications(
         notifications = state.notifications,
@@ -136,6 +142,7 @@ fun NotificationsScreen(
             onRejectClick(it)
         },
         onStudentClick = onStudentClick,
+        onReviewClick = onReviewClick,
         modifier = modifier
     )
 }

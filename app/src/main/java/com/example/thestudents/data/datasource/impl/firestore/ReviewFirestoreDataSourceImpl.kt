@@ -27,16 +27,33 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
             reviewDto.copy(id = doc.id)
         }.filter { review ->
             val autorIdStr = review.autor?.id
+            Log.d("ReviewFirestore", "autorIdStr: $autorIdStr, studentId: $studentId")
             autorIdStr != studentId
         }
     }
 
     override suspend fun getReviewsByReviewedStudentId(reviewedStudentId: String): List<ReviewDto> {
-        TODO("Not yet implemented")
+        val snapshot = db.collection("reviews")
+            .whereEqualTo("resenadoId", reviewedStudentId)
+            .get()
+            .await()
+        return snapshot.documents.map { doc ->
+            val review = doc.toObject(ReviewDto::class.java)
+                ?: throw Exception("Review not found")
+            review.copy(id = doc.id)
+        }
     }
 
     override suspend fun getReviewsByReviewerId(reviewerId: String): List<ReviewDto> {
-        TODO("Not yet implemented")
+        val snapshot = db.collection("reviews")
+            .whereEqualTo("autorId", reviewerId)
+            .get()
+            .await()
+        return snapshot.documents.map { doc ->
+            val review = doc.toObject(ReviewDto::class.java)
+                ?: throw Exception("Review not found")
+            review.copy(id = doc.id)
+        }
     }
 
     override suspend fun getReviewById(reviewId: String): ReviewDto {
@@ -51,7 +68,7 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
         return reviewDto.copy(id = snapshot.id)
     }
 
-    override suspend fun createReview(review: CreateReviewGenericDto) {
+    override suspend fun createReview(review: CreateReviewGenericDto): String {
         val autorId = review.autor_id
         val resenadoId = review.resenado_id
 
@@ -82,7 +99,8 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
             resenado = resenadoDto
         )
 
-        db.collection("reviews").add(firebaseDto).await()
+        val docRef = db.collection("reviews").add(firebaseDto).await()
+        return docRef.id
     }
 
     override suspend fun updateReview(

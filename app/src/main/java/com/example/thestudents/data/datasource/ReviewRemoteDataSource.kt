@@ -13,7 +13,7 @@ interface ReviewRemoteDataSource {
 
     suspend fun getReviewById(reviewId: String): ReviewDto
 
-    suspend fun createReview(review: CreateReviewGenericDto): Unit
+    suspend fun createReview(review: CreateReviewGenericDto): String
 
     suspend fun updateReview(reviewId: String, review: CreateReviewGenericDto): Unit
 

@@ -24,4 +24,8 @@ class UserRetrofitDataSourceImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun getAllUsers(): List<StudentDto> {
+        TODO("El backend de Express no tiene un endpoint para listar usuarios")
+    }
+
 }

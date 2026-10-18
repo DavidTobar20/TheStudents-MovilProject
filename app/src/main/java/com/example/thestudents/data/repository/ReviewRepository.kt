@@ -1,15 +1,19 @@
 package com.example.thestudents.data.repository
 
+import android.util.Log
 import retrofit2.HttpException
+import com.example.thestudents.data.NotificationType
 import com.example.thestudents.data.Review
+import com.example.thestudents.data.datasource.impl.firestore.NotificationFirestoreDataSourceImpl
 import com.example.thestudents.data.datasource.impl.firestore.ReviewFirestoreDataSourceImpl
-import com.example.thestudents.data.dtos.CreateReviewFirebaseDto
 import com.example.thestudents.data.dtos.CreateReviewGenericDto
+import com.example.thestudents.data.dtos.NotificationDto
 import com.example.thestudents.data.dtos.toReview
 import javax.inject.Inject
 
 class ReviewRepository @Inject constructor(
-    private val reviewRemoteDataSource: ReviewFirestoreDataSourceImpl
+    private val reviewRemoteDataSource: ReviewFirestoreDataSourceImpl,
+    private val notificationRemoteDataSource: NotificationFirestoreDataSourceImpl
 ) {
 
     suspend fun getAllReviewsExcludingStudentId(studentId: String): Result<List<Review>> {
@@ -71,7 +75,21 @@ class ReviewRepository @Inject constructor(
                 rating = rating,
                 contenido = contenido
             )
-            reviewRemoteDataSource.createReview(createReviewDto)
+            val reviewId = reviewRemoteDataSource.createReview(createReviewDto)
+            try {
+                val notificationDto = NotificationDto(
+                    destinatarioId = resenadoId,
+                    emisorId = autorId,
+                    tipo = NotificationType.REVIEW.name,
+                    materia = materia,
+                    rating = rating?.toDoubleOrNull()?.toInt(),
+                    comentario = contenido,
+                    resenaId = reviewId.ifBlank { null }
+                )
+                notificationRemoteDataSource.createNotification(notificationDto)
+            } catch (e: Exception) {
+                Log.d("ReviewRepository", "No se pudo crear la notificación: ${e.message}")
+            }
             Result.success(Unit)
 
         } catch (e: Exception){
@@ -86,15 +104,10 @@ class ReviewRepository @Inject constructor(
     ): Result<Unit> {
         return try {
             val createReviewDto = CreateReviewGenericDto(
-                autor_id = null,
-                resenado_id = null,
-                materia = null,
-                periodo = null,
                 contenido = contenido,
                 rating = rating
             )
             reviewRemoteDataSource.updateReview(reviewId, createReviewDto)
-            Result.success(Unit)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

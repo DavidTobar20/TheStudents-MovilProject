@@ -73,4 +73,11 @@ class UserFirestoreDataSourceImpl @Inject constructor(
         docRef.set(registerUserDto).await() // insertando el documento
     }
 
+    override suspend fun getAllUsers(): List<StudentDto> {
+        val snapshot = db.collection("users").get().await()
+        return snapshot.documents.mapNotNull { doc ->
+            doc.toObject(StudentDto::class.java)?.copy(id = doc.id)
+        }
+    }
+
 }
