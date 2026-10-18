@@ -5,9 +5,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.FormatListNumbered
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -62,14 +66,20 @@ fun RegisterScreen(
     RegisterBody(
         names = state.names,
         onNamesChange = { registerViewModel.onNamesChange(it) },
-        lastNames = state.lastNames,
-        onLastNamesChange = { registerViewModel.onLastNamesChange(it) },
+        username = state.username,
+        onUsernameChange = { registerViewModel.onUsernameChange(it) },
         email = state.email,
         onEmailChange = { registerViewModel.onEmailChange(it) },
         password = state.password,
         onPasswordChange = { registerViewModel.onPasswordChange(it) },
         confirmPassword = state.confirmPassword,
         onConfirmPasswordChange = { registerViewModel.onConfirmPasswordChange(it) },
+        program = state.program,
+        onProgramChange = { registerViewModel.onProgramChange(it) },
+        semester = state.semester,
+        onSemesterChange = { registerViewModel.onSemesterChange(it) },
+        bio = state.bio,
+        onBioChange = { registerViewModel.onBioChange(it) },
         isPasswordVisible = showPassword,
         onPasswordToggle = { registerViewModel.mostrarEsconderPassword() },
         isConfirmPasswordVisible = showPassword,
@@ -86,14 +96,20 @@ fun RegisterScreen(
 fun RegisterBody(
     names: String,
     onNamesChange: (String) -> Unit,
-    lastNames: String,
-    onLastNamesChange: (String) -> Unit,
+    username: String,
+    onUsernameChange: (String) -> Unit,
     email: String,
     onEmailChange: (String) -> Unit,
     password: String,
     onPasswordChange: (String) -> Unit,
     confirmPassword: String,
     onConfirmPasswordChange: (String) -> Unit,
+    program: String,
+    onProgramChange: (String) -> Unit,
+    semester: String,
+    onSemesterChange: (String) -> Unit,
+    bio: String,
+    onBioChange: (String) -> Unit,
     isPasswordVisible: Boolean,
     onPasswordToggle: () -> Unit,
     isConfirmPasswordVisible: Boolean,
@@ -114,7 +130,7 @@ fun RegisterBody(
         item {
             RegisterHeader()
 
-            // Form Fields
+            // 1. Nombres
             TextFieldWhitIcon(
                 value = names,
                 onValueChange = onNamesChange,
@@ -128,12 +144,13 @@ fun RegisterBody(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // 2. Nombre de usuario
             TextFieldWhitIcon(
-                value = lastNames,
-                onValueChange = onLastNamesChange,
-                label = stringResource(R.string.apellidos),
-                placeholder = stringResource(R.string.ingresa_tus_apellidos_completos),
-                leadingIcon = Icons.Default.Person,
+                value = username,
+                onValueChange = onUsernameChange,
+                label = stringResource(R.string.nombre_usuario),
+                placeholder = stringResource(R.string.ingresa_tu_nombre_usuario),
+                leadingIcon = Icons.Default.AccountCircle,
                 isPasswordField = false,
                 isPasswordVisible = false,
                 onPasswordToggle = {}
@@ -141,6 +158,44 @@ fun RegisterBody(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // 3. Programa / Carrera
+            TextFieldWhitIcon(
+                value = program,
+                onValueChange = onProgramChange,
+                label = stringResource(R.string.programa_carrera),
+                placeholder = stringResource(R.string.ingresa_tu_carrera),
+                leadingIcon = Icons.Default.School,
+                isPasswordField = false,
+                isPasswordVisible = false,
+                onPasswordToggle = {}
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 4. Semestre
+            NumberTextField(
+                value = semester,
+                onValueChange = onSemesterChange,
+                label = stringResource(R.string.semestre),
+                placeholder = stringResource(R.string.ingresa_tu_semestre),
+                leadingIcon = Icons.Default.FormatListNumbered
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 5. Biografía (Campo multi-línea)
+            MultilineTextField(
+                value = bio,
+                onValueChange = onBioChange,
+                label = stringResource(R.string.biografia),
+                placeholder = stringResource(R.string.cuentanos_sobre_ti),
+                leadingIcon = Icons.Default.Info,
+                minLines = 3
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 6. Correo institucional
             TextFieldWhitIcon(
                 value = email,
                 onValueChange = onEmailChange,
@@ -154,6 +209,7 @@ fun RegisterBody(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // 7. Contraseña
             TextFieldWhitIcon(
                 value = password,
                 onValueChange = onPasswordChange,
@@ -167,6 +223,7 @@ fun RegisterBody(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // 8. Confirmar Contraseña
             TextFieldWhitIcon(
                 value = confirmPassword,
                 onValueChange = onConfirmPasswordChange,

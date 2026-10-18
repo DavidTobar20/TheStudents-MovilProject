@@ -3,12 +3,15 @@ package com.example.thestudents.data.injection
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.storage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent:: class) //los objetos los cree como singleton
@@ -19,4 +22,8 @@ class FirebaseHiltModule {
 
     @Provides
     fun storage(): FirebaseStorage = Firebase.storage  // crea una unica instancia
+
+    @Singleton
+    @Provides
+    fun firestore(): FirebaseFirestore = Firebase.firestore
 }

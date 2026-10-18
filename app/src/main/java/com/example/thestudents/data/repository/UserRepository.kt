@@ -1,9 +1,10 @@
 package com.example.thestudents.data.repository
 
+import android.util.Log
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.UserProfile
-import com.example.thestudents.data.datasource.impl.UserRetrofitDataSourceImpl
-import com.example.thestudents.data.dtos.toReview
+import com.example.thestudents.data.datasource.impl.retrofit.UserRetrofitDataSourceImpl
+import com.example.thestudents.data.dtos.RegisterUserDto
 import com.example.thestudents.data.dtos.toStudent
 import com.example.thestudents.data.dtos.toUserProfile
 import javax.inject.Inject
@@ -32,6 +33,30 @@ class UserRepository @Inject constructor(
 
             Result.success(student)
         } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun registerUser(
+        name: String,
+        username: String,
+        program: String,
+        semester: Int,
+        bio: String,
+        userId: String
+    ): Result<Unit> {
+        return try {
+            val registerUserDto = RegisterUserDto(
+                nombre = name,
+                nombre_usuario = username,
+                carrera = program,
+                semestre = semester,
+                biografia = bio
+            )
+            userRemoteDataSource.registerUser(registerUserDto, userId)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.d("TAG", "registerUser: ${e.message}")
             Result.failure(e)
         }
     }

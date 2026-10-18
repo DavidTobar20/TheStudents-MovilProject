@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import android.util.Log
 import com.example.thestudents.data.repository.AuthRepository
+import com.example.thestudents.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow(RegisterState())
     val uiState: StateFlow<RegisterState> = _uiState
@@ -39,8 +41,8 @@ class RegisterViewModel @Inject constructor(
         _uiState.update { it.copy(names = newNames) }
     }
 
-    fun onLastNamesChange(newLastNames: String) {
-        _uiState.update { it.copy(lastNames = newLastNames) }
+    fun onUsernameChange(newUsername: String) {
+        _uiState.update { it.copy(username = newUsername) }
     }
 
     fun onEmailChange(newEmail: String) {
@@ -56,6 +58,18 @@ class RegisterViewModel @Inject constructor(
         _uiState.update { it.copy(confirmPassword = newConfirmPassword) }
     }
 
+    fun onProgramChange(newProgram: String) {
+        _uiState.update { it.copy(program = newProgram) }
+    }
+
+    fun onSemesterChange(newSemester: String) {
+        _uiState.update { it.copy(semester = newSemester) }
+    }
+
+    fun onBioChange(newBio: String) {
+        _uiState.update { it.copy(bio = newBio) }
+    }
+
     fun onPasswordToggle() {
         _uiState.update { it.copy(isPasswordVisible = !it.isPasswordVisible) }
     }
@@ -69,14 +83,19 @@ class RegisterViewModel @Inject constructor(
     }
 
     fun onRegisterClick() {
-        val names = _uiState.value.names
-        val lastNames = _uiState.value.lastNames
-        val email = _uiState.value.email
-        val password = _uiState.value.password
-        val confirmPassword = _uiState.value.confirmPassword
+        val state = _uiState.value
 
-        if (names.isEmpty() || lastNames.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            _errorMessage.value = "Todos los campos son obligatorios"
+        val names = state.names
+        val username = state.username
+        val program = state.program
+        val semester = state.semester
+        val bio = state.bio
+        val email = state.email
+        val password = state.password
+        val confirmPassword = state.confirmPassword
+
+        if (names.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || program.isEmpty() || semester.isEmpty()) {
+            _errorMessage.value = "Todos los campos son obligatorios excepto bio"
             _mostrarMensajeError.value = true
         } else if (password != confirmPassword) {
             _errorMessage.value = "Las contraseñas no coinciden"
@@ -86,9 +105,23 @@ class RegisterViewModel @Inject constructor(
                 _uiState.update { it.copy(isLoading = true) }
                 val result = authRepository.signUp(email, password)
                 if (result.isSuccess) {
-                    _navigateToHome.value = true
+                    val userId = authRepository.currentUser?.uid ?: ""
+                    val registerResult = userRepository.registerUser(
+                        name = names,
+                        username = username,
+                        program = program,
+                        semester = semester.toIntOrNull() ?: 1,
+                        bio = bio,
+                        userId = userId
+                    )
+                    if (registerResult.isSuccess) {
+                        _navigateToHome.value = true
+                    } else {
+                        _errorMessage.value = registerResult.exceptionOrNull()?.message ?: "Error al registrar en la base de datos"
+                        _mostrarMensajeError.value = true
+                    }
                 } else {
-                    _errorMessage.value = result.exceptionOrNull()?.message ?: "Error al registrar la cuenta"
+                    _errorMessage.value = result.exceptionOrNull()?.message ?: "Error al registrar la cuenta en la autenticación"
                     _mostrarMensajeError.value = true
                 }
                 _uiState.update { it.copy(isLoading = false) }

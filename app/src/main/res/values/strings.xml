@@ -98,6 +98,14 @@
     <string name="terminos_de_servicio">Términos de Servicio</string>
     <string name="y_la">" y la "</string>
     <string name="politica_de_privacidad">Política de Privacidad</string>
+    <string name="nombre_usuario">Nombre de usuario</string>
+    <string name="ingresa_tu_nombre_usuario">Ingresa tu nombre de usuario (ej. juan.gil)</string>
+    <string name="programa_carrera">Carrera / Programa</string>
+    <string name="ingresa_tu_carrera">Ingresa tu carrera o programa académico</string>
+    <string name="semestre">Semestre</string>
+    <string name="ingresa_tu_semestre">Ingresa tu semestre actual (ej. 5)</string>
+    <string name="biografia">Biografía</string>
+    <string name="cuentanos_sobre_ti">Cuéntanos un poco sobre ti</string>
 
     <!-- Comentarios a reseñas -->
     <string name="escribe_un_comentario" tools:ignore="TypographyEllipsis">Escribe un comentario...</string>
