@@ -20,7 +20,7 @@ data class NotificationDto(
     val resenaDe: String? = null,
     val codigoMateria: String? = null,
     val fragmento: String? = null,
-    val emisor: StudentDto? = null,
+    val emisor: StudentSummaryDto? = null,
     val fechaCreacion: String = currentIsoDate(),
 )
 
@@ -29,7 +29,7 @@ fun NotificationDto.toNotification(): Notification {
         .firstOrNull { it.name == tipo?.uppercase() } ?: NotificationType.REVIEW
     return Notification(
         id = id,
-        student = (emisor ?: StudentDto()).copy(id = emisor?.id ?: emisorId).toStudent(),
+        student = (emisor ?: StudentSummaryDto()).copy(id = emisor?.id ?: emisorId).toStudent(),
         type = notificationType,
         timeAgo = timeAgo(fechaCreacion),
         subject = materia,

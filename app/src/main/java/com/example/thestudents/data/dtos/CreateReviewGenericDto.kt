@@ -39,6 +39,6 @@ data class CreateReviewFirebaseDto(
     val likes: Int = 0,
     val disLikes: Int = 0,
     val fechaCreacion: String = currentIsoDate(),
-    val autor: StudentDto? = null,
-    val resenado: StudentDto? = null
+    val autor: StudentSummaryDto? = null,
+    val resenado: StudentSummaryDto? = null
 )

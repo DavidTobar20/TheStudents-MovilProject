@@ -12,8 +12,8 @@ data class ReviewDto(
     val disLikes: Int? = 0,
     val rating: String? = null,
     val fecha_creacion: String? = null,
-    val autor: StudentDto? = null,
-    val resenado: StudentDto? = null,
+    val autor: StudentSummaryDto? = null,
+    val resenado: StudentSummaryDto? = null,
     val materia: String? = null,
     val periodo: String? = null
 )

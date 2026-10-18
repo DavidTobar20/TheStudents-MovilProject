@@ -1,6 +1,5 @@
 package com.example.thestudents.data.datasource.impl.firestore
 
-import android.util.Log
 import com.example.thestudents.data.datasource.InscripcionRemoteDataSource
 import com.example.thestudents.data.dtos.InscripcionDto
 import com.google.firebase.firestore.DocumentSnapshot
@@ -35,7 +34,7 @@ class InscripcionFirestoreDataSourceImpl @Inject constructor(
                     .await()
                     .documents
                     .mapNotNull { it.toInscripcionDto() }
-                    .filter { it.usuario.id != usuarioId } // no me incluyo a mí mismo
+                    .filter { it.usuario?.id != usuarioId } // no me incluyo a mí mismo
             }
         return companeros
     }
@@ -56,6 +55,5 @@ class InscripcionFirestoreDataSourceImpl @Inject constructor(
         val documentId = id
         return toObject(InscripcionDto::class.java)?.copy(id = documentId)
     }
-
 
 }

@@ -5,6 +5,8 @@ import com.example.thestudents.data.dtos.CreateReviewFirebaseDto
 import com.example.thestudents.data.dtos.CreateReviewGenericDto
 import com.example.thestudents.data.dtos.ReviewDto
 import com.example.thestudents.data.dtos.StudentDto
+import com.example.thestudents.data.dtos.StudentSummaryDto
+import com.example.thestudents.data.dtos.toSummaryDto
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -32,24 +34,22 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
 
     override suspend fun getReviewsByReviewedStudentId(reviewedStudentId: String): List<ReviewDto> {
         val snapshot = db.collection("reviews")
-            .whereEqualTo("resenadoId", reviewedStudentId)
+            .whereEqualTo("resenado_id", reviewedStudentId)
             .get()
             .await()
-        return snapshot.documents.map { doc ->
-            val review = doc.toObject(ReviewDto::class.java)
-                ?: throw Exception("Review not found")
+        return snapshot.documents.mapNotNull { doc ->
+            val review = doc.toObject(ReviewDto::class.java) ?: return@mapNotNull null
             review.copy(id = doc.id)
         }
     }
 
     override suspend fun getReviewsByReviewerId(reviewerId: String): List<ReviewDto> {
         val snapshot = db.collection("reviews")
-            .whereEqualTo("autorId", reviewerId)
+            .whereEqualTo("autor_id", reviewerId)
             .get()
             .await()
-        return snapshot.documents.map { doc ->
-            val review = doc.toObject(ReviewDto::class.java)
-                ?: throw Exception("Review not found")
+        return snapshot.documents.mapNotNull { doc ->
+            val review = doc.toObject(ReviewDto::class.java) ?: return@mapNotNull null
             review.copy(id = doc.id)
         }
     }
@@ -70,19 +70,19 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
         val autorId = review.autor_id
         val resenadoId = review.resenado_id
 
-        var autorDto: StudentDto? = null
+        var autorSummaryDto: StudentSummaryDto? = null
         if (!autorId.isNullOrBlank()) {
             val userSnapshot = db.collection("users").document(autorId).get().await()
             if (userSnapshot.exists()) {
-                autorDto = userSnapshot.toObject(StudentDto::class.java)?.copy(id = userSnapshot.id)
+                autorSummaryDto = userSnapshot.toObject(StudentDto::class.java)?.copy(id = userSnapshot.id)?.toSummaryDto()
             }
         }
 
-        var resenadoDto: StudentDto? = null
+        var resenadoSummaryDto: StudentSummaryDto? = null
         if (!resenadoId.isNullOrBlank()) {
             val userSnapshot = db.collection("users").document(resenadoId).get().await()
             if (userSnapshot.exists()) {
-                resenadoDto = userSnapshot.toObject(StudentDto::class.java)?.copy(id = userSnapshot.id)
+                resenadoSummaryDto = userSnapshot.toObject(StudentDto::class.java)?.copy(id = userSnapshot.id)?.toSummaryDto()
             }
         }
 
@@ -93,8 +93,8 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
             periodo = review.periodo,
             contenido = review.contenido,
             rating = review.rating,
-            autor = autorDto,
-            resenado = resenadoDto
+            autor = autorSummaryDto,
+            resenado = resenadoSummaryDto
         )
 
         val docRef = db.collection("reviews").add(firebaseDto).await()
