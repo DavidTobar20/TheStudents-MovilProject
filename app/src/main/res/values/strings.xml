@@ -128,7 +128,6 @@
 
     <!-- Edición Perfil -->
     <string name="editar_perfil_mayuscula">EDITAR PERFIL</string>
-    <string name="semestre_numero">Semestre %1$d</string>
     <string name="contador_caracteres">%1$d/%2$d</string>
 
     <!-- Notificaciones -->

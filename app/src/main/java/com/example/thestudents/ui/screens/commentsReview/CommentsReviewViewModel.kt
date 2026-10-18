@@ -2,7 +2,6 @@ package com.example.thestudents.ui.screens.commentsReview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.data.repository.ReviewRepository
 import com.example.thestudents.data.repository.UserRepository
@@ -50,20 +49,14 @@ class CommentsReviewViewModel @Inject constructor(
     fun getCommentator() {
 
         viewModelScope.launch {
-            val result = userRepository.getUserById("1")
+            val currentUserId = authRepository.currentUser?.uid ?: ""
+            val result = userRepository.getUserById(currentUserId)
 
             if(result.isSuccess){
                 val commentator = result.getOrNull()
-                val authPhoto = authRepository.currentUser?.photoUrl?.toString()
-
-                val updatedCommentator = if (!authPhoto.isNullOrEmpty()) {
-                    commentator?.copy(profileImage = authPhoto)
-                } else {
-                    commentator
-                }
 
                 _uiState.update {
-                    it.copy(commentator = updatedCommentator)
+                    it.copy(commentator = commentator)
                 }
             }else {
                 val error = result.exceptionOrNull()

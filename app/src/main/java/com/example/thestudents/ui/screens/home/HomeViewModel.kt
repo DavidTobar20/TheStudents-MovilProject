@@ -17,7 +17,7 @@ class HomeViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow<HomeState>(HomeState())
+    private val _uiState = MutableStateFlow(HomeState())
     val uiState: StateFlow<HomeState> = _uiState
 
     fun reviewIsLiked(index: Int): Boolean {
@@ -59,10 +59,6 @@ class HomeViewModel @Inject constructor(
                 dislikedReviews = newDislikedReviews
             )
         }
-    }
-
-    init {
-        loadReviews()
     }
 
     fun loadReviews() {

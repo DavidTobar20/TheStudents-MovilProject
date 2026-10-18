@@ -1,6 +1,5 @@
 package com.example.thestudents.data.repository
 
-import android.util.Log
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.UserProfile
 import com.example.thestudents.data.datasource.impl.firestore.ReviewFirestoreDataSourceImpl
@@ -60,7 +59,33 @@ class UserRepository @Inject constructor(
             userRemoteDataSource.registerUser(registerUserDto, userId)
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.d("TAG", "registerUser: ${e.message}")
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateUser(
+        name: String,
+        username: String,
+        program: String,
+        semester: Int,
+        bio: String,
+        fotoUrl: String?,
+        colorPerfil: String?,
+        userId: String
+    ): Result<Unit> {
+        return try {
+            val registerUserDto = RegisterUserDto(
+                nombre = name,
+                nombre_usuario = username,
+                carrera = program,
+                semestre = semester,
+                biografia = bio,
+                foto_url = fotoUrl,
+                color_perfil = colorPerfil ?: ""
+            )
+            userRemoteDataSource.updateUser(registerUserDto, userId)
+            Result.success(Unit)
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }

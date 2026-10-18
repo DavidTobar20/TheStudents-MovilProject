@@ -14,4 +14,6 @@ interface UserRemoteDataSource {
 
     suspend fun getAllUsers(): List<StudentDto>
 
+    suspend fun updateUser(registerUserDto: RegisterUserDto, userId: String)
+
 }

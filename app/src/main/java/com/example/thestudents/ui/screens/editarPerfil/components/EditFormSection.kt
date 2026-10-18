@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AlternateEmail
 import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.HorizontalDivider
@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,7 +41,9 @@ fun EditFormSection(
     username: String,
     onUsernameChange: (String) -> Unit,
     program: String,
+    onProgramChange: (String) -> Unit,
     semester: String,
+    onSemesterChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -75,10 +78,8 @@ fun EditFormSection(
             EditFieldItem(
                 label = stringResource(R.string.carrera_programa_mayuscula),
                 value = program,
-                onValueChange = {},
-                icon = Icons.Default.School,
-                trailingIcon = Icons.Default.KeyboardArrowDown,
-                readOnly = true
+                onValueChange = onProgramChange,
+                icon = Icons.Default.School
             )
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -87,10 +88,9 @@ fun EditFormSection(
             EditFieldItem(
                 label = stringResource(R.string.semestre_mayuscula),
                 value = semester,
-                onValueChange = {},
+                onValueChange = onSemesterChange,
                 icon = Icons.Default.CalendarMonth,
-                trailingIcon = Icons.Default.KeyboardArrowDown,
-                readOnly = true
+                keyboardType = KeyboardType.Number
             )
         }
     }
@@ -102,14 +102,13 @@ private fun EditFieldItem(
     value: String,
     onValueChange: (String) -> Unit,
     icon: ImageVector,
-    trailingIcon: ImageVector? = null,
-    readOnly: Boolean = false
+    keyboardType: KeyboardType = KeyboardType.Text
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically // Centrado verticalmente de forma perpendicular
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = icon,
@@ -135,20 +134,11 @@ private fun EditFieldItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 4.dp),
-                readOnly = readOnly,
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
                     color = MaterialTheme.colorScheme.primary
                 ),
-                singleLine = true
-            )
-        }
-        
-        if (trailingIcon != null) {
-            Icon(
-                imageVector = trailingIcon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(20.dp)
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
             )
         }
     }
@@ -168,7 +158,9 @@ fun EditFormSectionPreview() {
                     username = student.username,
                     onUsernameChange = {},
                     program = student.program,
-                    semester = "Semestre ${student.semester}"
+                    onProgramChange = {},
+                    semester = student.semester.toString(),
+                    onSemesterChange = {}
                 )
             }
         }

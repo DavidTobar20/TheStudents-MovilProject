@@ -1,6 +1,5 @@
 package com.example.thestudents.data.datasource.impl.firestore
 
-import android.util.Log
 import com.example.thestudents.data.datasource.UserRemoteDataSource
 import com.example.thestudents.data.dtos.RegisterUserDto
 import com.example.thestudents.data.dtos.ReviewDto
@@ -83,6 +82,14 @@ class UserFirestoreDataSourceImpl @Inject constructor(
         return snapshot.documents.mapNotNull { doc ->
             doc.toObject(StudentDto::class.java)?.copy(id = doc.id)
         }
+    }
+
+    override suspend fun updateUser(
+        registerUserDto: RegisterUserDto,
+        userId: String
+    ) {
+        val docRef = db.collection("users").document(userId)
+        docRef.set(registerUserDto).await()
     }
 
 }

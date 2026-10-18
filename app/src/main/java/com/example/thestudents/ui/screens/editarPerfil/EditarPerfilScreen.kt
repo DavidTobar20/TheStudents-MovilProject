@@ -4,20 +4,16 @@ import android.content.res.Configuration
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Surface
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,6 +38,10 @@ fun BodyEditarPerfilScreen(
     onNameChange: (String) -> Unit,
     username: String,
     onUsernameChange: (String) -> Unit,
+    program: String,
+    onProgramChange: (String) -> Unit,
+    semester: String,
+    onSemesterChange: (String) -> Unit,
     bio: String,
     onBioChange: (String) -> Unit,
     showReviews: Boolean,
@@ -77,8 +77,10 @@ fun BodyEditarPerfilScreen(
                     onNameChange = onNameChange,
                     username = username,
                     onUsernameChange = onUsernameChange,
-                    program = student.program,
-                    semester = stringResource(R.string.semestre_numero, student.semester)
+                    program = program,
+                    onProgramChange = onProgramChange,
+                    semester = semester,
+                    onSemesterChange = onSemesterChange
                 )
             }
 
@@ -119,10 +121,7 @@ fun BodyEditarPerfilScreen(
 }
 
 /**
- * Pantalla de editar perfil.
- *
- * Es la duena del formulario. Se usa rememberSaveable para que lo escrito sobreviva a un giro de
- * pantalla, que con remember se perdia.
+ * Pantalla de editar perfil con manejo de estado (Carga y Error).
  */
 @Composable
 fun EditarPerfilScreen(
@@ -139,25 +138,66 @@ fun EditarPerfilScreen(
         uri?.let { editarPerfilViewModel.uploadImageToFirebase(it) }
     }
 
-    BodyEditarPerfilScreen(
-        student = state.student,
-        name = state.name,
-        onNameChange = { editarPerfilViewModel.updateName(it) },
-        username = state.username,
-        onUsernameChange = { editarPerfilViewModel.updateUsername(it) },
-        bio = state.bio,
-        onBioChange = { editarPerfilViewModel.updateBio(it) },
-        showReviews = state.showReviews,
-        onShowReviewsChange = { editarPerfilViewModel.updateShowReviews(it) },
-        notificationsEnabled = state.notificationsEnabled,
-        onNotificationsChange = { editarPerfilViewModel.updateNotificationsEnabled(it) },
-        onBackClick = onBackClick,
-        onSaveClick = onSaveClick,
-        onChangePhotoClick = {
-            launcher.launch("image/*")
-        },
-        modifier = modifier
-    )
+    when {
+        state.isLoading && state.student == null -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        state.student == null -> {
+            Column(modifier = modifier.fillMaxSize()) {
+                HeaderBack(
+                    title = stringResource(R.string.editar_perfil_mayuscula),
+                    onBackClick = onBackClick
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = state.errorMessage ?: stringResource(R.string.estudiante_no_encontrado),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+        else -> {
+            BodyEditarPerfilScreen(
+                student = state.student!!,
+                name = state.name,
+                onNameChange = { editarPerfilViewModel.updateName(it) },
+                username = state.username,
+                onUsernameChange = { editarPerfilViewModel.updateUsername(it) },
+                program = state.program,
+                onProgramChange = { editarPerfilViewModel.updateProgram(it) },
+                semester = state.semester,
+                onSemesterChange = { editarPerfilViewModel.updateSemester(it) },
+                bio = state.bio,
+                onBioChange = { editarPerfilViewModel.updateBio(it) },
+                showReviews = state.showReviews,
+                onShowReviewsChange = { editarPerfilViewModel.updateShowReviews(it) },
+                notificationsEnabled = state.notificationsEnabled,
+                onNotificationsChange = { editarPerfilViewModel.updateNotificationsEnabled(it) },
+                onBackClick = onBackClick,
+                onSaveClick = {
+                    editarPerfilViewModel.onSaveClick {
+                        onSaveClick()
+                    }
+                },
+                onChangePhotoClick = {
+                    launcher.launch("image/*")
+                },
+                modifier = modifier
+            )
+        }
+    }
 }
 
 @Preview(name = "Claro", showBackground = true, showSystemUi = true)
