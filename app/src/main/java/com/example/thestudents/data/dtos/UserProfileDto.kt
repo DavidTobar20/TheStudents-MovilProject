@@ -5,16 +5,14 @@ import com.google.gson.annotations.SerializedName
 
 data class UserProfileDto(
     val usuario: StudentDto,
-    @SerializedName("resenas_recibidas")
-    val resenasRecibidas: List<ReviewDto>,
-    @SerializedName("resenas_creadas")
-    val resenasCreadas: List<ReviewDto>
+    val resenas_recibidas: List<ReviewDto>,
+    val resenas_creadas: List<ReviewDto>
 )
 
 fun UserProfileDto.toUserProfile(): UserProfile{
     return UserProfile(
         student = usuario.toStudent(),
-        receivedReviews = resenasRecibidas.map { it.toReview() },
-        createdReviews = resenasCreadas.map { it.toReview() }
+        receivedReviews = resenas_recibidas.map { it.toReview() },
+        createdReviews = resenas_creadas.map { it.toReview() }
     )
 }

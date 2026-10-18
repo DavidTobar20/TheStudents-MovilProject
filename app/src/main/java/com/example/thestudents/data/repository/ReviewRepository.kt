@@ -64,13 +64,12 @@ class ReviewRepository @Inject constructor(
     ): Result<Unit> {
         return try{
             val createReviewDto = CreateReviewDto(
-                autorId = autorId.toInt(),
-                resenadoId = resenadoId.toInt(),
+                autor_id = autorId.toInt(),
+                resenado_id = resenadoId.toInt(),
                 materia = materia,
                 periodo = periodo,
                 rating = rating,
-                contenido = contenido,
-                estado = null
+                contenido = contenido
             )
             reviewRemoteDataSource.createReview(createReviewDto)
             Result.success(Unit)
@@ -83,18 +82,16 @@ class ReviewRepository @Inject constructor(
     suspend fun updateReview(
         reviewId: String,
         rating: String?,
-        contenido: String?,
-        estado: String?
+        contenido: String?
     ): Result<Unit> {
         return try {
             val createReviewDto = CreateReviewDto(
-                autorId = null,
-                resenadoId = null,
+                autor_id = null,
+                resenado_id = null,
                 materia = null,
                 periodo = null,
                 contenido = contenido,
-                rating = rating,
-                estado = estado
+                rating = rating
             )
             reviewRemoteDataSource.updateReview(reviewId, createReviewDto)
             Result.success(Unit)

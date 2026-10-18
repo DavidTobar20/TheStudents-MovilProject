@@ -3,33 +3,26 @@ package com.example.thestudents.data.dtos
 import androidx.compose.ui.graphics.Color
 import com.example.thestudents.data.Student
 import com.example.thestudents.ui.theme.avatarColorFor
-import com.google.gson.annotations.SerializedName
 
 data class StudentDto(
     val id: Int? = null,
-    @SerializedName("nombre_usuario")
-    val nombreUsuario: String? = null,
+    val nombre_usuario: String? = null,
     val nombre: String? = null,
     val biografia: String? = null,
-    @SerializedName("foto_url")
-    val fotoUrl: String? = null,
-    @SerializedName("color_perfil")
-    val colorPerfil: String? = null,
+    val foto_url: String? = null,
+    val color_perfil: String? = null,
     val carrera: String? = null,
-    val semestre: Int? = null,
-    val estado: String? = null,
-    @SerializedName("fecha_creacion")
-    val fechaCreacion: String? = null
+    val semestre: Int? = null
 )
 
 fun StudentDto.toStudent(): Student {
-    val usernameSafe = nombreUsuario.orEmpty()
+    val usernameSafe = nombre_usuario.orEmpty()
     val nameSafe = nombre.orEmpty()
     val idSafe = id?.toString() ?: "0"
 
     val parsedColor = try {
-        if (!colorPerfil.isNullOrBlank()) {
-            Color(android.graphics.Color.parseColor(colorPerfil))
+        if (!color_perfil.isNullOrBlank()) {
+            Color(android.graphics.Color.parseColor(color_perfil))
         } else {
             avatarColorFor(usernameSafe.ifEmpty { idSafe })
         }
@@ -55,6 +48,6 @@ fun StudentDto.toStudent(): Student {
         reviewsCount = 0,
         initials = initialsComputed,
         profileColor = parsedColor,
-        profileImage = if (fotoUrl.isNullOrBlank()) null else fotoUrl
+        profileImage = if (foto_url.isNullOrBlank()) null else foto_url
     )
 }

@@ -80,8 +80,7 @@ class UpdateReviewViewModel @Inject constructor(
             val result = reviewRepository.updateReview(
                 reviewId = state.reviewId,
                 rating = ratingStr,
-                contenido = state.review,
-                estado = estadoStr
+                contenido = state.review
             )
 
             if (result.isSuccess) {

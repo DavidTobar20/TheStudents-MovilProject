@@ -1,7 +1,6 @@
 package com.example.thestudents.data.dtos
 
 import com.example.thestudents.data.Review
-import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -12,11 +11,7 @@ data class ReviewDto(
     val likes: Int? = 0,
     val disLikes: Int? = 0,
     val rating: String? = null,
-    @SerializedName("fecha_creacion")
-    val fechaCreacion: String? = null,
-    @SerializedName("fecha_edicion")
-    val fechaEdicion: String? = null,
-    val estado: String? = "activo",
+    val fecha_creacion: String? = null,
     val autor: StudentDto? = null,
     val resenado: StudentDto? = null,
     val materia: String? = null,
@@ -48,7 +43,7 @@ fun ReviewDto.toReview(): Review {
         classReviewed = materia.orEmpty(),
         periodReviewed = periodo.orEmpty(),
         content = contenido.orEmpty(),
-        time = formatReviewTime(fechaCreacion),
+        time = formatReviewTime(fecha_creacion),
         likes = likes ?: 0,
         disLikes = disLikes ?: 0,
         rating = if (rating.isNullOrBlank()) null else rating,
