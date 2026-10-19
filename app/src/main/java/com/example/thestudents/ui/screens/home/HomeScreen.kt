@@ -79,9 +79,7 @@ fun HomeScreen(
                     onDislikeClick = { index -> homeViewModel.updateDislikedReviews(index) },
                     onCommentClick = onReviewClick,
                     onCardClick = onReviewClick,
-                    onReviewerClick = onStudentClick,
-                    isLiked = { index -> homeViewModel.reviewIsLiked(index) },
-                    isDisliked = { index -> homeViewModel.reviewIsDisliked(index) }
+                    onReviewerClick = onStudentClick
                 )
             }
         }
@@ -96,8 +94,6 @@ fun BodyHomeScreen(
     onCommentClick: (String) -> Unit,
     onCardClick: (String) -> Unit,
     onReviewerClick: (String) -> Unit,
-    isLiked: (Int) -> Boolean,
-    isDisliked: (Int) -> Boolean,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -126,8 +122,8 @@ fun BodyHomeScreen(
                 itemsIndexed(followedReviews, key = { _, review -> review.id }) { index, review ->
                     ReviewCard(
                         review = review,
-                        isLiked = isLiked(index),
-                        isDisliked = isDisliked(index),
+                        isLiked = review.isLiked,
+                        isDisliked = review.isDisliked,
                         onLikeClick = { onLikeClick(index) },
                         onDislikeClick = { onDislikeClick(index) },
                         onCommentClick = { onCommentClick(review.id) },
@@ -152,9 +148,7 @@ fun BodyHomeScreenPreview() {
             onDislikeClick = {},
             onCommentClick = {},
             onCardClick = {},
-            onReviewerClick = {},
-            isLiked = { false },
-            isDisliked = { false }
+            onReviewerClick = {}
         )
     }
 }
@@ -172,9 +166,7 @@ fun HomeScreenPreview() {
                 onDislikeClick = {},
                 onCommentClick = {},
                 onCardClick = {},
-                onReviewerClick = {},
-                isLiked = { false },
-                isDisliked = { false }
+                onReviewerClick = {}
             )
         }
     }

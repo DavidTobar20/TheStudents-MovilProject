@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.ui.theme.TheStudentsTheme
+import com.example.thestudents.ui.theme.extended
 
 @Composable
 fun SelectableIconButton(
@@ -38,18 +39,26 @@ fun SelectableIconButton(
     count: Int,
     isSelected: Boolean,
     selectedColor: Color,
+    // Fondo del boton cuando esta seleccionado. Si es null, el fondo no cambia (solo el borde y el icono).
+    selectedContainerColor: Color? = null,
     onClick: () -> Unit
 ) {
+    val containerColor = if (isSelected && selectedContainerColor != null) {
+        selectedContainerColor
+    } else {
+        MaterialTheme.colorScheme.surfaceContainerLowest
+    }
+
     Surface(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
             .border(
                 width = 1.dp,
-                color = if (isSelected) selectedColor else MaterialTheme.colorScheme.outline,
+                color = if (isSelected) selectedContainerColor ?: selectedColor else MaterialTheme.colorScheme.outline,
                 shape = RoundedCornerShape(8.dp)
             )
             .clickable(onClick = onClick),
-        color = MaterialTheme.colorScheme.surfaceContainerLowest
+        color = containerColor
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp),
@@ -83,7 +92,8 @@ fun SelectableIconButtonPreviewLike() {
                 icon = Icons.Filled.ThumbUp,
                 count = 10,
                 isSelected = isSelected,
-                selectedColor = MaterialTheme.colorScheme.onSurface,
+                selectedColor = MaterialTheme.extended.onLike,
+                selectedContainerColor = MaterialTheme.extended.like,
                 onClick = {
                     isSelected = !isSelected
                     count += if (isSelected) 1 else -1
@@ -105,7 +115,8 @@ fun SelectableIconButtonPreviewDisLike() {
                 icon = Icons.Filled.ThumbDown,
                 count = count,
                 isSelected = isSelected,
-                selectedColor = MaterialTheme.colorScheme.error,
+                selectedColor = MaterialTheme.extended.onDislike,
+                selectedContainerColor = MaterialTheme.extended.dislike,
                 onClick = {
                     isSelected = !isSelected
                     count += if (isSelected) 1 else -1

@@ -24,7 +24,7 @@ class ReviewRetrofitDataSourceImpl @Inject constructor(
         return service.getReviewsByReviewerId(reviewerId)
     }
 
-    override suspend fun getReviewById(reviewId: String): ReviewDto {
+    override suspend fun getReviewById(reviewId: String, studentId: String): ReviewDto {
         return service.getReviewById(reviewId)
     }
 
@@ -59,5 +59,19 @@ class ReviewRetrofitDataSourceImpl @Inject constructor(
     override suspend fun deleteReview(reviewId: String) {
         val response = service.deleteReview(reviewId)
         if (!response.isSuccessful) throw HttpException(response)
+    }
+
+    override suspend fun senOrDeleteReviewLikes(
+        reviewId: String,
+        studentId: String
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun sendOrDeleteReviewDislike(
+        reviewId: String,
+        studentId: String
+    ) {
+        TODO("Not yet implemented")
     }
 }

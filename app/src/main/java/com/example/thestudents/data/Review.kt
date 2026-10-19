@@ -8,8 +8,10 @@ data class Review(
     val periodReviewed: String,
     val content: String,
     val time: String,
-    val likes: Int,
+    val likesCount: Int,
     val disLikes: Int,
     val rating: String?,
-    val comments: List<Comment>
+    val comments: List<Comment>,
+    val isLiked: Boolean = false,
+    val isDisliked: Boolean = false
 )

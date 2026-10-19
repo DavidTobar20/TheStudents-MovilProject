@@ -132,17 +132,32 @@ private val DarkColorScheme = darkColorScheme(
 @Immutable
 data class ExtendedColors(
     val rating: Color,
-    val ratingInactive: Color
+    val ratingInactive: Color,
+    // Botones de reaccion: like en verde claro y dislike en verde oscuro, en ambos temas.
+    // Los roles MD3 (primary, secondaryContainer) invierten su luminosidad en modo oscuro,
+    // por eso estos tokens se definen aparte.
+    val like: Color,
+    val onLike: Color,
+    val dislike: Color,
+    val onDislike: Color
 )
 
 private val LightExtendedColors = ExtendedColors(
     rating = Gold60,
-    ratingInactive = Sage80
+    ratingInactive = Sage80,
+    like = Pine90,
+    onLike = Pine10,
+    dislike = Green20,
+    onDislike = Green100
 )
 
 private val DarkExtendedColors = ExtendedColors(
     rating = Gold80,
-    ratingInactive = Sage30
+    ratingInactive = Sage30,
+    like = Pine80,
+    onLike = Pine10,
+    dislike = Green30,
+    onDislike = Green90
 )
 
 private val LocalExtendedColors = staticCompositionLocalOf { LightExtendedColors }

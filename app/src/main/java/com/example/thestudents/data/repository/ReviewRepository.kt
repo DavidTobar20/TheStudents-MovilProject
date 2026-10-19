@@ -4,6 +4,7 @@ import android.util.Log
 import retrofit2.HttpException
 import com.example.thestudents.data.NotificationType
 import com.example.thestudents.data.Review
+import com.example.thestudents.data.datasource.AuthRemoteDataSource
 import com.example.thestudents.data.datasource.impl.firestore.NotificationFirestoreDataSourceImpl
 import com.example.thestudents.data.datasource.impl.firestore.ReviewFirestoreDataSourceImpl
 import com.example.thestudents.data.dtos.CreateReviewGenericDto
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 class ReviewRepository @Inject constructor(
     private val reviewRemoteDataSource: ReviewFirestoreDataSourceImpl,
-    private val notificationRemoteDataSource: NotificationFirestoreDataSourceImpl
+    private val notificationRemoteDataSource: NotificationFirestoreDataSourceImpl,
+    private val authRemoteDataSource: AuthRemoteDataSource
 ) {
 
     suspend fun getAllReviewsExcludingStudentId(studentId: String): Result<List<Review>> {
@@ -49,8 +51,10 @@ class ReviewRepository @Inject constructor(
     }
 
     suspend fun getReviewById(reviewId: String) : Result<Review> {
+        val currentUserId = authRemoteDataSource.currentUser?.uid ?: ""
+
         return try {
-            val reviewDto = reviewRemoteDataSource.getReviewById(reviewId)
+            val reviewDto = reviewRemoteDataSource.getReviewById(reviewId, currentUserId)
             val review = reviewDto.toReview()
             Result.success(review)
         } catch (e: Exception) {
@@ -123,4 +127,33 @@ class ReviewRepository @Inject constructor(
         }
     }
 
+    suspend fun sendOrDeleteReviewLike(
+        reviewId: String,
+        studentId: String,
+    ): Result<Unit> {
+        return try {
+            reviewRemoteDataSource.senOrDeleteReviewLikes(
+                reviewId = reviewId,
+                studentId = studentId,
+            )
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun sendOrDeleteReviewDislike(
+        reviewId: String,
+        studentId: String,
+    ): Result<Unit> {
+        return try {
+            reviewRemoteDataSource.sendOrDeleteReviewDislike(
+                reviewId = reviewId,
+                studentId = studentId,
+            )
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }
