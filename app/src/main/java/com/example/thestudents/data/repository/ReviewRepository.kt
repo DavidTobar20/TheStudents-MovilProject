@@ -7,15 +7,20 @@ import com.example.thestudents.data.Review
 import com.example.thestudents.data.datasource.AuthRemoteDataSource
 import com.example.thestudents.data.datasource.impl.firestore.NotificationFirestoreDataSourceImpl
 import com.example.thestudents.data.datasource.impl.firestore.ReviewFirestoreDataSourceImpl
+import com.example.thestudents.data.datasource.impl.firestore.UserFirestoreDataSourceImpl
 import com.example.thestudents.data.dtos.CreateReviewGenericDto
 import com.example.thestudents.data.dtos.NotificationDto
+import com.example.thestudents.data.dtos.StudentSummaryDto
+import com.example.thestudents.data.dtos.toSummaryDto
+import com.google.firebase.Timestamp
 import com.example.thestudents.data.dtos.toReview
 import javax.inject.Inject
 
 class ReviewRepository @Inject constructor(
     private val reviewRemoteDataSource: ReviewFirestoreDataSourceImpl,
     private val notificationRemoteDataSource: NotificationFirestoreDataSourceImpl,
-    private val authRemoteDataSource: AuthRemoteDataSource
+    private val authRemoteDataSource: AuthRemoteDataSource,
+    private val userRemoteDataSource: UserFirestoreDataSourceImpl
 ) {
 
     suspend fun getAllReviewsExcludingStudentId(studentId: String): Result<List<Review>> {
@@ -81,6 +86,17 @@ class ReviewRepository @Inject constructor(
             )
             val reviewId = reviewRemoteDataSource.createReview(createReviewDto)
             try {
+                // Datos del autor (nombre, usuario y foto) para mostrarlos en la notificacion.
+                // Si no se puede leer su perfil, al menos se usa la foto del usuario logueado.
+                val emisor = try {
+                    userRemoteDataSource.getUserById(autorId).toSummaryDto()
+                } catch (e: Exception) {
+                    StudentSummaryDto(
+                        id = autorId,
+                        foto_url = authRemoteDataSource.currentUser?.photoUrl?.toString()
+                    )
+                }
+
                 val notificationDto = NotificationDto(
                     destinatarioId = resenadoId,
                     emisorId = autorId,
@@ -88,7 +104,9 @@ class ReviewRepository @Inject constructor(
                     materia = materia,
                     rating = rating?.toDoubleOrNull()?.toInt(),
                     comentario = contenido,
-                    resenaId = reviewId.ifBlank { null }
+                    resenaId = reviewId.ifBlank { null },
+                    emisor = emisor,
+                    fechaCreacion = Timestamp.now()
                 )
                 notificationRemoteDataSource.createNotification(notificationDto)
             } catch (e: Exception) {

@@ -19,7 +19,13 @@ class NotificationFirestoreDataSourceImpl @Inject constructor(
             .await()
         return snapshot.documents
             .mapNotNull { doc ->
-                doc.toObject(NotificationDto::class.java)?.copy(id = doc.id)
+                // Si una notificacion tiene un formato viejo (ej. fecha como texto), se salta
+                // en vez de hacer fallar toda la lista.
+                try {
+                    doc.toObject(NotificationDto::class.java)?.copy(id = doc.id)
+                } catch (e: Exception) {
+                    null
+                }
             }
             .sortedByDescending { it.fechaCreacion }
     }
