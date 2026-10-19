@@ -20,44 +20,63 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(HomeState())
     val uiState: StateFlow<HomeState> = _uiState
 
-    fun reviewIsLiked(index: Int): Boolean {
-        return index in _uiState.value.likedReviews
-    }
-
-    fun reviewIsDisliked(index: Int): Boolean {
-        return index in _uiState.value.dislikedReviews
-    }
-
-    private fun Set<Int>.toggle(value: Int): Set<Int> =
-        if (value in this) this - value else this + value
-
     fun updateLikedReviews(index: Int) {
-        _uiState.update { state ->
-            val newLikedReviews = state.likedReviews.toggle(index)
-            val newDislikedReviews = if (index in newLikedReviews) {
-                state.dislikedReviews - index
+        val studentId = authRepository.currentUser?.uid ?: return
+        val targetReview = _uiState.value.followedReviews.getOrNull(index) ?: return
+
+        viewModelScope.launch {
+            val result = reviewRepository.sendOrDeleteReviewLike(targetReview.id, studentId)
+            if (result.isSuccess) {
+                _uiState.update { state ->
+                    state.copy(
+                        followedReviews = state.followedReviews.map { review ->
+                            if (review.id == targetReview.id) {
+                                review.copy(
+                                    isLiked = !review.isLiked,
+                                    likesCount = if (review.isLiked) review.likesCount - 1 else review.likesCount + 1,
+                                    // si tenia dislike, Firestore ya se lo quito en la transaccion
+                                    isDisliked = false,
+                                    disLikes = if (review.isDisliked) review.disLikes - 1 else review.disLikes
+                                )
+                            } else {
+                                review
+                            }
+                        }
+                    )
+                }
             } else {
-                state.dislikedReviews
+
             }
-            state.copy(
-                likedReviews = newLikedReviews,
-                dislikedReviews = newDislikedReviews
-            )
         }
     }
 
     fun updateDislikedReviews(index: Int) {
-        _uiState.update { state ->
-            val newDislikedReviews = state.dislikedReviews.toggle(index)
-            val newLikedReviews = if (index in newDislikedReviews) {
-                state.likedReviews - index
+        val studentId = authRepository.currentUser?.uid ?: return
+        val targetReview = _uiState.value.followedReviews.getOrNull(index) ?: return
+
+        viewModelScope.launch {
+            val result = reviewRepository.sendOrDeleteReviewDislike(targetReview.id, studentId)
+            if (result.isSuccess) {
+                _uiState.update { state ->
+                    state.copy(
+                        followedReviews = state.followedReviews.map { review ->
+                            if (review.id == targetReview.id) {
+                                review.copy(
+                                    isDisliked = !review.isDisliked,
+                                    disLikes = if (review.isDisliked) review.disLikes - 1 else review.disLikes + 1,
+                                    // si tenia like, Firestore ya se lo quito en la transaccion
+                                    isLiked = false,
+                                    likesCount = if (review.isLiked) review.likesCount - 1 else review.likesCount
+                                )
+                            } else {
+                                review
+                            }
+                        }
+                    )
+                }
             } else {
-                state.likedReviews
+
             }
-            state.copy(
-                likedReviews = newLikedReviews,
-                dislikedReviews = newDislikedReviews
-            )
         }
     }
 

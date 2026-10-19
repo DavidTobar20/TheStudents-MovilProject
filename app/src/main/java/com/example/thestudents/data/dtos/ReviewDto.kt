@@ -8,14 +8,16 @@ import java.util.TimeZone
 data class ReviewDto(
     val id: String? = null,
     val contenido: String? = null,
-    val likes: Int? = 0,
+    val likesCount: Int? = 0,
     val disLikes: Int? = 0,
     val rating: String? = null,
     val fecha_creacion: String? = null,
     val autor: StudentSummaryDto? = null,
     val resenado: StudentSummaryDto? = null,
     val materia: String? = null,
-    val periodo: String? = null
+    val periodo: String? = null,
+    var isLiked: Boolean = false,
+    var isDisliked: Boolean = false
 )
 
 fun formatReviewTime(rawTime: String?): String {
@@ -44,9 +46,11 @@ fun ReviewDto.toReview(): Review {
         periodReviewed = periodo.orEmpty(),
         content = contenido.orEmpty(),
         time = formatReviewTime(fecha_creacion),
-        likes = likes ?: 0,
+        likesCount = likesCount ?: 0,
         disLikes = disLikes ?: 0,
         rating = if (rating.isNullOrBlank()) null else rating,
-        comments = emptyList()
+        comments = emptyList(),
+        isLiked = isLiked,
+        isDisliked = isDisliked
     )
 }

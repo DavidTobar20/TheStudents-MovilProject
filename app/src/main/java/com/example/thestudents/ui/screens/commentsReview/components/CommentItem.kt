@@ -26,6 +26,7 @@ import com.example.thestudents.data.local.localCommentsProvider
 import com.example.thestudents.ui.components.SelectableIconButton
 import com.example.thestudents.ui.theme.OnAvatar
 import com.example.thestudents.ui.theme.TheStudentsTheme
+import com.example.thestudents.ui.theme.extended
 import com.example.thestudents.ui.utils.ProfileIcon
 
 @Composable
@@ -90,14 +91,16 @@ fun CommentItem(
                     count = comment.likes,
                     isSelected = isLiked,
                     onClick = onLikeClick,
-                    selectedColor = MaterialTheme.colorScheme.onSurface,
+                    selectedColor = MaterialTheme.extended.onLike,
+                    selectedContainerColor = MaterialTheme.extended.like
                 )
                 SelectableIconButton(
                     icon = Icons.Outlined.ThumbDown,
                     count = comment.disLikes,
                     isSelected = isDisliked,
                     onClick = onDislikeClick,
-                    selectedColor = MaterialTheme.colorScheme.error
+                    selectedColor = MaterialTheme.extended.onDislike,
+                    selectedContainerColor = MaterialTheme.extended.dislike
                 )
             }
         }

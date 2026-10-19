@@ -11,12 +11,16 @@ interface ReviewRemoteDataSource {
 
     suspend fun getReviewsByReviewerId(reviewerId: String): List<ReviewDto>
 
-    suspend fun getReviewById(reviewId: String): ReviewDto
+    suspend fun getReviewById(reviewId: String, studentId: String): ReviewDto
 
     suspend fun createReview(review: CreateReviewGenericDto): String
 
     suspend fun updateReview(reviewId: String, review: CreateReviewGenericDto): Unit
 
     suspend fun deleteReview(reviewId: String): Unit
+
+    suspend fun senOrDeleteReviewLikes(reviewId: String, studentId: String): Unit
+
+    suspend fun sendOrDeleteReviewDislike(reviewId: String, studentId: String): Unit
 
 }

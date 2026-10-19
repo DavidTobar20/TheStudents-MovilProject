@@ -26,8 +26,7 @@ class CommentsReviewViewModel @Inject constructor(
         if (_uiState.value.review?.id == id) return
 
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null, isLiked = false,
-                isDisliked = false,
+            _uiState.update { it.copy(isLoading = true, errorMessage = null,
                 likedComments = emptySet(),
                 dislikedComments = emptySet()) }
             val result = reviewRepository.getReviewById(id)
@@ -72,71 +71,49 @@ class CommentsReviewViewModel @Inject constructor(
     }
 
     fun updateIsLiked() {
-        _uiState.update { state ->
-            val review = state.review ?: return@update state
-            if (state.isDisliked) {
-                val nuevaResena = review.copy(
-                    disLikes = review.disLikes - 1,
-                    likes = review.likes + 1
-                )
-                state.copy(
-                    isLiked = !state.isLiked,
-                    isDisliked = false,
-                    review = nuevaResena
-                )
-            } else{
-                if(state.isLiked) {
-                    val nuevaResena = review.copy(
-                        likes = review.likes - 1,
-                    )
-                    state.copy(
-                        isLiked = false,
-                        review = nuevaResena
-                    )
-                } else{
-                    val nuevaResena = review.copy(
-                        likes = review.likes + 1,
-                    )
-                    state.copy(
-                        isLiked = true,
-                        review = nuevaResena
+        val reviewId = _uiState.value.review?.id ?: return
+        val studentId = authRepository.currentUser?.uid ?: return
+
+        viewModelScope.launch {
+            val result = reviewRepository.sendOrDeleteReviewLike(reviewId, studentId)
+            if (result.isSuccess) {
+                _uiState.update {
+                    it.copy(
+                        review = it.review?.copy(
+                            isLiked = !it.review.isLiked,
+                            likesCount = if (it.review.isLiked) it.review.likesCount - 1 else it.review.likesCount + 1,
+                            // si tenia dislike, Firestore ya se lo quito en la transaccion
+                            isDisliked = false,
+                            disLikes = if (it.review.isDisliked) it.review.disLikes - 1 else it.review.disLikes
+                        )
                     )
                 }
+            } else {
+                _uiState.update { it.copy(errorMessage = result.exceptionOrNull()?.message) }
             }
         }
     }
 
     fun updateIsDisliked() {
-        _uiState.update { state ->
-            val review = state.review ?: return@update state
-            if (state.isLiked) {
-                val nuevaResena = review.copy(
-                    disLikes = review.disLikes + 1,
-                    likes = review.likes - 1
-                )
-                state.copy(
-                    isDisliked = !state.isDisliked,
-                    isLiked = false,
-                    review = nuevaResena
-                )
-            } else{
-                if(state.isDisliked) {
-                    val nuevaResena = review.copy(
-                        disLikes = review.disLikes - 1,
-                    )
-                    state.copy(
-                        isDisliked = false,
-                        review = nuevaResena
-                    )
-                } else{
-                    val nuevaResena = review.copy(
-                        disLikes = review.disLikes + 1,
-                    )
-                    state.copy(
-                        isDisliked = true,
-                        review = nuevaResena
+        val reviewId = _uiState.value.review?.id ?: return
+        val studentId = authRepository.currentUser?.uid ?: return
+
+        viewModelScope.launch {
+            val result = reviewRepository.sendOrDeleteReviewDislike(reviewId, studentId)
+            if (result.isSuccess) {
+                _uiState.update {
+                    it.copy(
+                        review = it.review?.copy(
+                            isDisliked = !it.review.isDisliked,
+                            disLikes = if (it.review.isDisliked) it.review.disLikes - 1 else it.review.disLikes + 1,
+                            // si tenia like, Firestore ya se lo quito en la transaccion
+                            isLiked = false,
+                            likesCount = if (it.review.isLiked) it.review.likesCount - 1 else it.review.likesCount
+                        )
                     )
                 }
+            } else {
+                _uiState.update { it.copy(errorMessage = result.exceptionOrNull()?.message) }
             }
         }
     }
@@ -146,31 +123,93 @@ class CommentsReviewViewModel @Inject constructor(
 
     fun updateLikedComments(index: Int) {
         _uiState.update { state ->
-            val newLikedComments = state.likedComments.toggle(index)
-            val newDislikedComments = if (index in newLikedComments) {
-                state.dislikedComments - index
+            val review = state.review
+            if (review != null && index in review.comments.indices) {
+                val comments = review.comments.toMutableList()
+                val targetComment = comments[index]
+                val isCurrentlyLiked = index in state.likedComments
+                val isCurrentlyDisliked = index in state.dislikedComments
+
+                val updatedComment = if (isCurrentlyDisliked) {
+                    targetComment.copy(
+                        disLikes = targetComment.disLikes - 1,
+                        likes = targetComment.likes + 1
+                    )
+                } else {
+                    if (isCurrentlyLiked) {
+                        targetComment.copy(
+                            likes = targetComment.likes - 1
+                        )
+                    } else {
+                        targetComment.copy(
+                            likes = targetComment.likes + 1
+                        )
+                    }
+                }
+
+                comments[index] = updatedComment
+
+                val newLikedComments = state.likedComments.toggle(index)
+                val newDislikedComments = if (index in newLikedComments) {
+                    state.dislikedComments - index
+                } else {
+                    state.dislikedComments
+                }
+
+                state.copy(
+                    review = review.copy(comments = comments),
+                    likedComments = newLikedComments,
+                    dislikedComments = newDislikedComments
+                )
             } else {
-                state.dislikedComments
+                state
             }
-            state.copy(
-                likedComments = newLikedComments,
-                dislikedComments = newDislikedComments
-            )
         }
     }
 
     fun updateDislikedComments(index: Int) {
         _uiState.update { state ->
-            val newDislikedComments = state.dislikedComments.toggle(index)
-            val newLikedComments = if (index in newDislikedComments) {
-                state.likedComments - index
+            val review = state.review
+            if (review != null && index in review.comments.indices) {
+                val comments = review.comments.toMutableList()
+                val targetComment = comments[index]
+                val isCurrentlyLiked = index in state.likedComments
+                val isCurrentlyDisliked = index in state.dislikedComments
+
+                val updatedComment = if (isCurrentlyLiked) {
+                    targetComment.copy(
+                        likes = targetComment.likes - 1,
+                        disLikes = targetComment.disLikes + 1
+                    )
+                } else {
+                    if (isCurrentlyDisliked) {
+                        targetComment.copy(
+                            disLikes = targetComment.disLikes - 1
+                        )
+                    } else {
+                        targetComment.copy(
+                            disLikes = targetComment.disLikes + 1
+                        )
+                    }
+                }
+
+                comments[index] = updatedComment
+
+                val newDislikedComments = state.dislikedComments.toggle(index)
+                val newLikedComments = if (index in newDislikedComments) {
+                    state.dislikedComments - index
+                } else {
+                    state.likedComments
+                }
+
+                state.copy(
+                    review = review.copy(comments = comments),
+                    likedComments = newLikedComments,
+                    dislikedComments = newDislikedComments
+                )
             } else {
-                state.likedComments
+                state
             }
-            state.copy(
-                likedComments = newLikedComments,
-                dislikedComments = newDislikedComments
-            )
         }
     }
 

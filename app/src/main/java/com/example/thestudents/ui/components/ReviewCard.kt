@@ -36,6 +36,7 @@ import com.example.thestudents.R
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
+import com.example.thestudents.ui.theme.extended
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -134,16 +135,20 @@ fun ReviewCard(
             ) {
                 SelectableIconButton(
                     icon = Icons.Outlined.ThumbUp,
-                    count = review.likes,
+                    count = review.likesCount,
                     isSelected = isLiked,
-                    selectedColor = MaterialTheme.colorScheme.onSurface,
+                    // Like: verde claro de la marca
+                    selectedColor = MaterialTheme.extended.onLike,
+                    selectedContainerColor = MaterialTheme.extended.like,
                     onClick = onLikeClick
                 )
                 SelectableIconButton(
                     icon = Icons.Outlined.ThumbDown,
                     count = review.disLikes,
                     isSelected = isDisliked,
-                    selectedColor = MaterialTheme.colorScheme.error,
+                    // Dislike: verde oscuro de la marca
+                    selectedColor = MaterialTheme.extended.onDislike,
+                    selectedContainerColor = MaterialTheme.extended.dislike,
                     onClick = onDislikeClick
                 )
                 if (onCommentClick != null) {
