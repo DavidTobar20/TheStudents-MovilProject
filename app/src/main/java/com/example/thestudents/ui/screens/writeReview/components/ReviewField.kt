@@ -27,7 +27,7 @@ import com.example.thestudents.ui.utils.CustomTextField
 fun ReviewField(
     modifier: Modifier = Modifier,
     review: String,
-    onReviewChange: (String) -> Unit,
+    onContenidoChange: (String) -> Unit,
     maxLength: Int = 300) {
     Card(
         modifier = modifier
@@ -57,7 +57,7 @@ fun ReviewField(
 
             CustomTextField(
                 value = review,
-                onValueChange = { if (it.length <= maxLength) onReviewChange(it) },
+                onValueChange = { if (it.length <= maxLength) onContenidoChange(it) },
                 placeholder = "Escribe tu experiencia con Laura...",
                 singleLine = false,
                 modifier = Modifier
@@ -79,7 +79,7 @@ fun ReviewFieldPreview() {
         ReviewField(
             review = "",
             maxLength = 100,
-            onReviewChange = {}
+            onContenidoChange = {}
         )
     }
 }

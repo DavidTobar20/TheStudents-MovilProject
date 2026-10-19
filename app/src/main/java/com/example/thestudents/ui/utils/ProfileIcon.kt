@@ -87,7 +87,7 @@ fun ProfileIcon(
 }
 
 /**
- * Preview for [ProfileIcon] configured for review screens.
+ * Preview for [ProfileIcon] configured for contenido screens.
  */
 @Preview(showBackground = true)
 @Composable

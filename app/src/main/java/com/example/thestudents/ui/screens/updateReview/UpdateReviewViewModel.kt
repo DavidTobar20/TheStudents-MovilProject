@@ -37,7 +37,7 @@ class UpdateReviewViewModel @Inject constructor(
                             className = reviewData.classReviewed,
                             period = reviewData.periodReviewed,
                             rating = initialRating,
-                            review = reviewData.content,
+                            contenido = reviewData.content,
                             isLoading = false,
                             error = null
                         )
@@ -62,8 +62,8 @@ class UpdateReviewViewModel @Inject constructor(
         }
     }
 
-    fun updateReview(input: String) {
-        _uiState.update { it.copy(review = input) }
+    fun updateContenido(input: String) {
+        _uiState.update { it.copy(contenido = input) }
     }
 
     fun updateIsAnonymous(input: Boolean) {
@@ -80,7 +80,7 @@ class UpdateReviewViewModel @Inject constructor(
             val result = reviewRepository.updateReview(
                 reviewId = state.reviewId,
                 rating = ratingStr,
-                contenido = state.review
+                contenido = state.contenido
             )
 
             if (result.isSuccess) {
