@@ -2,6 +2,7 @@ package com.example.thestudents.data.repository
 
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.UserProfile
+import com.example.thestudents.data.datasource.AuthRemoteDataSource
 import com.example.thestudents.data.datasource.impl.firestore.ReviewFirestoreDataSourceImpl
 import com.example.thestudents.data.datasource.impl.firestore.UserFirestoreDataSourceImpl
 import com.example.thestudents.data.dtos.RegisterUserDto
@@ -13,12 +14,15 @@ import javax.inject.Inject
 
 class UserRepository @Inject constructor(
     private val userRemoteDataSource: UserFirestoreDataSourceImpl,
-    private val reviewRemoteDataSource: ReviewFirestoreDataSourceImpl
+    private val reviewRemoteDataSource: ReviewFirestoreDataSourceImpl,
+    private val authRemoteDataSource: AuthRemoteDataSource
 ) {
 
     suspend fun getUserProfile(studentId: String): Result<UserProfile> {
+        val currentUserId = authRemoteDataSource.currentUser?.uid ?: ""
+
         return try {
-            val response = userRemoteDataSource.getUserProfile(studentId)
+            val response = userRemoteDataSource.getUserProfile(studentId, currentUserId)
 
             val profile = response.toUserProfile()
 
@@ -111,6 +115,15 @@ class UserRepository @Inject constructor(
                     .awaitAll()
             }
             Result.success(students)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun followOrUnfollowStudent(currentUserId: String, targetUserId: String): Result<Unit> {
+        return try {
+            userRemoteDataSource.followOrUnfollowStudent(currentUserId, targetUserId)
+            Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }

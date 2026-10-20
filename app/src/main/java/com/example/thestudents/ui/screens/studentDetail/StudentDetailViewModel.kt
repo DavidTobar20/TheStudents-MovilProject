@@ -3,7 +3,7 @@ package com.example.thestudents.ui.screens.studentDetail
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.thestudents.data.local.localStudentProvider
+import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.data.repository.UserRepository
 import com.example.thestudents.ui.screens.profile.components.ProfileTab
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StudentDetailViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(StudentDetailState())
@@ -33,15 +34,11 @@ class StudentDetailViewModel @Inject constructor(
             if (result.isSuccess) {
                 val profile = result.getOrNull()
 
-                val followers = localStudentProvider.getFollowersCount(id)
-                val following = localStudentProvider.getFollowingCount(id)
                 val totalReviews = (profile?.receivedReviews?.size ?: 0) + (profile?.createdReviews?.size ?: 0)
 
                 _uiState.update {
                     it.copy(
                         userProfile = profile,
-                        followersCount = followers,
-                        followingCount = following,
                         reviewsCount = totalReviews,
                         isLoading = false,
                         errorMessage = null
@@ -54,6 +51,27 @@ class StudentDetailViewModel @Inject constructor(
                     it.copy(
                         isLoading = false,
                         errorMessage = error?.message ?: "Error al cargar el perfil del estudiante"
+                    )
+                }
+            }
+        }
+    }
+
+    fun followOrUnfollowStudent(targetUserId: String) {
+        val currentUserId = authRepository.currentUser?.uid ?: ""
+
+        viewModelScope.launch {
+            val result = userRepository.followOrUnfollowStudent(currentUserId, targetUserId)
+            if (result.isSuccess) {
+                val profile = _uiState.value.userProfile
+                if (profile != null) {
+                    _uiState.value = _uiState.value.copy(
+                        userProfile = profile.copy(
+                            student = profile.student.copy(
+                                followersCount = if (profile.followed) profile.student.followersCount - 1 else profile.student.followersCount + 1
+                            ),
+                            followed = !profile.followed
+                        )
                     )
                 }
             }

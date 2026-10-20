@@ -3,7 +3,6 @@ package com.example.thestudents.ui.screens.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thestudents.data.UserProfile
-import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.data.repository.ReviewRepository
 import com.example.thestudents.data.repository.UserRepository
@@ -52,8 +51,9 @@ class ProfileViewModel @Inject constructor(
                     profile
                 }
 
-                val followers = localStudentProvider.getFollowersCount(currentUserId)
-                val following = localStudentProvider.getFollowingCount(currentUserId)
+                // Contadores reales que guarda la transaccion de follow en Firestore
+                val followers = profile?.student?.followersCount ?: 0
+                val following = profile?.student?.followingCount ?: 0
                 val totalReviews = (profile?.receivedReviews?.size ?: 0) + (profile?.createdReviews?.size ?: 0)
 
                 _uiState.update {

@@ -31,7 +31,10 @@ data class UserProfileFirestoreDto(
     val carrera: String? = null,
     val semestre: Int? = null,
     val resenas_recibidas: List<ReviewDto> = emptyList(),
-    val resenas_creadas: List<ReviewDto> = emptyList()
+    val resenas_creadas: List<ReviewDto> = emptyList(),
+    val followersCount: Int = 0, // contadores que actualiza la transaccion de follow
+    val followingCount: Int = 0,
+    var followed: Boolean = false // se llena en el datasource revisando la subcoleccion followers
 ) : UserProfileGenericDto() {
     override fun toUserProfile(): UserProfile {
         val studentDto = StudentDto(
@@ -45,9 +48,13 @@ data class UserProfileFirestoreDto(
             semestre = semestre
         )
         return UserProfile(
-            student = studentDto.toStudent(),
+            student = studentDto.toStudent().copy(
+                followersCount = followersCount,
+                followingCount = followingCount
+            ),
             receivedReviews = resenas_recibidas.map { it.toReview() },
-            createdReviews = resenas_creadas.map { it.toReview() }
+            createdReviews = resenas_creadas.map { it.toReview() },
+            followed = followed
         )
     }
 }

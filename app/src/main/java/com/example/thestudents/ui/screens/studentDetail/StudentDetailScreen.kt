@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PersonAdd
+import androidx.compose.material.icons.filled.PersonRemove
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -44,7 +45,8 @@ fun BodyStudentDetail(
     onReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     onStudentClick: (String) -> Unit = {},
-    reviewsCount: Int = student.reviewsCount
+    reviewsCount: Int = student.reviewsCount,
+    followed: Boolean = false
 ) {
     LazyColumn(modifier = modifier.fillMaxSize()) {
         item { UserInfoSection(student = student) }
@@ -56,8 +58,9 @@ fun BodyStudentDetail(
         }
         item {
             ButtonWithIcon(
-                text = stringResource(R.string.seguir),
-                icon = Icons.Default.PersonAdd,
+                //  si ya lo sigo muestro "Dejar de seguir", si no "Seguir"
+                text = if (followed) stringResource(R.string.dejar_de_seguir) else stringResource(R.string.seguir),
+                icon = if (followed) Icons.Default.PersonRemove else Icons.Default.PersonAdd,
                 onClick = onFollowClick,
                 borderColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.primary,
@@ -174,10 +177,11 @@ fun StudentDetailScreen(
                     reviews = reviews,
                     selectedTab = state.selectedTab,
                     onTabSelected = studentDetailViewModel::onTabSelected,
-                    onFollowClick = { /* Handle follow */ },
+                    onFollowClick = { studentDetailViewModel.followOrUnfollowStudent(studentId) },
                     onReviewClick = onReviewClick,
                     onStudentClick = onStudentClick,
-                    reviewsCount = state.reviewsCount
+                    reviewsCount = state.reviewsCount,
+                    followed = userProfile.followed
                 )
             }
         }
