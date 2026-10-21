@@ -14,6 +14,8 @@ import com.example.thestudents.data.dtos.StudentSummaryDto
 import com.example.thestudents.data.dtos.toSummaryDto
 import com.google.firebase.Timestamp
 import com.example.thestudents.data.dtos.toReview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ReviewRepository @Inject constructor(
@@ -172,6 +174,12 @@ class ReviewRepository @Inject constructor(
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
+        }
+    }
+
+    suspend fun getReviewsLive(studentId: String): Flow<List<Review>> {
+        return reviewRemoteDataSource.listenAllReviewsExcludingStudentId(studentId).map { reviews ->
+            reviews.map { it.toReview() }
         }
     }
 }

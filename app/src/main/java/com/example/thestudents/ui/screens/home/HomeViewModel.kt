@@ -5,8 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.data.repository.ReviewRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,6 +21,8 @@ class HomeViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(HomeState())
     val uiState: StateFlow<HomeState> = _uiState
+
+    private var reviewsJob: Job? = null
 
     fun updateLikedReviews(index: Int) {
         val studentId = authRepository.currentUser?.uid ?: return
@@ -84,7 +88,7 @@ class HomeViewModel @Inject constructor(
 
         val currentUserId = authRepository.currentUser?.uid ?: ""
 
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
             val result = reviewRepository.getAllReviewsExcludingStudentId(currentUserId)
             if (result.isSuccess) {
@@ -105,6 +109,16 @@ class HomeViewModel @Inject constructor(
                     )
                 }
             }
+        }*/
+
+        reviewsJob?.cancel()
+        reviewsJob = viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            reviewRepository.getReviewsLive(currentUserId)
+                .catch { e -> _uiState.update { it.copy(errorMessage = e.message, isLoading = false) } }
+                .collect { reviews ->
+                    _uiState.update { it.copy(followedReviews = reviews, isLoading = false, errorMessage = null) }
+                }
         }
     }
 

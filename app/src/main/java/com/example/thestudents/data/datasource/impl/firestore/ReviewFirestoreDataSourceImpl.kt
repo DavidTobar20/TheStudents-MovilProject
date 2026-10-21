@@ -11,7 +11,11 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -198,6 +202,42 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
                 }
             }
         }.await()
+    }
+
+    override suspend fun listenAllReviewsExcludingStudentId(studentId: String): Flow<List<ReviewDto>> = callbackFlow {
+        val listener = db.collection("reviews").addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                close(error)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null) {
+                val reviews = snapshot.documents.map { doc ->
+                    val review = doc.toObject(ReviewDto::class.java)
+                    review?.copy(id = doc.id) ?: throw Exception("Reseña no encontrada")
+                }.filter { review ->
+                    val autorIdStr = review.autor?.id
+                    autorIdStr != studentId
+                }
+
+                launch {
+                    if (studentId.isNotEmpty()) {
+                        reviews.map { review ->
+                            async {
+                                val reviewId = review.id ?: return@async
+                                val reviewRef = db.collection("reviews").document(reviewId)
+                                val liked = async { reviewRef.collection("likes").document(studentId).get().await().exists() }
+                                val disliked = async { reviewRef.collection("dislikes").document(studentId).get().await().exists() }
+                                review.isLiked = liked.await()
+                                review.isDisliked = disliked.await()
+                            }
+                        }.awaitAll()
+                    }
+                    trySend(reviews).isSuccess
+                }
+            }
+        }
+        awaitClose { listener.remove() }
     }
 
 }

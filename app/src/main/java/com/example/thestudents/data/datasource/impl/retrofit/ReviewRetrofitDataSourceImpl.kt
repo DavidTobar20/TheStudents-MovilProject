@@ -5,6 +5,7 @@ import com.example.thestudents.data.datasource.services.ReviewRetrofitService
 import com.example.thestudents.data.dtos.CreateReviewGenericDto
 import com.example.thestudents.data.dtos.CreateReviewRetrofitDto
 import com.example.thestudents.data.dtos.ReviewDto
+import kotlinx.coroutines.flow.Flow
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -72,6 +73,10 @@ class ReviewRetrofitDataSourceImpl @Inject constructor(
         reviewId: String,
         studentId: String
     ) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun listenAllReviewsExcludingStudentId(studentId: String): Flow<List<ReviewDto>> {
         TODO("Not yet implemented")
     }
 }
