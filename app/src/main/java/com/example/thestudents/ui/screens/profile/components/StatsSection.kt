@@ -1,6 +1,8 @@
 package com.example.thestudents.ui.screens.profile.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,6 +26,8 @@ fun StatsSection(
     followersCount: Int = student.followersCount,
     followingCount: Int = student.followingCount,
     reviewsCount: Int = student.reviewsCount,
+    onFollowersClick: (() -> Unit)? = null,
+    onFollowingClick: (() -> Unit)? = null
 ) {
     Row(
         modifier = modifier
@@ -31,12 +35,16 @@ fun StatsSection(
             .padding(vertical = 24.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        StatItem(followersCount.toString(), stringResource(R.string.seguidores_mayuscula))
+        Box(modifier = if (onFollowersClick != null) Modifier.clickable(onClick = onFollowersClick) else Modifier) {
+            StatItem(followersCount.toString(), stringResource(R.string.seguidores_mayuscula))
+        }
         VerticalDivider(
             modifier = Modifier.height(40.dp),
             color = MaterialTheme.colorScheme.outlineVariant
         )
-        StatItem(followingCount.toString(), stringResource(R.string.siguiendo_mayuscula))
+        Box(modifier = if (onFollowingClick != null) Modifier.clickable(onClick = onFollowingClick) else Modifier) {
+            StatItem(followingCount.toString(), stringResource(R.string.siguiendo_mayuscula))
+        }
         VerticalDivider(
             modifier = Modifier.height(40.dp),
             color = MaterialTheme.colorScheme.outlineVariant

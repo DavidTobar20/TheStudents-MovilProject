@@ -16,7 +16,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.Student
@@ -45,6 +44,8 @@ fun BodyStudentDetail(
     onReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     onStudentClick: (String) -> Unit = {},
+    onFollowersClick: () -> Unit = {},
+    onFollowingClick: () -> Unit = {},
     reviewsCount: Int = student.reviewsCount,
     followed: Boolean = false
 ) {
@@ -53,7 +54,11 @@ fun BodyStudentDetail(
         item {
             StatsSection(
                 student = student,
-                reviewsCount = reviewsCount
+                followersCount = student.followersCount,
+                followingCount = student.followingCount,
+                reviewsCount = reviewsCount,
+                onFollowersClick = onFollowersClick,
+                onFollowingClick = onFollowingClick
             )
         }
         item {
@@ -132,6 +137,8 @@ fun StudentDetailScreen(
     onBackClick: () -> Unit,
     onReviewClick: (String) -> Unit,
     onStudentClick: (String) -> Unit,
+    onFollowersClick: (String) -> Unit,
+    onFollowingClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val state by studentDetailViewModel.uiState.collectAsState()
@@ -180,6 +187,8 @@ fun StudentDetailScreen(
                     onFollowClick = { studentDetailViewModel.followOrUnfollowStudent(studentId) },
                     onReviewClick = onReviewClick,
                     onStudentClick = onStudentClick,
+                    onFollowersClick = { onFollowersClick(student.id) },
+                    onFollowingClick = { onFollowingClick(student.id) },
                     reviewsCount = state.reviewsCount,
                     followed = userProfile.followed
                 )

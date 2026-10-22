@@ -52,6 +52,8 @@ fun BodyProfile(
     onEditReviewClick: (String) -> Unit = {},
     onDeleteReviewClick: (String) -> Unit = {},
     onStudentClick: (String) -> Unit = {},
+    onFollowersClick: () -> Unit = {},
+    onFollowingClick: () -> Unit = {},
     onLogoutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -76,7 +78,9 @@ fun BodyProfile(
                     student = student,
                     followersCount = followersCount,
                     followingCount = followingCount,
-                    reviewsCount = reviewsCount
+                    reviewsCount = reviewsCount,
+                    onFollowersClick = onFollowersClick,
+                    onFollowingClick = onFollowingClick
                 ) 
             }
             item {
@@ -181,6 +185,8 @@ fun ProfileScreen(
     onReviewClick: (String) -> Unit,
     onEditReviewClick: (String) -> Unit,
     onStudentClick: (String) -> Unit,
+    onFollowersClick: (String) -> Unit = {},
+    onFollowingClick: (String) -> Unit = {},
     logoutButtonPressed: () -> Unit,
     profileViewModel: ProfileViewModel,
     modifier: Modifier = Modifier
@@ -251,6 +257,8 @@ fun ProfileScreen(
                 onEditReviewClick = onEditReviewClick,
                 onDeleteReviewClick = { profileViewModel.deleteReview(it) },
                 onStudentClick = onStudentClick,
+                onFollowersClick = { onFollowersClick(student.id) },
+                onFollowingClick = { onFollowingClick(student.id) },
                 onLogoutClick = {
                     profileViewModel.logout()
                     logoutButtonPressed()

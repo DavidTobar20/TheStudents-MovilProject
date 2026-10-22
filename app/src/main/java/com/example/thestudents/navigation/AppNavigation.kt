@@ -24,6 +24,8 @@ import com.example.thestudents.ui.screens.commentsReview.CommentsReviewScreen
 import com.example.thestudents.ui.screens.commentsReview.CommentsReviewViewModel
 import com.example.thestudents.ui.screens.editarPerfil.EditarPerfilScreen
 import com.example.thestudents.ui.screens.editarPerfil.EditarPerfilViewModel
+import com.example.thestudents.ui.screens.followList.FollowListScreen
+import com.example.thestudents.ui.screens.followList.FollowListViewModel
 import com.example.thestudents.ui.screens.home.HomeScreen
 import com.example.thestudents.ui.screens.home.HomeViewModel
 import com.example.thestudents.ui.screens.login.LoginScreen
@@ -51,6 +53,7 @@ import com.example.thestudents.ui.screens.writeReview.WriteReviewViewModel
 const val STUDENT_ID_ARG = "studentId"
 const val REVIEW_ID_ARG = "reviewId"
 const val INSCRIPTION_ID_ARG = "inscriptionId"
+const val IS_FOLLOWING_LIST_ARG = "isFollowingList"
 
 /** Determina qué pestaña debe marcarse como activa en la barra inferior. */
 fun selectedTabFor(route: String?): String? = when (route) {
@@ -88,6 +91,10 @@ sealed class Screen(val route: String) {
 
     data object CommentsReview : Screen("comments_review/{$REVIEW_ID_ARG}") {
         fun createRoute(reviewId: String) = "comments_review/$reviewId"
+    }
+
+    data object FollowList : Screen("follow_list/{$STUDENT_ID_ARG}/{$IS_FOLLOWING_LIST_ARG}") {
+        fun createRoute(userId: String, isFollowingList: Boolean) = "follow_list/$userId/$isFollowingList"
     }
 }
 
@@ -261,6 +268,8 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
             onEditReviewClick = { reviewId -> navController.navigate(Screen.UpdateReview.createRoute(reviewId)) },
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
+            onFollowersClick = { id -> navController.navigate(Screen.FollowList.createRoute(id, false)) },
+            onFollowingClick = { id -> navController.navigate(Screen.FollowList.createRoute(id, true)) },
             logoutButtonPressed = {
                 navController.navigate(Screen.Login.route) {
                     popUpTo(0) { inclusive = true }
@@ -290,10 +299,11 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             studentId = studentId,
             onBackClick = { navController.popBackStack() },
             onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
-            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
+            onFollowersClick = { id -> navController.navigate(Screen.FollowList.createRoute(id, false)) },
+            onFollowingClick = { id -> navController.navigate(Screen.FollowList.createRoute(id, true)) }
         )
     }
-
     composable(
         route = Screen.CommentsReview.route,
         arguments = listOf(navArgument(REVIEW_ID_ARG) { type = NavType.StringType })
@@ -303,6 +313,25 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         CommentsReviewScreen(
             commentsReviewViewModel = commentsReviewViewModel,
             reviewId = reviewId,
+            onBackClick = { navController.popBackStack() },
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
+        )
+    }
+
+    composable(
+        route = Screen.FollowList.route,
+        arguments = listOf(
+            navArgument(STUDENT_ID_ARG) { type = NavType.StringType },
+            navArgument(IS_FOLLOWING_LIST_ARG) { type = NavType.BoolType }
+        )
+    ) { backStackEntry ->
+        val userId = backStackEntry.arguments?.getString(STUDENT_ID_ARG) ?: ""
+        val isFollowingList = backStackEntry.arguments?.getBoolean(IS_FOLLOWING_LIST_ARG) ?: true
+        val followListViewModel: FollowListViewModel = hiltViewModel()
+        FollowListScreen(
+            followListViewModel = followListViewModel,
+            userId = userId,
+            isFollowingList = isFollowingList,
             onBackClick = { navController.popBackStack() },
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
         )

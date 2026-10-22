@@ -18,4 +18,8 @@ interface UserRemoteDataSource {
 
     suspend fun followOrUnfollowStudent(currentUserId: String, targetUserId: String): Unit
 
+    suspend fun getFollowers(userId: String): List<StudentDto>
+
+    suspend fun getFollowing(userId: String): List<StudentDto>
+
 }
