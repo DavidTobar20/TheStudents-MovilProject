@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,7 +20,7 @@ import com.example.thestudents.R
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.ui.theme.TheStudentsTheme
-import com.example.thestudents.ui.utils.ButtonWithoutIcon
+import com.example.thestudents.ui.utils.FollowButton
 import com.example.thestudents.ui.utils.ProfileIcon
 import com.example.thestudents.ui.utils.StarsRating
 import kotlin.math.roundToInt
@@ -29,9 +28,11 @@ import kotlin.math.roundToInt
 @Composable
 fun StudentCard(
     student: Student,
+    isFollowing: Boolean,
     onClick: () -> Unit,
-    onWriteReviewClick: () -> Unit,
     modifier: Modifier = Modifier,
+    showFollowButton: Boolean = true,
+    onFollowToggle: (() -> Unit)? = null
 ) {
     Surface(
         modifier = modifier
@@ -85,12 +86,14 @@ fun StudentCard(
                 )
             }
 
-            ButtonWithoutIcon(
-                textoBoton = stringResource(R.string.seguir_mayuscula),
-                onClick = onWriteReviewClick,
-                fontSize = 11.sp,
-                contentPadding = PaddingValues(horizontal = 18.dp, vertical = 8.dp)
-            )
+            if (showFollowButton && onFollowToggle != null) {
+                FollowButton(
+                    isFollowing = isFollowing,
+                    onFollowToggle = onFollowToggle,
+                    fontSize = 11.sp,
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                )
+            }
         }
     }
 }
@@ -102,9 +105,23 @@ fun StudentCardPreview() {
         Surface {
             StudentCard(
                 student = localStudentProvider.students[4],
-                onClick = {},
-                onWriteReviewClick = {}
-            )
+                isFollowing = false,
+                onClick = {}
+            ) {}
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun StudentCardFollowingPreview() {
+    TheStudentsTheme {
+        Surface {
+            StudentCard(
+                student = localStudentProvider.students[4],
+                isFollowing = true,
+                onClick = {}
+            ) {}
         }
     }
 }

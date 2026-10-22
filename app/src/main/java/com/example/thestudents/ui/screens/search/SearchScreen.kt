@@ -29,7 +29,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
 import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localStudentProvider
-import com.example.thestudents.ui.screens.reviews.ReviewsViewModel
 import com.example.thestudents.ui.screens.search.components.HeaderSearch
 import com.example.thestudents.ui.screens.search.components.SearchBar
 import com.example.thestudents.ui.screens.search.components.StudentCard
@@ -71,8 +70,8 @@ fun BodySearch(
             items(students, key = { it.id }) { student -> 
                 StudentCard(
                     student = student,
-                    onClick = { onStudentClick(student.id) },
-                    onWriteReviewClick = { }
+                    isFollowing = false,
+                    onClick = { onStudentClick(student.id) }
                 ) 
             }
         }

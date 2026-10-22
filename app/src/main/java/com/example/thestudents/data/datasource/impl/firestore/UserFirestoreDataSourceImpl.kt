@@ -130,4 +130,28 @@ class UserFirestoreDataSourceImpl @Inject constructor(
         }.await()
     }
 
+    override suspend fun getFollowers(userId: String): List<StudentDto> {
+        val snapshot = db.collection("users").document(userId).collection("followers").get().await()
+        val followerIds = snapshot.documents.map { it.id }
+        return followerIds.mapNotNull { followerId ->
+            try {
+                getUserById(followerId)
+            } catch (_: Exception) {
+                null
+            }
+        }
+    }
+
+    override suspend fun getFollowing(userId: String): List<StudentDto> {
+        val snapshot = db.collection("users").document(userId).collection("following").get().await()
+        val followingIds = snapshot.documents.map { it.id }
+        return followingIds.mapNotNull { targetId ->
+            try {
+                getUserById(targetId)
+            } catch (_: Exception) {
+                null
+            }
+        }
+    }
+
 }

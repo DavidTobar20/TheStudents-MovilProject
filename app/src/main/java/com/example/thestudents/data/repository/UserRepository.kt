@@ -129,4 +129,24 @@ class UserRepository @Inject constructor(
         }
     }
 
+    suspend fun getFollowers(userId: String): Result<List<Student>> {
+        return try {
+            val dtos = userRemoteDataSource.getFollowers(userId)
+            val students = dtos.map { it.toStudent() }
+            Result.success(students)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getFollowing(userId: String): Result<List<Student>> {
+        return try {
+            val dtos = userRemoteDataSource.getFollowing(userId)
+            val students = dtos.map { it.toStudent() }
+            Result.success(students)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 }
