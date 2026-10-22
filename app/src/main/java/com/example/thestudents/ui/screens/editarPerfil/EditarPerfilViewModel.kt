@@ -86,7 +86,8 @@ class EditarPerfilViewModel @Inject constructor(
                 program = state.program,
                 semester = state.semester.toIntOrNull() ?: 1,
                 bio = state.bio,
-                fotoUrl = authRepository.currentUser?.photoUrl?.toString(),
+                // La foto que se ve en pantalla: la nueva si acaba de subirla, o la que ya tenia
+                fotoUrl = state.student?.profileImage ?: authRepository.currentUser?.photoUrl?.toString(),
                 colorPerfil = colorHex,
                 userId = currentUser
             )
