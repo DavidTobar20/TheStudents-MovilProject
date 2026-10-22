@@ -138,11 +138,18 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
         reviewId: String,
         review: CreateReviewGenericDto
     ) {
-        TODO("Not yet implemented")
+        val docRef = db.collection("reviews").document(reviewId)
+        val updates = mutableMapOf<String, Any?>()
+        if (review.contenido != null) updates["contenido"] = review.contenido
+        if (review.rating != null) updates["rating"] = review.rating
+
+        if (updates.isNotEmpty()) {
+            docRef.update(updates).await()
+        }
     }
 
-    override suspend fun deleteReview(reviewId: String) {
-        TODO("Not yet implemented")
+    override suspend fun deleteReview(reviewId:String) {
+        db.collection("reviews").document(reviewId).delete().await()
     }
 
     override suspend fun senOrDeleteReviewLikes(

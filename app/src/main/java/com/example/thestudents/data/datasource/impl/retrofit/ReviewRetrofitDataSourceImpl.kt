@@ -31,7 +31,7 @@ class ReviewRetrofitDataSourceImpl @Inject constructor(
 
     override suspend fun createReview(review: CreateReviewGenericDto): String {
         val retrofitDto = CreateReviewRetrofitDto(
-            autor_id = review.autor_id,
+            autor_id = "1",
             resenado_id = review.resenado_id,
             materia = review.materia,
             periodo = review.periodo,

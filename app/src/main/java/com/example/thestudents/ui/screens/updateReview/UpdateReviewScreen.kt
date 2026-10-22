@@ -40,7 +40,7 @@ fun BodyUpdateReviewScreen(
     modifier: Modifier = Modifier,
     rating: Int,
     onRatingSelected: (Int) -> Unit,
-    onReviewChange: (String) -> Unit,
+    onContenidoChange: (String) -> Unit,
     onAnonymousChange: (Boolean) -> Unit,
     review: String,
     isAnonymous: Boolean,
@@ -79,7 +79,7 @@ fun BodyUpdateReviewScreen(
             )
             ReviewField(
                 review = review,
-                onReviewChange = onReviewChange
+                onContenidoChange = onContenidoChange
             )
             Card(
                 modifier = Modifier
@@ -128,7 +128,7 @@ fun BodyUpdateReviewScreenPreview() {
         BodyUpdateReviewScreen(
             rating = 4,
             onRatingSelected = {},
-            onReviewChange = {},
+            onContenidoChange = {},
             onAnonymousChange = {},
             review = "Excelente compañero de trabajo, muy responsable y puntual.",
             isAnonymous = false,
@@ -193,9 +193,9 @@ fun UpdateReviewScreen(
                     modifier = Modifier.weight(1f),
                     rating = state.rating,
                     onRatingSelected = { updateReviewViewModel.updateRating(it) },
-                    onReviewChange = { updateReviewViewModel.updateReview(it) },
+                    onContenidoChange = { updateReviewViewModel.updateContenido(it) },
                     onAnonymousChange = { updateReviewViewModel.updateIsAnonymous(it) },
-                    review = state.review,
+                    review = state.contenido,
                     isAnonymous = state.isAnonymous,
                     onUpdateClick = { updateReviewViewModel.updateReview() },
                     onBackClick = onBackClick,

@@ -78,7 +78,7 @@ fun BodyWriteReviewScreen(
             )
             ReviewField(
                 review = review,
-                onReviewChange = onReviewChange
+                onContenidoChange = onReviewChange
             )
             Card(
                 modifier = Modifier
