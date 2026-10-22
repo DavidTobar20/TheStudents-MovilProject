@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,6 +28,8 @@ import com.example.thestudents.R
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.ui.components.ReviewCard
+import com.example.thestudents.ui.screens.home.components.HomeTab
+import com.example.thestudents.ui.screens.home.components.HomeTabs
 import com.example.thestudents.ui.screens.home.components.HomeTopBar
 import com.example.thestudents.ui.theme.TheStudentsTheme
 
@@ -73,8 +76,12 @@ fun HomeScreen(
                 }
             }
             else -> {
+                val reviews = if (state.selectedTab == HomeTab.ALL) state.allReviews else state.followedReviews
+
                 BodyHomeScreen(
-                    followedReviews = state.followedReviews,
+                    selectedTab = state.selectedTab,
+                    onTabSelected = { homeViewModel.onTabSelected(it) },
+                    reviews = reviews,
                     onLikeClick = { index -> homeViewModel.updateLikedReviews(index) },
                     onDislikeClick = { index -> homeViewModel.updateDislikedReviews(index) },
                     onCommentClick = onReviewClick,
@@ -88,7 +95,9 @@ fun HomeScreen(
 
 @Composable
 fun BodyHomeScreen(
-    followedReviews: List<Review>,
+    selectedTab: HomeTab,
+    onTabSelected: (HomeTab) -> Unit,
+    reviews: List<Review>,
     onLikeClick: (Int) -> Unit,
     onDislikeClick: (Int) -> Unit,
     onCommentClick: (String) -> Unit,
@@ -96,41 +105,52 @@ fun BodyHomeScreen(
     onReviewerClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
-        if (followedReviews.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(32.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.aun_no_hay_resenas_de_las_personas_que_sigues_comienza_a_explorar_para_seguir_a_tus_companeros),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center
-                )
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(bottom = 16.dp)
-            ) {
-                item {
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-                itemsIndexed(followedReviews, key = { _, review -> review.id }) { index, review ->
-                    ReviewCard(
-                        review = review,
-                        isLiked = review.isLiked,
-                        isDisliked = review.isDisliked,
-                        onLikeClick = { onLikeClick(index) },
-                        onDislikeClick = { onDislikeClick(index) },
-                        onCommentClick = { onCommentClick(review.id) },
-                        onCardClick = { onCardClick(review.id) },
-                        onReviewerClick = { onReviewerClick(review.reviewer.id) },
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+    Column(modifier = modifier.fillMaxSize()) {
+        HomeTabs(
+            selectedTab = selectedTab,
+            onTabSelected = onTabSelected
+        )
+
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (reviews.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = if (selectedTab == HomeTab.FOLLOWED) {
+                            stringResource(R.string.aun_no_hay_resenas_de_las_personas_que_sigues_comienza_a_explorar_para_seguir_a_tus_companeros)
+                        } else {
+                            stringResource(R.string.no_hay_resenas_disponibles)
+                        },
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
                     )
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    item {
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                    itemsIndexed(reviews, key = { _, review -> review.id }) { index, review ->
+                        ReviewCard(
+                            review = review,
+                            isLiked = review.isLiked,
+                            isDisliked = review.isDisliked,
+                            onLikeClick = { onLikeClick(index) },
+                            onDislikeClick = { onDislikeClick(index) },
+                            onCommentClick = { onCommentClick(review.id) },
+                            onCardClick = { onCardClick(review.id) },
+                            onReviewerClick = { onReviewerClick(review.reviewer.id) },
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        )
+                    }
                 }
             }
         }
@@ -143,7 +163,9 @@ fun BodyHomeScreen(
 fun BodyHomeScreenPreview() {
     TheStudentsTheme {
         BodyHomeScreen(
-            followedReviews = localReviewsProvider.allReviews,
+            selectedTab = HomeTab.ALL,
+            onTabSelected = {},
+            reviews = localReviewsProvider.allReviews,
             onLikeClick = {},
             onDislikeClick = {},
             onCommentClick = {},
@@ -161,7 +183,9 @@ fun HomeScreenPreview() {
         Column(modifier = Modifier.fillMaxSize()) {
             HomeTopBar()
             BodyHomeScreen(
-                followedReviews = localReviewsProvider.allReviews,
+                selectedTab = HomeTab.ALL,
+                onTabSelected = {},
+                reviews = localReviewsProvider.allReviews,
                 onLikeClick = {},
                 onDislikeClick = {},
                 onCommentClick = {},

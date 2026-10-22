@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.thestudents.R
 import com.example.thestudents.ui.theme.TheStudentsTheme
+import com.example.thestudents.ui.utils.TabItem
 
 /** Pestanas del perfil: recibidas y escritas. */
 enum class ProfileTab { RECEIVED, WRITTEN }
@@ -44,13 +45,13 @@ fun ProfileTabs(
                 .padding(horizontal = 24.dp),
             horizontalArrangement = Arrangement.Start
         ) {
-            ProfileTabItem(
+            TabItem(
                 text = stringResource(R.string.recibidas),
                 isSelected = selectedTab == ProfileTab.RECEIVED,
                 onClick = { onTabSelected(ProfileTab.RECEIVED) }
             )
             Spacer(modifier = Modifier.width(16.dp))
-            ProfileTabItem(
+            TabItem(
                 text = stringResource(R.string.escritas),
                 isSelected = selectedTab == ProfileTab.WRITTEN,
                 onClick = { onTabSelected(ProfileTab.WRITTEN) }

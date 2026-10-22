@@ -138,6 +138,9 @@
     <string name="home_screen">Home Screen</string>
     <string name="resenas_recientes">RESEÑAS RECIENTES</string>
     <string name="materia">Materia</string>
+    <string name="todos">Todos</string>
+    <string name="seguidos">Seguidos</string>
+    <string name="no_hay_resenas_disponibles">No hay reseñas disponibles por ahora.</string>
 
     <!-- Escribir Reseña -->
     <string name="publicar_resena">PUBLICAR RESEÑA</string>

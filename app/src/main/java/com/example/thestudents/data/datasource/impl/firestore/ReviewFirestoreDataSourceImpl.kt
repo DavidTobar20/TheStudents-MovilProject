@@ -4,6 +4,7 @@ import com.example.thestudents.data.datasource.ReviewRemoteDataSource
 import com.example.thestudents.data.dtos.CommentDto
 import com.example.thestudents.data.dtos.CreateReviewFirebaseDto
 import com.example.thestudents.data.dtos.CreateReviewGenericDto
+import com.example.thestudents.data.dtos.HomeFeedDto
 import com.example.thestudents.data.dtos.ReviewDto
 import com.example.thestudents.data.dtos.StudentDto
 import com.example.thestudents.data.dtos.StudentSummaryDto
@@ -250,6 +251,64 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
                         }.awaitAll()
                     }
                     trySend(reviews).isSuccess
+                }
+            }
+        }
+        awaitClose { listener.remove() }
+    }
+
+    override suspend fun listenHomeFeed(studentId: String): Flow<HomeFeedDto> = callbackFlow {
+        var lastJob: Job? = null
+
+        val listener = db.collection("reviews").addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                close(error)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null) {
+                val reviews = snapshot.documents.map { doc ->
+                    val review = doc.toObject(ReviewDto::class.java)
+                    review?.copy(id = doc.id) ?: throw Exception("Reseña no encontrada")
+                }.filter { review ->
+                    val autorIdStr = review.autor?.id
+                    autorIdStr != studentId
+                }
+
+                lastJob?.cancel()
+                lastJob = launch {
+                    val followingList = try {
+                        val followingSnapshot = db.collection("users").document(studentId).collection("following").get().await()
+                        followingSnapshot.documents.map { it.id }.toSet()
+                    } catch (_: Exception) {
+                        emptySet()
+                    }
+
+                    if (studentId.isNotEmpty()) {
+                        reviews.map { review ->
+                            async {
+                                val reviewId = review.id ?: return@async
+                                val reviewRef = db.collection("reviews").document(reviewId)
+                                val liked = async { reviewRef.collection("likes").document(studentId).get().await().exists() }
+                                val disliked = async { reviewRef.collection("dislikes").document(studentId).get().await().exists() }
+                                review.isLiked = liked.await()
+                                review.isDisliked = disliked.await()
+                            }
+                        }.awaitAll()
+                    }
+
+                    val seguidos = reviews.filter { dto ->
+                        val autorId = dto.autor?.id.orEmpty()
+                        val resenadoId = dto.resenado?.id.orEmpty()
+                        autorId in followingList || resenadoId in followingList
+                    }
+
+                    val homeFeedDto = HomeFeedDto(
+                        todasResenas = reviews,
+                        resenasSeguidos = seguidos
+                    )
+
+                    trySend(homeFeedDto).isSuccess
                 }
             }
         }

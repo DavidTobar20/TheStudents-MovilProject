@@ -3,6 +3,7 @@ package com.example.thestudents.data.repository
 import android.util.Log
 import retrofit2.HttpException
 import com.example.thestudents.data.Comment
+import com.example.thestudents.data.HomeFeed
 import com.example.thestudents.data.NotificationType
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.datasource.AuthRemoteDataSource
@@ -183,6 +184,10 @@ class ReviewRepository @Inject constructor(
         return reviewRemoteDataSource.listenAllReviewsExcludingStudentId(studentId).map { reviews ->
             reviews.map { it.toReview() }
         }
+    }
+
+    suspend fun getHomeFeedLive(studentId: String): Flow<HomeFeed> {
+        return reviewRemoteDataSource.listenHomeFeed(studentId).map { it.toHomeFeed() }
     }
 
     suspend fun getComments(reviewId: String): Result<List<Comment>> {

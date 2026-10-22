@@ -2,6 +2,7 @@ package com.example.thestudents.data.datasource
 
 import com.example.thestudents.data.dtos.CommentDto
 import com.example.thestudents.data.dtos.CreateReviewGenericDto
+import com.example.thestudents.data.dtos.HomeFeedDto
 import com.example.thestudents.data.dtos.ReviewDto
 import kotlinx.coroutines.flow.Flow
 
@@ -26,6 +27,8 @@ interface ReviewRemoteDataSource {
     suspend fun sendOrDeleteReviewDislike(reviewId: String, studentId: String): Unit
 
     suspend fun listenAllReviewsExcludingStudentId(studentId: String): Flow<List<ReviewDto>>
+
+    suspend fun listenHomeFeed(studentId: String): Flow<HomeFeedDto>
 
     suspend fun getComments(reviewId: String, studentId: String): List<CommentDto>
 
