@@ -8,6 +8,7 @@ import com.example.thestudents.data.dtos.UserProfileFirestoreDto
 import com.example.thestudents.data.dtos.UserProfileGenericDto
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.collections.mapOf
@@ -98,7 +99,8 @@ class UserFirestoreDataSourceImpl @Inject constructor(
         userId: String
     ) {
         val docRef = db.collection("users").document(userId)
-        docRef.set(registerUserDto).await()
+        // merge: solo cambia los campos del DTO y NO borra los demas (followersCount, followingCount...)
+        docRef.set(registerUserDto, SetOptions.merge()).await()
     }
 
     override suspend fun followOrUnfollowStudent(
