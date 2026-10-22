@@ -20,6 +20,11 @@ class CommentsReviewViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository
 ) : ViewModel() {
+    // Reseña o comentarios que tienen un like/dislike guardandose en Firestore.
+    // Mientras tanto se ignoran nuevos toques para no mandar transacciones encima de otras.
+    private var reviewPending = false
+    private val pendingComments = mutableSetOf<String>()
+
     private val _uiState = MutableStateFlow(CommentsReviewState())
     val uiState : StateFlow<CommentsReviewState> = _uiState
 
@@ -109,6 +114,8 @@ class CommentsReviewViewModel @Inject constructor(
     fun updateIsLiked() {
         val review = _uiState.value.review ?: return
         val studentId = authRepository.currentUser?.uid ?: return
+        if (reviewPending) return
+        reviewPending = true
 
         // 1. Se cambia la pantalla de una vez, sin esperar a Firestore
         _uiState.value = _uiState.value.copy(
@@ -124,6 +131,7 @@ class CommentsReviewViewModel @Inject constructor(
         // 2. Se guarda en Firestore por detras; si falla, se vuelve a como estaba
         viewModelScope.launch {
             val result = reviewRepository.sendOrDeleteReviewLike(review.id, studentId)
+            reviewPending = false
             if (result.isSuccess) {
                 // Firestore lo guardo: la pantalla ya estaba bien, no hay nada que hacer
             } else {
@@ -136,6 +144,8 @@ class CommentsReviewViewModel @Inject constructor(
     fun updateIsDisliked() {
         val review = _uiState.value.review ?: return
         val studentId = authRepository.currentUser?.uid ?: return
+        if (reviewPending) return
+        reviewPending = true
 
         // 1. Se cambia la pantalla de una vez, sin esperar a Firestore
         _uiState.value = _uiState.value.copy(
@@ -151,6 +161,7 @@ class CommentsReviewViewModel @Inject constructor(
         // 2. Se guarda en Firestore por detras; si falla, se vuelve a como estaba
         viewModelScope.launch {
             val result = reviewRepository.sendOrDeleteReviewDislike(review.id, studentId)
+            reviewPending = false
             if (result.isSuccess) {
                 // Firestore lo guardo: la pantalla ya estaba bien, no hay nada que hacer
             } else {
@@ -190,6 +201,8 @@ class CommentsReviewViewModel @Inject constructor(
         val reviewId = _uiState.value.review?.id ?: return
         val studentId = authRepository.currentUser?.uid ?: return
         val comment = _uiState.value.review?.comments?.find { it.id == commentId } ?: return
+        if (commentId in pendingComments) return
+        pendingComments.add(commentId)
 
         // 1. Se cambia la pantalla de una vez, sin esperar a Firestore
         replaceComment(
@@ -205,6 +218,7 @@ class CommentsReviewViewModel @Inject constructor(
         // 2. Se guarda en Firestore por detras; si falla, se vuelve a como estaba
         viewModelScope.launch {
             val result = reviewRepository.sendOrDeleteCommentLike(reviewId, commentId, studentId)
+            pendingComments.remove(commentId)
             if (result.isSuccess) {
                 // Firestore lo guardo: la pantalla ya estaba bien, no hay nada que hacer
             } else {
@@ -218,6 +232,8 @@ class CommentsReviewViewModel @Inject constructor(
         val reviewId = _uiState.value.review?.id ?: return
         val studentId = authRepository.currentUser?.uid ?: return
         val comment = _uiState.value.review?.comments?.find { it.id == commentId } ?: return
+        if (commentId in pendingComments) return
+        pendingComments.add(commentId)
 
         // 1. Se cambia la pantalla de una vez, sin esperar a Firestore
         replaceComment(
@@ -233,6 +249,7 @@ class CommentsReviewViewModel @Inject constructor(
         // 2. Se guarda en Firestore por detras; si falla, se vuelve a como estaba
         viewModelScope.launch {
             val result = reviewRepository.sendOrDeleteCommentDislike(reviewId, commentId, studentId)
+            pendingComments.remove(commentId)
             if (result.isSuccess) {
                 // Firestore lo guardo: la pantalla ya estaba bien, no hay nada que hacer
             } else {

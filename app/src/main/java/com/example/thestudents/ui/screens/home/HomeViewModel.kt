@@ -25,6 +25,10 @@ class HomeViewModel @Inject constructor(
 
     private var reviewsJob: Job? = null
 
+    // Reseñas que tienen un like/dislike guardandose en Firestore.
+    // Mientras tanto se ignoran nuevos toques para no mandar transacciones encima de otras.
+    private val pendingReviews = mutableSetOf<String>()
+
     // Reemplaza una reseña de la lista (por id) sin tocar las demas
     private fun replaceReview(updated: Review) {
         _uiState.value = _uiState.value.copy(
@@ -37,6 +41,8 @@ class HomeViewModel @Inject constructor(
     fun updateLikedReviews(index: Int) {
         val studentId = authRepository.currentUser?.uid ?: return
         val review = _uiState.value.followedReviews.getOrNull(index) ?: return
+        if (review.id in pendingReviews) return
+        pendingReviews.add(review.id)
 
         // 1. Se cambia la pantalla de una vez, sin esperar a Firestore
         replaceReview(
@@ -52,6 +58,7 @@ class HomeViewModel @Inject constructor(
         // 2. Se guarda en Firestore por detras; si falla, se vuelve a como estaba
         viewModelScope.launch {
             val result = reviewRepository.sendOrDeleteReviewLike(review.id, studentId)
+            pendingReviews.remove(review.id)
             if (result.isSuccess) {
                 // Firestore lo guardo: la pantalla ya estaba bien, no hay nada que hacer
             } else {
@@ -64,6 +71,8 @@ class HomeViewModel @Inject constructor(
     fun updateDislikedReviews(index: Int) {
         val studentId = authRepository.currentUser?.uid ?: return
         val review = _uiState.value.followedReviews.getOrNull(index) ?: return
+        if (review.id in pendingReviews) return
+        pendingReviews.add(review.id)
 
         // 1. Se cambia la pantalla de una vez, sin esperar a Firestore
         replaceReview(
@@ -79,6 +88,7 @@ class HomeViewModel @Inject constructor(
         // 2. Se guarda en Firestore por detras; si falla, se vuelve a como estaba
         viewModelScope.launch {
             val result = reviewRepository.sendOrDeleteReviewDislike(review.id, studentId)
+            pendingReviews.remove(review.id)
             if (result.isSuccess) {
                 // Firestore lo guardo: la pantalla ya estaba bien, no hay nada que hacer
             } else {

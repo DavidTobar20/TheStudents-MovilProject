@@ -12,6 +12,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.awaitClose
@@ -215,6 +216,10 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
     }
 
     override suspend fun listenAllReviewsExcludingStudentId(studentId: String): Flow<List<ReviewDto>> = callbackFlow {
+        // Trabajo del ultimo aviso del listener. Si llega uno nuevo, el anterior se cancela
+        // para que un aviso viejo no termine despues y pinte un estado viejo en la pantalla.
+        var lastJob: Job? = null
+
         val listener = db.collection("reviews").addSnapshotListener { snapshot, error ->
             if (error != null) {
                 close(error)
@@ -230,7 +235,8 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
                     autorIdStr != studentId
                 }
 
-                launch {
+                lastJob?.cancel()
+                lastJob = launch {
                     if (studentId.isNotEmpty()) {
                         reviews.map { review ->
                             async {
