@@ -52,6 +52,39 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    // Igual que en FollowListViewModel: ids de los estudiantes que sigue el usuario actual
+    fun loadFollowedIds() {
+        val currentUserId = authRepository.currentUser?.uid ?: return
+
+        viewModelScope.launch {
+            val result = userRepository.getFollowing(currentUserId)
+            if (result.isSuccess) {
+                val followedIds = result.getOrNull()?.map { it.id }?.toSet() ?: emptySet()
+                _uiState.update { it.copy(followedStudentIds = followedIds) }
+            }
+        }
+    }
+
+    // Igual que en FollowListViewModel: seguir o dejar de seguir desde la tarjeta
+    fun toggleFollow(targetUserId: String) {
+        val currentUserId = authRepository.currentUser?.uid ?: return
+
+        viewModelScope.launch {
+            val result = userRepository.followOrUnfollowStudent(currentUserId, targetUserId)
+            if (result.isSuccess) {
+                _uiState.update { state ->
+                    val currentlyFollowing = state.followedStudentIds.contains(targetUserId)
+                    val newFollowedIds = if (currentlyFollowing) {
+                        state.followedStudentIds - targetUserId
+                    } else {
+                        state.followedStudentIds + targetUserId
+                    }
+                    state.copy(followedStudentIds = newFollowedIds)
+                }
+            }
+        }
+    }
+
     // Firestore no tiene busqueda por "contiene", asi que se filtra en el cliente
     private fun filterStudents(students: List<Student>, query: String): List<Student> {
         val text = query.trim()

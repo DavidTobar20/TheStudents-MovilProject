@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,7 +44,9 @@ fun BodySearch(
     onQueryChange: (String) -> Unit,
     students: List<Student>,
     onStudentClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    followedStudentIds: Set<String> = emptySet(),
+    onFollowToggle: (String) -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -70,9 +73,10 @@ fun BodySearch(
             items(students, key = { it.id }) { student -> 
                 StudentCard(
                     student = student,
-                    isFollowing = false,
-                    onClick = { onStudentClick(student.id) }
-                ) 
+                    isFollowing = student.id in followedStudentIds,
+                    onClick = { onStudentClick(student.id) },
+                    onFollowToggle = { onFollowToggle(student.id) }
+                )
             }
         }
     }
@@ -108,12 +112,20 @@ fun SearchScreen(
 ) {
     val state by searchViewModel.uiState.collectAsState()
 
+    // Se recarga cada vez que se entra a Buscar, por si seguiste o dejaste de seguir
+    // a alguien desde su perfil o desde la lista de seguidores
+    LaunchedEffect(Unit) {
+        searchViewModel.loadFollowedIds()
+    }
+
     BodySearch(
         query = state.query,
         onQueryChange = { searchViewModel.updateQuery(it) },
         students = state.students,
         onStudentClick = onStudentClick,
-        modifier = modifier
+        modifier = modifier,
+        followedStudentIds = state.followedStudentIds,
+        onFollowToggle = { searchViewModel.toggleFollow(it) }
     )
 }
 
