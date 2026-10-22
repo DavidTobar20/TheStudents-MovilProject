@@ -2,6 +2,8 @@ package com.example.thestudents.ui.screens.commentsReview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.thestudents.data.Comment
+import com.example.thestudents.data.Review
 import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.data.repository.ReviewRepository
 import com.example.thestudents.data.repository.UserRepository
@@ -26,15 +28,23 @@ class CommentsReviewViewModel @Inject constructor(
         if (_uiState.value.review?.id == id) return
 
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null,
-                likedComments = emptySet(),
-                dislikedComments = emptySet()) }
+            _uiState.update {
+                it.copy(
+                    isLoading = true,
+                    errorMessage = null,
+                    currentUserId = authRepository.currentUser?.uid ?: ""
+                )
+            }
             val result = reviewRepository.getReviewById(id)
 
             if(result.isSuccess){
                 val review = result.getOrNull()
+
+                // Comentarios de la reseña (subcoleccion reviews/{id}/comments)
+                val comments = reviewRepository.getComments(id).getOrNull() ?: emptyList()
+
                 _uiState.update {
-                    it.copy(review = review, isLoading = false, errorMessage = null)
+                    it.copy(review = review?.copy(comments = comments, commentsCount = comments.size), isLoading = false, errorMessage = null)
                 }
             }else {
                 val error = result.exceptionOrNull()
@@ -70,145 +80,205 @@ class CommentsReviewViewModel @Inject constructor(
         _uiState.update { it.copy(commentInputText = text) }
     }
 
-    fun updateIsLiked() {
+    fun sendComment() {
         val reviewId = _uiState.value.review?.id ?: return
-        val studentId = authRepository.currentUser?.uid ?: return
+        val contenido = _uiState.value.commentInputText.trim()
+        if (contenido.isEmpty()) return
 
         viewModelScope.launch {
-            val result = reviewRepository.sendOrDeleteReviewLike(reviewId, studentId)
+            val result = reviewRepository.createComment(reviewId, contenido)
             if (result.isSuccess) {
-                _uiState.update {
-                    it.copy(
-                        review = it.review?.copy(
-                            isLiked = !it.review.isLiked,
-                            likesCount = if (it.review.isLiked) it.review.likesCount - 1 else it.review.likesCount + 1,
-                            // si tenia dislike, Firestore ya se lo quito en la transaccion
-                            isDisliked = false,
-                            disLikes = if (it.review.isDisliked) it.review.disLikes - 1 else it.review.disLikes
-                        )
+                val comment = result.getOrNull()
+                val review = _uiState.value.review
+                if (comment != null && review != null) {
+                    // Se agrega al final de la lista (debajo de la reseña) y se limpia el campo
+                    _uiState.value = _uiState.value.copy(
+                        review = review.copy(
+                            comments = review.comments + comment,
+                            commentsCount = review.commentsCount + 1
+                        ),
+                        commentInputText = ""
                     )
                 }
             } else {
                 _uiState.update { it.copy(errorMessage = result.exceptionOrNull()?.message) }
+            }
+        }
+    }
+
+    fun updateIsLiked() {
+        val review = _uiState.value.review ?: return
+        val studentId = authRepository.currentUser?.uid ?: return
+
+        // 1. Se cambia la pantalla de una vez, sin esperar a Firestore
+        _uiState.value = _uiState.value.copy(
+            review = review.copy(
+                isLiked = !review.isLiked,
+                likesCount = if (review.isLiked) review.likesCount - 1 else review.likesCount + 1,
+                // si tenia dislike, la transaccion de Firestore tambien se lo quita
+                isDisliked = false,
+                disLikes = if (review.isDisliked) review.disLikes - 1 else review.disLikes
+            )
+        )
+
+        // 2. Se guarda en Firestore por detras; si falla, se vuelve a como estaba
+        viewModelScope.launch {
+            val result = reviewRepository.sendOrDeleteReviewLike(review.id, studentId)
+            if (result.isSuccess) {
+                // Firestore lo guardo: la pantalla ya estaba bien, no hay nada que hacer
+            } else {
+                // Fallo: se vuelve a como estaba
+                restoreReviewReactions(review)
             }
         }
     }
 
     fun updateIsDisliked() {
-        val reviewId = _uiState.value.review?.id ?: return
+        val review = _uiState.value.review ?: return
         val studentId = authRepository.currentUser?.uid ?: return
 
+        // 1. Se cambia la pantalla de una vez, sin esperar a Firestore
+        _uiState.value = _uiState.value.copy(
+            review = review.copy(
+                isDisliked = !review.isDisliked,
+                disLikes = if (review.isDisliked) review.disLikes - 1 else review.disLikes + 1,
+                // si tenia like, la transaccion de Firestore tambien se lo quita
+                isLiked = false,
+                likesCount = if (review.isLiked) review.likesCount - 1 else review.likesCount
+            )
+        )
+
+        // 2. Se guarda en Firestore por detras; si falla, se vuelve a como estaba
         viewModelScope.launch {
-            val result = reviewRepository.sendOrDeleteReviewDislike(reviewId, studentId)
+            val result = reviewRepository.sendOrDeleteReviewDislike(review.id, studentId)
             if (result.isSuccess) {
-                _uiState.update {
-                    it.copy(
-                        review = it.review?.copy(
-                            isDisliked = !it.review.isDisliked,
-                            disLikes = if (it.review.isDisliked) it.review.disLikes - 1 else it.review.disLikes + 1,
-                            // si tenia like, Firestore ya se lo quito en la transaccion
-                            isLiked = false,
-                            likesCount = if (it.review.isLiked) it.review.likesCount - 1 else it.review.likesCount
-                        )
-                    )
-                }
+                // Firestore lo guardo: la pantalla ya estaba bien, no hay nada que hacer
             } else {
-                _uiState.update { it.copy(errorMessage = result.exceptionOrNull()?.message) }
+                // Fallo: se vuelve a como estaba
+                restoreReviewReactions(review)
             }
         }
     }
 
-    private fun Set<Int>.toggle(value: Int): Set<Int> =
-        if (value in this) this - value else this + value
+    // Si Firestore fallo, devuelve los likes/dislikes de la reseña a como estaban
+    // (sin tocar los comentarios, por si se agrego alguno mientras tanto)
+    private fun restoreReviewReactions(previous: Review) {
+        val current = _uiState.value.review ?: return
+        _uiState.value = _uiState.value.copy(
+            review = current.copy(
+                isLiked = previous.isLiked,
+                likesCount = previous.likesCount,
+                isDisliked = previous.isDisliked,
+                disLikes = previous.disLikes
+            )
+        )
+    }
 
-    fun updateLikedComments(index: Int) {
-        _uiState.update { state ->
-            val review = state.review
-            if (review != null && index in review.comments.indices) {
-                val comments = review.comments.toMutableList()
-                val targetComment = comments[index]
-                val isCurrentlyLiked = index in state.likedComments
-                val isCurrentlyDisliked = index in state.dislikedComments
-
-                val updatedComment = if (isCurrentlyDisliked) {
-                    targetComment.copy(
-                        disLikes = targetComment.disLikes - 1,
-                        likes = targetComment.likes + 1
-                    )
-                } else {
-                    if (isCurrentlyLiked) {
-                        targetComment.copy(
-                            likes = targetComment.likes - 1
-                        )
-                    } else {
-                        targetComment.copy(
-                            likes = targetComment.likes + 1
-                        )
-                    }
+    // Reemplaza un comentario de la lista (por id) sin tocar los demas
+    private fun replaceComment(updated: Comment) {
+        val review = _uiState.value.review ?: return
+        _uiState.value = _uiState.value.copy(
+            review = review.copy(
+                comments = review.comments.map { comment ->
+                    if (comment.id == updated.id) updated else comment
                 }
+            )
+        )
+    }
 
-                comments[index] = updatedComment
+    fun updateCommentLike(commentId: String) {
+        val reviewId = _uiState.value.review?.id ?: return
+        val studentId = authRepository.currentUser?.uid ?: return
+        val comment = _uiState.value.review?.comments?.find { it.id == commentId } ?: return
 
-                val newLikedComments = state.likedComments.toggle(index)
-                val newDislikedComments = if (index in newLikedComments) {
-                    state.dislikedComments - index
-                } else {
-                    state.dislikedComments
-                }
+        // 1. Se cambia la pantalla de una vez, sin esperar a Firestore
+        replaceComment(
+            comment.copy(
+                isLiked = !comment.isLiked,
+                likes = if (comment.isLiked) comment.likes - 1 else comment.likes + 1,
+                // si tenia dislike, la transaccion de Firestore tambien se lo quita
+                isDisliked = false,
+                disLikes = if (comment.isDisliked) comment.disLikes - 1 else comment.disLikes
+            )
+        )
 
-                state.copy(
-                    review = review.copy(comments = comments),
-                    likedComments = newLikedComments,
-                    dislikedComments = newDislikedComments
-                )
+        // 2. Se guarda en Firestore por detras; si falla, se vuelve a como estaba
+        viewModelScope.launch {
+            val result = reviewRepository.sendOrDeleteCommentLike(reviewId, commentId, studentId)
+            if (result.isSuccess) {
+                // Firestore lo guardo: la pantalla ya estaba bien, no hay nada que hacer
             } else {
-                state
+                // Fallo: se vuelve a como estaba
+                replaceComment(comment)
             }
         }
     }
 
-    fun updateDislikedComments(index: Int) {
-        _uiState.update { state ->
-            val review = state.review
-            if (review != null && index in review.comments.indices) {
-                val comments = review.comments.toMutableList()
-                val targetComment = comments[index]
-                val isCurrentlyLiked = index in state.likedComments
-                val isCurrentlyDisliked = index in state.dislikedComments
+    fun updateCommentDislike(commentId: String) {
+        val reviewId = _uiState.value.review?.id ?: return
+        val studentId = authRepository.currentUser?.uid ?: return
+        val comment = _uiState.value.review?.comments?.find { it.id == commentId } ?: return
 
-                val updatedComment = if (isCurrentlyLiked) {
-                    targetComment.copy(
-                        likes = targetComment.likes - 1,
-                        disLikes = targetComment.disLikes + 1
-                    )
-                } else {
-                    if (isCurrentlyDisliked) {
-                        targetComment.copy(
-                            disLikes = targetComment.disLikes - 1
-                        )
-                    } else {
-                        targetComment.copy(
-                            disLikes = targetComment.disLikes + 1
-                        )
-                    }
-                }
+        // 1. Se cambia la pantalla de una vez, sin esperar a Firestore
+        replaceComment(
+            comment.copy(
+                isDisliked = !comment.isDisliked,
+                disLikes = if (comment.isDisliked) comment.disLikes - 1 else comment.disLikes + 1,
+                // si tenia like, la transaccion de Firestore tambien se lo quita
+                isLiked = false,
+                likes = if (comment.isLiked) comment.likes - 1 else comment.likes
+            )
+        )
 
-                comments[index] = updatedComment
-
-                val newDislikedComments = state.dislikedComments.toggle(index)
-                val newLikedComments = if (index in newDislikedComments) {
-                    state.dislikedComments - index
-                } else {
-                    state.likedComments
-                }
-
-                state.copy(
-                    review = review.copy(comments = comments),
-                    likedComments = newLikedComments,
-                    dislikedComments = newDislikedComments
-                )
+        // 2. Se guarda en Firestore por detras; si falla, se vuelve a como estaba
+        viewModelScope.launch {
+            val result = reviewRepository.sendOrDeleteCommentDislike(reviewId, commentId, studentId)
+            if (result.isSuccess) {
+                // Firestore lo guardo: la pantalla ya estaba bien, no hay nada que hacer
             } else {
-                state
+                // Fallo: se vuelve a como estaba
+                replaceComment(comment)
+            }
+        }
+    }
+
+    fun editComment(commentId: String, nuevoContenido: String) {
+        val reviewId = _uiState.value.review?.id ?: return
+        val contenido = nuevoContenido.trim()
+        if (contenido.isEmpty()) return
+
+        viewModelScope.launch {
+            val result = reviewRepository.updateComment(reviewId, commentId, contenido)
+            if (result.isSuccess) {
+                val review = _uiState.value.review
+                if (review != null) {
+                    _uiState.value = _uiState.value.copy(
+                        review = review.copy(
+                            comments = review.comments.map { comment ->
+                                if (comment.id == commentId) comment.copy(content = contenido) else comment
+                            }
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    fun deleteComment(commentId: String) {
+        val reviewId = _uiState.value.review?.id ?: return
+
+        viewModelScope.launch {
+            val result = reviewRepository.deleteComment(reviewId, commentId)
+            if (result.isSuccess) {
+                val review = _uiState.value.review
+                if (review != null) {
+                    _uiState.value = _uiState.value.copy(
+                        review = review.copy(
+                            comments = review.comments.filter { it.id != commentId },
+                            commentsCount = review.commentsCount - 1
+                        )
+                    )
+                }
             }
         }
     }

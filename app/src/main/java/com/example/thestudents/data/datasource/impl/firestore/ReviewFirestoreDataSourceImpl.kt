@@ -1,14 +1,17 @@
 package com.example.thestudents.data.datasource.impl.firestore
 
 import com.example.thestudents.data.datasource.ReviewRemoteDataSource
+import com.example.thestudents.data.dtos.CommentDto
 import com.example.thestudents.data.dtos.CreateReviewFirebaseDto
 import com.example.thestudents.data.dtos.CreateReviewGenericDto
 import com.example.thestudents.data.dtos.ReviewDto
 import com.example.thestudents.data.dtos.StudentDto
 import com.example.thestudents.data.dtos.StudentSummaryDto
 import com.example.thestudents.data.dtos.toSummaryDto
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.awaitClose
@@ -245,6 +248,137 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
             }
         }
         awaitClose { listener.remove() }
+    }
+
+    // Comentarios de una reseña, del mas viejo al mas nuevo (como un chat)
+    override suspend fun getComments(reviewId: String, studentId: String): List<CommentDto> {
+        val commentsRef = db.collection("reviews").document(reviewId).collection("comments")
+        val snapshot = commentsRef
+            .orderBy("fecha_creacion", Query.Direction.ASCENDING)
+            .get()
+            .await()
+        val comments = snapshot.documents.mapNotNull { doc ->
+            doc.toObject(CommentDto::class.java)?.copy(id = doc.id)
+        }
+
+        // Verifica si el estudiante actual ya le dio like o dislike a cada comentario (en paralelo)
+        if (studentId.isNotEmpty()) {
+            coroutineScope {
+                comments.map { comment ->
+                    async {
+                        val commentId = comment.id
+                        if (commentId != null) {
+                            val commentRef = commentsRef.document(commentId)
+                            val liked = async { commentRef.collection("likes").document(studentId).get().await().exists() }
+                            val disliked = async { commentRef.collection("dislikes").document(studentId).get().await().exists() }
+                            comment.isLiked = liked.await()
+                            comment.isDisliked = disliked.await()
+                        }
+                    }
+                }.awaitAll()
+            }
+        }
+
+        return comments
+    }
+
+    override suspend fun createComment(reviewId: String, autorId: String, contenido: String): CommentDto {
+        // Datos del autor (nombre, usuario y foto) copiados del perfil, igual que en createReview
+        val userSnapshot = db.collection("users").document(autorId).get().await()
+        val autorSummaryDto = userSnapshot.toObject(StudentDto::class.java)?.copy(id = userSnapshot.id)?.toSummaryDto()
+
+        val comment = CommentDto(
+            autor_id = autorId,
+            autor = autorSummaryDto,
+            contenido = contenido,
+            fecha_creacion = Timestamp.now()
+        )
+
+        val reviewRef = db.collection("reviews").document(reviewId)
+        val commentRef = reviewRef.collection("comments").document() // genera el id del nuevo comentario
+
+        // Se crea el comentario y se suma 1 al contador de la reseña al mismo tiempo
+        val batch = db.batch()
+        batch.set(commentRef, comment)
+        batch.update(reviewRef, "commentsCount", FieldValue.increment(1))
+        batch.commit().await()
+
+        // Se devuelve con su id para poder mostrarlo de una vez en la pantalla
+        return comment.copy(id = commentRef.id)
+    }
+
+    override suspend fun updateComment(reviewId: String, commentId: String, contenido: String) {
+        db.collection("reviews").document(reviewId)
+            .collection("comments").document(commentId)
+            .update("contenido", contenido)
+            .await()
+    }
+
+    override suspend fun deleteComment(reviewId: String, commentId: String) {
+        val reviewRef = db.collection("reviews").document(reviewId)
+        val commentRef = reviewRef.collection("comments").document(commentId)
+
+        // Se borra el comentario y se resta 1 al contador de la reseña al mismo tiempo
+        val batch = db.batch()
+        batch.delete(commentRef)
+        batch.update(reviewRef, "commentsCount", FieldValue.increment(-1))
+        batch.commit().await()
+    }
+
+    // Igual que el like de la reseña, pero en reviews/{reviewId}/comments/{commentId}
+    override suspend fun sendOrDeleteCommentLike(reviewId: String, commentId: String, studentId: String) {
+        val commentRef = db.collection("reviews").document(reviewId).collection("comments").document(commentId)
+        val likesRef = commentRef.collection("likes").document(studentId)
+        val dislikesRef = commentRef.collection("dislikes").document(studentId)
+
+        db.runTransaction { transaction ->
+            // En Firestore todas las lecturas van antes de las escrituras
+            val likeDoc = transaction.get(likesRef)
+            val dislikeDoc = transaction.get(dislikesRef)
+
+            if (likeDoc.exists()) {
+                // Quitar like
+                transaction.delete(likesRef)
+                transaction.update(commentRef, "likesCount", FieldValue.increment(-1))
+            } else {
+                // Dar like
+                transaction.set(likesRef, mapOf("timestamp" to FieldValue.serverTimestamp()))
+                transaction.update(commentRef, "likesCount", FieldValue.increment(1))
+                // Si tenia dislike, se lo quitamos
+                if (dislikeDoc.exists()) {
+                    transaction.delete(dislikesRef)
+                    transaction.update(commentRef, "disLikes", FieldValue.increment(-1))
+                }
+            }
+        }.await()
+    }
+
+    // Igual que el dislike de la reseña, pero en reviews/{reviewId}/comments/{commentId}
+    override suspend fun sendOrDeleteCommentDislike(reviewId: String, commentId: String, studentId: String) {
+        val commentRef = db.collection("reviews").document(reviewId).collection("comments").document(commentId)
+        val dislikesRef = commentRef.collection("dislikes").document(studentId)
+        val likesRef = commentRef.collection("likes").document(studentId)
+
+        db.runTransaction { transaction ->
+            // En Firestore todas las lecturas van antes de las escrituras
+            val dislikeDoc = transaction.get(dislikesRef)
+            val likeDoc = transaction.get(likesRef)
+
+            if (dislikeDoc.exists()) {
+                // Quitar dislike
+                transaction.delete(dislikesRef)
+                transaction.update(commentRef, "disLikes", FieldValue.increment(-1))
+            } else {
+                // Dar dislike
+                transaction.set(dislikesRef, mapOf("timestamp" to FieldValue.serverTimestamp()))
+                transaction.update(commentRef, "disLikes", FieldValue.increment(1))
+                // Si tenia like, se lo quitamos
+                if (likeDoc.exists()) {
+                    transaction.delete(likesRef)
+                    transaction.update(commentRef, "likesCount", FieldValue.increment(-1))
+                }
+            }
+        }.await()
     }
 
 }

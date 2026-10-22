@@ -2,6 +2,7 @@ package com.example.thestudents.data.repository
 
 import android.util.Log
 import retrofit2.HttpException
+import com.example.thestudents.data.Comment
 import com.example.thestudents.data.NotificationType
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.datasource.AuthRemoteDataSource
@@ -13,6 +14,7 @@ import com.example.thestudents.data.dtos.NotificationDto
 import com.example.thestudents.data.dtos.StudentSummaryDto
 import com.example.thestudents.data.dtos.toSummaryDto
 import com.google.firebase.Timestamp
+import com.example.thestudents.data.dtos.toComment
 import com.example.thestudents.data.dtos.toReview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -180,6 +182,68 @@ class ReviewRepository @Inject constructor(
     suspend fun getReviewsLive(studentId: String): Flow<List<Review>> {
         return reviewRemoteDataSource.listenAllReviewsExcludingStudentId(studentId).map { reviews ->
             reviews.map { it.toReview() }
+        }
+    }
+
+    suspend fun getComments(reviewId: String): Result<List<Comment>> {
+        // Para saber a cuales comentarios ya les dio like/dislike el usuario actual
+        val currentUserId = authRemoteDataSource.currentUser?.uid ?: ""
+
+        return try {
+            val commentsDto = reviewRemoteDataSource.getComments(reviewId, currentUserId)
+            val comments = commentsDto.map { it.toComment() }
+            Result.success(comments)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun createComment(reviewId: String, contenido: String): Result<Comment> {
+        // El autor es el usuario que tiene la sesion iniciada
+        val autorId = authRemoteDataSource.currentUser?.uid ?: ""
+
+        return try {
+            val commentDto = reviewRemoteDataSource.createComment(reviewId, autorId, contenido)
+            val comment = commentDto.toComment()
+            Result.success(comment)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateComment(reviewId: String, commentId: String, contenido: String): Result<Unit> {
+        return try {
+            reviewRemoteDataSource.updateComment(reviewId, commentId, contenido)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteComment(reviewId: String, commentId: String): Result<Unit> {
+        return try {
+            reviewRemoteDataSource.deleteComment(reviewId, commentId)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun sendOrDeleteCommentLike(reviewId: String, commentId: String, studentId: String): Result<Unit> {
+        return try {
+            reviewRemoteDataSource.sendOrDeleteCommentLike(reviewId, commentId, studentId)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun sendOrDeleteCommentDislike(reviewId: String, commentId: String, studentId: String): Result<Unit> {
+        return try {
+            reviewRemoteDataSource.sendOrDeleteCommentDislike(reviewId, commentId, studentId)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 }

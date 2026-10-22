@@ -2,6 +2,7 @@ package com.example.thestudents.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.thestudents.data.Review
 import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.data.repository.ReviewRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,62 +25,65 @@ class HomeViewModel @Inject constructor(
 
     private var reviewsJob: Job? = null
 
+    // Reemplaza una reseña de la lista (por id) sin tocar las demas
+    private fun replaceReview(updated: Review) {
+        _uiState.value = _uiState.value.copy(
+            followedReviews = _uiState.value.followedReviews.map { review ->
+                if (review.id == updated.id) updated else review
+            }
+        )
+    }
+
     fun updateLikedReviews(index: Int) {
         val studentId = authRepository.currentUser?.uid ?: return
-        val targetReview = _uiState.value.followedReviews.getOrNull(index) ?: return
+        val review = _uiState.value.followedReviews.getOrNull(index) ?: return
 
+        // 1. Se cambia la pantalla de una vez, sin esperar a Firestore
+        replaceReview(
+            review.copy(
+                isLiked = !review.isLiked,
+                likesCount = if (review.isLiked) review.likesCount - 1 else review.likesCount + 1,
+                // si tenia dislike, la transaccion de Firestore tambien se lo quita
+                isDisliked = false,
+                disLikes = if (review.isDisliked) review.disLikes - 1 else review.disLikes
+            )
+        )
+
+        // 2. Se guarda en Firestore por detras; si falla, se vuelve a como estaba
         viewModelScope.launch {
-            val result = reviewRepository.sendOrDeleteReviewLike(targetReview.id, studentId)
+            val result = reviewRepository.sendOrDeleteReviewLike(review.id, studentId)
             if (result.isSuccess) {
-                _uiState.update { state ->
-                    state.copy(
-                        followedReviews = state.followedReviews.map { review ->
-                            if (review.id == targetReview.id) {
-                                review.copy(
-                                    isLiked = !review.isLiked,
-                                    likesCount = if (review.isLiked) review.likesCount - 1 else review.likesCount + 1,
-                                    // si tenia dislike, Firestore ya se lo quito en la transaccion
-                                    isDisliked = false,
-                                    disLikes = if (review.isDisliked) review.disLikes - 1 else review.disLikes
-                                )
-                            } else {
-                                review
-                            }
-                        }
-                    )
-                }
+                // Firestore lo guardo: la pantalla ya estaba bien, no hay nada que hacer
             } else {
-
+                // Fallo: se vuelve a como estaba
+                replaceReview(review)
             }
         }
     }
 
     fun updateDislikedReviews(index: Int) {
         val studentId = authRepository.currentUser?.uid ?: return
-        val targetReview = _uiState.value.followedReviews.getOrNull(index) ?: return
+        val review = _uiState.value.followedReviews.getOrNull(index) ?: return
 
+        // 1. Se cambia la pantalla de una vez, sin esperar a Firestore
+        replaceReview(
+            review.copy(
+                isDisliked = !review.isDisliked,
+                disLikes = if (review.isDisliked) review.disLikes - 1 else review.disLikes + 1,
+                // si tenia like, la transaccion de Firestore tambien se lo quita
+                isLiked = false,
+                likesCount = if (review.isLiked) review.likesCount - 1 else review.likesCount
+            )
+        )
+
+        // 2. Se guarda en Firestore por detras; si falla, se vuelve a como estaba
         viewModelScope.launch {
-            val result = reviewRepository.sendOrDeleteReviewDislike(targetReview.id, studentId)
+            val result = reviewRepository.sendOrDeleteReviewDislike(review.id, studentId)
             if (result.isSuccess) {
-                _uiState.update { state ->
-                    state.copy(
-                        followedReviews = state.followedReviews.map { review ->
-                            if (review.id == targetReview.id) {
-                                review.copy(
-                                    isDisliked = !review.isDisliked,
-                                    disLikes = if (review.isDisliked) review.disLikes - 1 else review.disLikes + 1,
-                                    // si tenia like, Firestore ya se lo quito en la transaccion
-                                    isLiked = false,
-                                    likesCount = if (review.isLiked) review.likesCount - 1 else review.likesCount
-                                )
-                            } else {
-                                review
-                            }
-                        }
-                    )
-                }
+                // Firestore lo guardo: la pantalla ya estaba bien, no hay nada que hacer
             } else {
-
+                // Fallo: se vuelve a como estaba
+                replaceReview(review)
             }
         }
     }

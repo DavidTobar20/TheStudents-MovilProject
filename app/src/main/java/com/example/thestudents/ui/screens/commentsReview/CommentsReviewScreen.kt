@@ -52,10 +52,11 @@ fun BodyCommentsReviewScreen(
     isDisliked: Boolean,
     onLikeClick: () -> Unit,
     onDislikeClick: () -> Unit,
-    likedComments: Set<Int>,
-    dislikedComments: Set<Int>,
-    onCommentLikeClick: (Int) -> Unit,
-    onCommentDislikeClick: (Int) -> Unit,
+    currentUserId: String,
+    onCommentLikeClick: (String) -> Unit,
+    onCommentDislikeClick: (String) -> Unit,
+    onEditCommentClick: (String, String) -> Unit,   // (commentId, texto nuevo)
+    onDeleteCommentClick: (String) -> Unit,         // commentId
     commentInputText: String,
     onCommentTextChange: (String) -> Unit,
     onSendCommentClick: () -> Unit,
@@ -89,13 +90,16 @@ fun BodyCommentsReviewScreen(
                 .padding(horizontal = 16.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            itemsIndexed(review.comments) { index, comment ->
+            itemsIndexed(review.comments) { _, comment ->
                 CommentItem(
                     comment = comment,
-                    isLiked = index in likedComments,
-                    isDisliked = index in dislikedComments,
-                    onLikeClick = { onCommentLikeClick(index) },
-                    onDislikeClick = { onCommentDislikeClick(index) },
+                    isLiked = comment.isLiked,
+                    isDisliked = comment.isDisliked,
+                    onLikeClick = { onCommentLikeClick(comment.id) },
+                    onDislikeClick = { onCommentDislikeClick(comment.id) },
+                    showActions = comment.commentator.id == currentUserId,
+                    onEditClick = { nuevoTexto -> onEditCommentClick(comment.id, nuevoTexto) },
+                    onDeleteClick = { onDeleteCommentClick(comment.id) },
                     onCommentatorClick = comment.commentator.id
                         .takeIf { it.isNotBlank() }
                         ?.let { id -> { onStudentClick(id) } },
@@ -130,10 +134,11 @@ fun BodyCommentsReviewScreenPreview() {
                 isDisliked = isDisliked,
                 onLikeClick = { isLiked = !isLiked },
                 onDislikeClick = { isDisliked = !isDisliked },
-                likedComments = emptySet(),
-                dislikedComments = emptySet(),
+                currentUserId = localStudentProvider.currentUser.id,
                 onCommentLikeClick = {},
                 onCommentDislikeClick = {},
+                onEditCommentClick = { _, _ -> },
+                onDeleteCommentClick = {},
                 commentInputText = commentInputText,
                 onCommentTextChange = { commentInputText = it },
                 onSendCommentClick = {}
@@ -203,13 +208,14 @@ fun CommentsReviewScreen(
                     isDisliked = review.isDisliked,
                     onLikeClick = { commentsReviewViewModel.updateIsLiked() },
                     onDislikeClick = { commentsReviewViewModel.updateIsDisliked() },
-                    likedComments = state.likedComments,
-                    dislikedComments = state.dislikedComments,
-                    onCommentLikeClick = { commentsReviewViewModel.updateLikedComments(it) },
-                    onCommentDislikeClick = { commentsReviewViewModel.updateDislikedComments(it) },
+                    currentUserId = state.currentUserId,
+                    onCommentLikeClick = { commentsReviewViewModel.updateCommentLike(it) },
+                    onCommentDislikeClick = { commentsReviewViewModel.updateCommentDislike(it) },
+                    onEditCommentClick = { commentId, nuevoTexto -> commentsReviewViewModel.editComment(commentId, nuevoTexto) },
+                    onDeleteCommentClick = { commentsReviewViewModel.deleteComment(it) },
                     commentInputText = state.commentInputText,
                     onCommentTextChange = { commentsReviewViewModel.updateCommentInputText(it) },
-                    onSendCommentClick = onBackClick
+                    onSendCommentClick = { commentsReviewViewModel.sendComment() }
                 )
             }
         }

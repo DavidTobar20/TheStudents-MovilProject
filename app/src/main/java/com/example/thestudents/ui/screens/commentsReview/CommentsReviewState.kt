@@ -6,8 +6,7 @@ import com.example.thestudents.data.local.localStudentProvider
 
 data class CommentsReviewState(
     val commentInputText: String = "",
-    val likedComments: Set<Int> = emptySet(),
-    val dislikedComments: Set<Int> = emptySet(),
+    val currentUserId: String = "", // para saber cuales comentarios son mios (editar / eliminar)
     val commentator: Student? = null,
     // La resena se carga desde el backend con el id que llega por la ruta; ya no hay una fija.
     val review: Review? = null,

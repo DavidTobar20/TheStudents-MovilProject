@@ -10,6 +10,7 @@ data class ReviewDto(
     val contenido: String? = null,
     val likesCount: Int? = 0,
     val disLikes: Int? = 0,
+    val commentsCount: Int? = 0,
     val rating: String? = null,
     val fecha_creacion: String? = null,
     val autor: StudentSummaryDto? = null,
@@ -50,6 +51,7 @@ fun ReviewDto.toReview(): Review {
         disLikes = disLikes ?: 0,
         rating = if (rating.isNullOrBlank()) null else rating,
         comments = emptyList(),
+        commentsCount = commentsCount ?: 0,
         isLiked = isLiked,
         isDisliked = isDisliked
     )

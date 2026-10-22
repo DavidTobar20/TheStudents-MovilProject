@@ -154,7 +154,7 @@ fun ReviewCard(
                 if (onCommentClick != null) {
                     SelectableIconButton(
                         icon = Icons.Outlined.ChatBubbleOutline,
-                        count = review.comments.size,
+                        count = review.commentsCount,
                         isSelected = false,
                         selectedColor = MaterialTheme.colorScheme.onSurface,
                         onClick = onCommentClick
