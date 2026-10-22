@@ -53,7 +53,7 @@ class FollowListViewModel @Inject constructor(
             }
 
             val result = if (isFollowingList) {
-                myFollowingResult
+                userRepository.getFollowing(userId)
             } else {
                 userRepository.getFollowers(userId)
             }
