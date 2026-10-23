@@ -80,6 +80,9 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.storage)
 
+    //Messaging
+    implementation("com.google.firebase:firebase-messaging")
+
     //Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
 

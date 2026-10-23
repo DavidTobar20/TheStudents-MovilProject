@@ -9,5 +9,6 @@ data class RegisterUserDto(
     val semestre: Int,
     val biografia: String,
     val foto_url: String? = null,
-    val color_perfil: String = ""
+    val color_perfil: String = "",
+    val fcmToken: String
 )

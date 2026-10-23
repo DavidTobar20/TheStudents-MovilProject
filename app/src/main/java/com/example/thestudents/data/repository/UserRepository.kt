@@ -7,9 +7,11 @@ import com.example.thestudents.data.datasource.impl.firestore.ReviewFirestoreDat
 import com.example.thestudents.data.datasource.impl.firestore.UserFirestoreDataSourceImpl
 import com.example.thestudents.data.dtos.RegisterUserDto
 import com.example.thestudents.data.dtos.toStudent
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
@@ -53,12 +55,14 @@ class UserRepository @Inject constructor(
         userId: String
     ): Result<Unit> {
         return try {
+            val fcmToken = FirebaseMessaging.getInstance().token.await()
             val registerUserDto = RegisterUserDto(
                 nombre = name,
                 nombre_usuario = username,
                 carrera = program,
                 semestre = semester,
-                biografia = bio
+                biografia = bio,
+                fcmToken = fcmToken
             )
             userRemoteDataSource.registerUser(registerUserDto, userId)
             Result.success(Unit)
@@ -78,6 +82,7 @@ class UserRepository @Inject constructor(
         userId: String
     ): Result<Unit> {
         return try {
+            val fcmToken = FirebaseMessaging.getInstance().token.await()
             val registerUserDto = RegisterUserDto(
                 nombre = name,
                 nombre_usuario = username,
@@ -85,7 +90,8 @@ class UserRepository @Inject constructor(
                 semestre = semester,
                 biografia = bio,
                 foto_url = fotoUrl,
-                color_perfil = colorPerfil ?: ""
+                color_perfil = colorPerfil ?: "",
+                fcmToken = fcmToken
             )
             userRemoteDataSource.updateUser(registerUserDto, userId)
             Result.success(Unit)
