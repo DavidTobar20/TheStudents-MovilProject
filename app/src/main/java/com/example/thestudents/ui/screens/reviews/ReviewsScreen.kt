@@ -1,5 +1,8 @@
 package com.example.thestudents.ui.screens.reviews
 
+import com.example.thestudents.R
+import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.layout.fillMaxWidth
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -45,6 +48,23 @@ fun BodyReviews(
         item {
             Spacer(modifier = Modifier.height(24.dp))
             HeaderReviews()
+        }
+        if (sections.isEmpty()) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 48.dp, start = 8.dp, end = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(R.string.sin_inscripciones),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
         }
         items(sections, key = { it.title }) { section ->
             CourseSectionCard(

@@ -55,7 +55,8 @@ fun BodyProfile(
     onFollowersClick: () -> Unit = {},
     onFollowingClick: () -> Unit = {},
     onLogoutClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    receivedReviews: List<Review> = emptyList() // para la grafica de calificaciones
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         ProfileHeader(onBackClick = onBackClick)
@@ -112,7 +113,7 @@ fun BodyProfile(
                     )
                 }
             }
-            item { RatingChartSection() }
+            item { RatingChartSection(receivedReviews = receivedReviews) }
             item {
                 ProfileTabs(
                     selectedTab = selectedTab,
@@ -246,6 +247,7 @@ fun ProfileScreen(
                 student = student,
                 email = state.email ?: "",
                 reviews = reviews,
+                receivedReviews = userProfile.receivedReviews,
                 selectedTab = state.selectedTab,
                 followersCount = state.followersCount,
                 followingCount = state.followingCount,

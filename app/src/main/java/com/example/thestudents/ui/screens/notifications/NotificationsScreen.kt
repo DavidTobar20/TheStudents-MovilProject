@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.notifications
 
+import androidx.compose.material3.CircularProgressIndicator
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,12 +40,21 @@ fun BodyNotifications(
     onRejectClick: (String) -> Unit,
     onStudentClick: (String) -> Unit,
     onReviewClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isLoading: Boolean = false
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         NotificationsTopBar()
 
-        if (notifications.isEmpty()) {
+        if (isLoading && notifications.isEmpty()) {
+            // Mientras llegan de Firestore se muestra el loader, no el mensaje de "no tienes notificaciones"
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else if (notifications.isEmpty()) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -143,7 +153,8 @@ fun NotificationsScreen(
         },
         onStudentClick = onStudentClick,
         onReviewClick = onReviewClick,
-        modifier = modifier
+        modifier = modifier,
+        isLoading = state.isLoading
     )
 }
 

@@ -45,6 +45,7 @@
     <string name="explorar">Explorar</string>
     <string name="comentarios">COMENTARIOS (%1$d)</string>
     <string name="sin_notificaciones">No tienes notificaciones por ahora.</string>
+    <string name="sin_inscripciones">Aún no tienes materias inscritas. Cuando te inscribas en una, aquí aparecerán tus compañeros para que puedas reseñarlos.</string>
     <string name="repite_tu_contrase_a">Repite tu contraseña</string>
     <string name="confirma_tu_contrase_a">Confirma tu contraseña</string>
     <string name="crea_una_contrase_a_segura">Crea una contraseña segura</string>
@@ -158,6 +159,8 @@
 
     <!-- Components -->
     <string name="reseno_a">"reseñó a "</string>
+    <string name="resena_para">RESEÑA PARA</string>
+    <string name="periodo_x">Periodo %1$s</string>
 
     <!-- Perfil otro estudiante -->
     <string name="seguir">Seguir</string>
@@ -170,6 +173,10 @@
     <plurals name="programa_y_resenas">
         <item quantity="one">%1$s · %2$d reseña</item>
         <item quantity="other">%1$s · %2$d reseñas</item>
+    </plurals>
+    <plurals name="comentarios_total">
+        <item quantity="one">%d comentario</item>
+        <item quantity="other">%d comentarios</item>
     </plurals>
     <plurals name="resenas_count">
         <item quantity="one">%1$d reseña</item>

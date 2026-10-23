@@ -139,7 +139,11 @@ data class ExtendedColors(
     val like: Color,
     val onLike: Color,
     val dislike: Color,
-    val onDislike: Color
+    val onDislike: Color,
+    // Pildora de calificacion de la tarjeta de reseña: verde oscuro con estrella dorada en ambos temas
+    val ratingPill: Color,
+    val onRatingPill: Color,
+    val ratingPillStar: Color
 )
 
 private val LightExtendedColors = ExtendedColors(
@@ -148,7 +152,10 @@ private val LightExtendedColors = ExtendedColors(
     like = Pine90,
     onLike = Pine10,
     dislike = Green20,
-    onDislike = Green100
+    onDislike = Green100,
+    ratingPill = Green20,
+    onRatingPill = Cream98,
+    ratingPillStar = Gold80
 )
 
 private val DarkExtendedColors = ExtendedColors(
@@ -157,7 +164,10 @@ private val DarkExtendedColors = ExtendedColors(
     like = Pine80,
     onLike = Pine10,
     dislike = Green30,
-    onDislike = Green90
+    onDislike = Green90,
+    ratingPill = Green30,
+    onRatingPill = Cream98,
+    ratingPillStar = Gold80
 )
 
 private val LocalExtendedColors = staticCompositionLocalOf { LightExtendedColors }

@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.profile.components
 
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +27,7 @@ fun RatingBarItem(
     rating: Int,
     progress: Float,
     modifier: Modifier = Modifier,
+    count: Int? = null, // cuantas reseñas tienen esta calificacion
 ) {
     Row(
         modifier = modifier
@@ -49,6 +51,16 @@ fun RatingBarItem(
             color = MaterialTheme.extended.rating,
             trackColor = MaterialTheme.colorScheme.surfaceContainerHigh
         )
+        if (count != null) {
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = count.toString(),
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.End,
+                modifier = Modifier.width(20.dp)
+            )
+        }
     }
 }
 

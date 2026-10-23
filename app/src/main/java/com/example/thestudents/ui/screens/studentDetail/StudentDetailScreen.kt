@@ -47,7 +47,8 @@ fun BodyStudentDetail(
     onFollowersClick: () -> Unit = {},
     onFollowingClick: () -> Unit = {},
     reviewsCount: Int = student.reviewsCount,
-    followed: Boolean = false
+    followed: Boolean = false,
+    receivedReviews: List<Review> = emptyList() // para la grafica de calificaciones
 ) {
     LazyColumn(modifier = modifier.fillMaxSize()) {
         item { UserInfoSection(student = student) }
@@ -74,7 +75,7 @@ fun BodyStudentDetail(
                     .padding(horizontal = 24.dp)
             )
         }
-        item { RatingChartSection() }
+        item { RatingChartSection(receivedReviews = receivedReviews) }
         item {
             ProfileTabs(
                 selectedTab = selectedTab,
@@ -182,6 +183,7 @@ fun StudentDetailScreen(
                 BodyStudentDetail(
                     student = student,
                     reviews = reviews,
+                    receivedReviews = userProfile.receivedReviews,
                     selectedTab = state.selectedTab,
                     onTabSelected = studentDetailViewModel::onTabSelected,
                     onFollowClick = { studentDetailViewModel.followOrUnfollowStudent(studentId) },
