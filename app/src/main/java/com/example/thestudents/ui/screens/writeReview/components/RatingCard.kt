@@ -1,5 +1,7 @@
 package com.example.thestudents.ui.screens.writeReview.components
 
+import com.example.thestudents.ui.components.luxuryCard
+import com.example.thestudents.ui.components.SectionLabel
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,19 +33,15 @@ fun RatingCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 16.dp),
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .luxuryCard(RoundedCornerShape(20.dp)),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        shape = RoundedCornerShape(16.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        shape = RoundedCornerShape(20.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = stringResource(R.string.calificacion_opcional),
-                fontSize = 11.sp,
-                color = MaterialTheme.colorScheme.secondary,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+            SectionLabel(text = stringResource(R.string.calificacion_opcional))
+            Spacer(modifier = Modifier.height(10.dp))
             StarsRating(
                 modifier = Modifier
                     .size(32.dp),

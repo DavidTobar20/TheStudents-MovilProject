@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.editarPerfil.components
 
+import com.example.thestudents.ui.components.luxuryCard
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,10 +37,10 @@ fun EditBioSection(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp),
+            .padding(horizontal = 24.dp)
+            .luxuryCard(RoundedCornerShape(20.dp)),
         shape = RoundedCornerShape(20.dp),
-        color = MaterialTheme.colorScheme.surfaceContainerLowest,
-        shadowElevation = 2.dp
+        color = MaterialTheme.colorScheme.surfaceContainerLowest
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -49,10 +50,10 @@ fun EditBioSection(
             ) {
                 Text(
                     text = stringResource(R.string.biografia_mayuscula),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    letterSpacing = 0.5.sp
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    letterSpacing = 1.4.sp
                 )
                 
                 Text(

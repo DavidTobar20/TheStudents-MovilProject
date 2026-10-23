@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.utils
 
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,7 +35,7 @@ fun ButtonWithIcon(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
+        shape = CircleShape,
         border = BorderStroke(1.dp, borderColor),
         colors = ButtonDefaults.outlinedButtonColors(
             contentColor = contentColor

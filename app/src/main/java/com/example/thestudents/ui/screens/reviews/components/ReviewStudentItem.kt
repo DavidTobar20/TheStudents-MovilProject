@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.reviews.components
 
+import com.example.thestudents.ui.components.GoldRingAvatar
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -34,14 +35,13 @@ fun ReviewStudentItem(
             .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        ProfileIcon(
+        GoldRingAvatar(
             initials = student.initials,
             profileImage = student.profileImage,
             backgroundColor = student.profileColor,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-            fontSize = 18.sp,
+            size = 48.dp,
+            fontSize = 17.sp,
             modifier = Modifier
-                .size(48.dp)
                 .clip(CircleShape)
                 .clickable(onClick = onStudentClick)
         )
@@ -58,7 +58,7 @@ fun ReviewStudentItem(
                 color = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = inscription.period,
+                text = stringResource(R.string.periodo_x, inscription.period),
                 fontSize = 13.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -68,7 +68,7 @@ fun ReviewStudentItem(
             textoBoton = stringResource(R.string.resenar),
             onClick = onWriteReviewClick,
             fontSize = 12.sp,
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+            contentPadding = PaddingValues(horizontal = 18.dp, vertical = 10.dp)
         )
     }
 }

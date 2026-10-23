@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.notifications.components
 
+import com.example.thestudents.ui.components.GoldRingAvatar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -59,13 +60,12 @@ fun NotificationAvatar(
             .clickable(onClick = onClick),
         contentAlignment = Alignment.BottomEnd
     ) {
-        ProfileIcon(
+        GoldRingAvatar(
             initials = student.initials,
             profileImage = student.profileImage,
             backgroundColor = student.profileColor,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-            fontSize = 18.sp,
-            modifier = Modifier.size(48.dp)
+            size = 48.dp,
+            fontSize = 17.sp
         )
         
         Box(

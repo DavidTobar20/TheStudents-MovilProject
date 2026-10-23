@@ -1,5 +1,7 @@
 package com.example.thestudents.ui.screens.reviews.components
 
+import com.example.thestudents.ui.components.luxuryCard
+import com.example.thestudents.ui.components.SectionLabel
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -22,20 +24,16 @@ fun CourseSectionCard(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.padding(vertical = 12.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = "${section.title} (${section.period})",
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.surfaceContainerLowest,
-            shape = RoundedCornerShape(16.dp),
-            shadowElevation = 1.dp
+        // Materia y periodo en letras doradas, como "RESEÑA PARA"
+        SectionLabel(
+            text = "${section.title} · ${section.period}",
+            modifier = Modifier.padding(start = 4.dp)
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .luxuryCard()
         ) {
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 section.inscriptions.forEachIndexed { index, inscription ->
@@ -47,8 +45,8 @@ fun CourseSectionCard(
                     )
                     if (index < (section.inscriptions.size - 1)) {
                         HorizontalDivider(
-                            color = MaterialTheme.colorScheme.outlineVariant,
-                            thickness = 0.5.dp
+                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            thickness = 1.dp
                         )
                     }
                 }

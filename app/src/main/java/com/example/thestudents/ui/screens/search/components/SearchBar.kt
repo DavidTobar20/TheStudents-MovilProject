@@ -1,5 +1,10 @@
 package com.example.thestudents.ui.screens.search.components
 
+import com.example.thestudents.ui.theme.extended
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.shadow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -24,7 +29,16 @@ fun SearchBar(
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            // Sombra suave, como las tarjetas
+            .shadow(
+                elevation = 8.dp,
+                shape = CircleShape,
+                ambientColor = Color.Black.copy(alpha = 0.06f),
+                spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)
+            ),
         placeholder = {
             Text(
                 text = stringResource(R.string.buscar_por_nombre_o_carrera),
@@ -35,13 +49,14 @@ fun SearchBar(
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                tint = MaterialTheme.colorScheme.primary
             )
         },
-        shape = RoundedCornerShape(12.dp),
+        shape = CircleShape,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+            // Borde dorado al escribir; borde fino del tema en reposo
+            focusedBorderColor = MaterialTheme.extended.rating,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
             focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
             unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
         ),

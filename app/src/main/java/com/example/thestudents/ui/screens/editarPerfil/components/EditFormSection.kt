@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.editarPerfil.components
 
+import com.example.thestudents.ui.components.luxuryCard
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -49,10 +50,10 @@ fun EditFormSection(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp),
+            .padding(horizontal = 24.dp)
+            .luxuryCard(RoundedCornerShape(20.dp)),
         shape = RoundedCornerShape(20.dp),
-        color = MaterialTheme.colorScheme.surfaceContainerLowest,
-        shadowElevation = 2.dp
+        color = MaterialTheme.colorScheme.surfaceContainerLowest
     ) {
         Column(modifier = Modifier.padding(vertical = 8.dp)) {
             EditFieldItem(
@@ -123,9 +124,9 @@ private fun EditFieldItem(
             Text(
                 text = label,
                 fontSize = 10.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                letterSpacing = 0.3.sp
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.tertiary,
+                letterSpacing = 1.2.sp
             )
             
             BasicTextField(

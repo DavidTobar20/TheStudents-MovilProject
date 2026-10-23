@@ -160,6 +160,7 @@
     <!-- Components -->
     <string name="reseno_a">"reseñó a "</string>
     <string name="resena_para">RESEÑA PARA</string>
+    <string name="calificaciones_recibidas">Calificaciones recibidas</string>
     <string name="periodo_x">Periodo %1$s</string>
 
     <!-- Perfil otro estudiante -->
@@ -173,6 +174,14 @@
     <plurals name="programa_y_resenas">
         <item quantity="one">%1$s · %2$d reseña</item>
         <item quantity="other">%1$s · %2$d reseñas</item>
+    </plurals>
+    <plurals name="seguidores_label">
+        <item quantity="one">seguidor</item>
+        <item quantity="other">seguidores</item>
+    </plurals>
+    <plurals name="resenas_label">
+        <item quantity="one">reseña</item>
+        <item quantity="other">reseñas</item>
     </plurals>
     <plurals name="comentarios_total">
         <item quantity="one">%d comentario</item>

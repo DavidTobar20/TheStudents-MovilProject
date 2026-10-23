@@ -1,5 +1,8 @@
 package com.example.thestudents.ui.screens.writeReview.components
 
+import com.example.thestudents.ui.components.luxuryCard
+import com.example.thestudents.ui.components.SectionLabel
+import com.example.thestudents.ui.components.GoldRingAvatar
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ProfileIcon
 
+// Tarjeta "RESEÑA PARA" con el estudiante que se va a reseñar
 @Composable
 fun ReviewHeader(
     modifier: Modifier = Modifier,
@@ -34,36 +38,35 @@ fun ReviewHeader(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = 30.dp),
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .luxuryCard()
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ProfileIcon(
-            modifier = Modifier
-                .size(43.dp)
-                .then(
-                    if (onAvatarClick != null) {
-                        Modifier
-                            .clip(CircleShape)
-                            .clickable(onClick = onAvatarClick)
-                    } else Modifier
-                ),
+        GoldRingAvatar(
             initials = initials,
             profileImage = profileImage,
             backgroundColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-            fontSize = 18.sp
+            size = 52.dp,
+            fontSize = 18.sp,
+            modifier = if (onAvatarClick != null) {
+                Modifier
+                    .clip(CircleShape)
+                    .clickable(onClick = onAvatarClick)
+            } else Modifier
         )
-        Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(14.dp))
         Column {
+            SectionLabel(text = "Reseña para")
             Text(
                 text = name,
                 color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.SemiBold,
+                fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )
             Text(
                 text = courseInfo,
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 12.sp
             )
         }

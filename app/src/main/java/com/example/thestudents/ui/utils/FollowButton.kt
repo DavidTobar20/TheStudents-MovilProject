@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.utils
 
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,7 +32,7 @@ fun FollowButton(
         OutlinedButton(
             onClick = onFollowToggle,
             modifier = modifier,
-            shape = RoundedCornerShape(12.dp),
+            shape = CircleShape,
             contentPadding = contentPadding,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
             colors = ButtonDefaults.outlinedButtonColors(
@@ -42,14 +43,15 @@ fun FollowButton(
             Text(
                 text = stringResource(R.string.siguiendo_mayuscula),
                 fontSize = fontSize,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp
             )
         }
     } else {
         Button(
             onClick = onFollowToggle,
             modifier = modifier,
-            shape = RoundedCornerShape(12.dp),
+            shape = CircleShape,
             contentPadding = contentPadding,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
@@ -59,7 +61,8 @@ fun FollowButton(
             Text(
                 text = stringResource(R.string.seguir_mayuscula),
                 fontSize = fontSize,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp
             )
         }
     }

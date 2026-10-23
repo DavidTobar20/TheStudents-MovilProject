@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.profile
 
+import com.example.thestudents.ui.components.ProfileActionButton
 import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
@@ -61,17 +62,11 @@ fun BodyProfile(
     Column(modifier = modifier.fillMaxSize()) {
         ProfileHeader(onBackClick = onBackClick)
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            item { 
-                UserInfoSection(
-                    student = student
-                ) 
-            }
             item {
-                Text(
-                    text = "Email: $email",
-                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.secondary
+                // Foto, nombre, carrera, biografia y correo centrados
+                UserInfoSection(
+                    student = student,
+                    email = email
                 )
             }
             item { 
@@ -89,27 +84,20 @@ fun BodyProfile(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    ButtonWithIcon(
+                    // Botones tonales lado a lado, estilo Threads
+                    ProfileActionButton(
                         text = stringResource(R.string.editar_perfil),
                         icon = Icons.Outlined.Edit,
                         onClick = onEditProfileClick,
-                        borderColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(48.dp)
+                        modifier = Modifier.weight(1f)
                     )
-                    ButtonWithIcon(
+                    ProfileActionButton(
                         text = stringResource(R.string.cerrar_sesion),
                         icon = Icons.AutoMirrored.Filled.Logout,
                         onClick = onLogoutClick,
-                        borderColor = MaterialTheme.colorScheme.secondary,
-                        contentColor = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(48.dp)
+                        modifier = Modifier.weight(1f)
                     )
                 }
             }

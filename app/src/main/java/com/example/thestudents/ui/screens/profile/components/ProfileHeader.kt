@@ -1,12 +1,13 @@
 package com.example.thestudents.ui.screens.profile.components
 
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
-import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -48,13 +49,8 @@ fun ProfileHeader(
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
         )
-        IconButton(onClick = { /* Menú */ }) {
-            Icon(
-                imageVector = Icons.Default.MoreHoriz,
-                contentDescription = stringResource(R.string.opciones),
-                tint = MaterialTheme.colorScheme.primary
-            )
-        }
+        // Espacio del mismo ancho que el boton de atras, para que el titulo quede centrado
+        Spacer(modifier = Modifier.size(48.dp))
     }
 }
 

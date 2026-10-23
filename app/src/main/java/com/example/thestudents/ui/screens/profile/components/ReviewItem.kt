@@ -1,5 +1,7 @@
 package com.example.thestudents.ui.screens.profile.components
 
+import com.example.thestudents.ui.components.GoldRingAvatar
+import com.example.thestudents.ui.components.luxuryCard
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -55,21 +57,23 @@ fun ReviewItem(
             Modifier
         }
 
+    // Cada reseña del perfil es una tarjeta con el mismo estilo que las del Home
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 6.dp)
+            .luxuryCard()
             .clickable { onClick() }
-            .padding(24.dp)
+            .padding(16.dp)
     ) {
         Row(verticalAlignment = Alignment.Top) {
-            ProfileIcon(
+            GoldRingAvatar(
                 initials = displayStudent.initials,
                 profileImage = displayStudent.profileImage,
                 backgroundColor = displayStudent.profileColor,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
+                size = 40.dp,
                 fontSize = 14.sp,
                 modifier = Modifier
-                    .size(40.dp)
                     .clip(CircleShape)
                     .then(studentModifier)
             )

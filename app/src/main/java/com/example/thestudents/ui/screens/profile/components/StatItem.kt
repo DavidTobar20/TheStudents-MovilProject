@@ -28,11 +28,13 @@ fun StatItem(
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
         )
+        // Etiqueta en letras doradas pequeñas y espaciadas
         Text(
             text = label,
-            fontSize = 11.sp,
-            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f),
-            fontWeight = FontWeight.Bold
+            fontSize = 10.sp,
+            color = MaterialTheme.colorScheme.tertiary,
+            fontWeight = FontWeight.SemiBold,
+            letterSpacing = 1.2.sp
         )
     }
 }

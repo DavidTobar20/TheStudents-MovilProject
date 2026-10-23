@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.studentDetail
 
+import com.example.thestudents.ui.components.ProfileActionButton
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -63,15 +64,14 @@ fun BodyStudentDetail(
             )
         }
         item {
-            ButtonWithIcon(
-                //  si ya lo sigo muestro "Dejar de seguir", si no "Seguir"
+            // Si no lo sigo: boton verde "Seguir" (accion principal). Si ya lo sigo: tonal "Dejar de seguir"
+            ProfileActionButton(
                 text = if (followed) stringResource(R.string.dejar_de_seguir) else stringResource(R.string.seguir),
                 icon = if (followed) Icons.Default.PersonRemove else Icons.Default.PersonAdd,
                 onClick = onFollowClick,
-                borderColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.primary,
+                filled = !followed,
                 modifier = Modifier
-                    .height(48.dp)
+                    .fillMaxWidth()
                     .padding(horizontal = 24.dp)
             )
         }

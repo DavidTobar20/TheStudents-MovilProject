@@ -1,5 +1,8 @@
 package com.example.thestudents.ui.utils
 
+import com.example.thestudents.ui.theme.extended
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,9 +44,10 @@ fun TabItem(
                 Spacer(modifier = Modifier.height(4.dp))
                 Box(
                     modifier = Modifier
-                        .width(40.dp)
-                        .height(2.dp)
-                        .background(MaterialTheme.colorScheme.primary)
+                        .width(32.dp)
+                        .height(3.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.extended.rating)
                 )
             }
         }

@@ -1,5 +1,8 @@
 package com.example.thestudents.ui.screens.editarPerfil.components
 
+import androidx.compose.ui.text.font.FontWeight
+import com.example.thestudents.ui.theme.extended
+import androidx.compose.foundation.border
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -55,7 +58,12 @@ fun EditPhotoSection(
                 backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 contentColor = MaterialTheme.colorScheme.primary,
                 fontSize = 36.sp,
-                modifier = Modifier.fillMaxSize()
+                // Aro dorado alrededor de la foto
+                modifier = Modifier
+                    .fillMaxSize()
+                    .border(2.dp, MaterialTheme.extended.rating, CircleShape)
+                    .padding(4.dp)
+                    .clip(CircleShape)
             )
             
             Box(
@@ -80,7 +88,8 @@ fun EditPhotoSection(
         Text(
             text = stringResource(R.string.cambiar_foto),
             fontSize = 13.sp,
-            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f),
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier.clickable { onEditClick() }
         )
     }

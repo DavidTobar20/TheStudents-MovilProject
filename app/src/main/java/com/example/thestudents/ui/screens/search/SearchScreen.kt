@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.search
 
+import androidx.compose.foundation.layout.PaddingValues
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -48,29 +49,30 @@ fun BodySearch(
     followedStudentIds: Set<String> = emptySet(),
     onFollowToggle: (String) -> Unit = {}
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(24.dp))
+    Column(modifier = modifier.fillMaxSize()) {
+        // Barra de titulo de 64 dp, igual que Notificaciones y Reseña
         HeaderSearch()
-        SearchBar(query, onQueryChange = onQueryChange)
-        Spacer(modifier = Modifier.height(24.dp))
 
-        Text(
-            text = stringResource(R.string.sugerencias_para_ti),
-            modifier = Modifier.fillMaxWidth(),
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.7f),
-            letterSpacing = 1.sp
-        )
+        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+            SearchBar(query, onQueryChange = onQueryChange)
+            Spacer(modifier = Modifier.height(20.dp))
+            // Etiqueta en versalitas doradas, como "COMENTARIOS" y "RESEÑA PARA"
+            Text(
+                text = stringResource(R.string.sugerencias_para_ti).uppercase(),
+                modifier = Modifier.padding(horizontal = 4.dp),
+                fontSize = 11.sp,
+                fontWeight = FontWeight.SemiBold,
+                letterSpacing = 1.4.sp,
+                color = MaterialTheme.colorScheme.tertiary
+            )
+        }
 
-        Spacer(modifier = Modifier.height(8.dp))
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(students, key = { it.id }) { student -> 
+        // El margen va en contentPadding para que las sombras de las tarjetas no se corten
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp)
+        ) {
+            items(students, key = { it.id }) { student ->
                 StudentCard(
                     student = student,
                     isFollowing = student.id in followedStudentIds,

@@ -1,5 +1,8 @@
 package com.example.thestudents.ui.screens.register.components
 
+import com.example.thestudents.ui.theme.extended
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.shadow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,7 +49,13 @@ fun MultilineTextField(
             onValueChange = onValueChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surfaceContainerLowest, RoundedCornerShape(14.dp)),
+                .shadow(
+                    elevation = 6.dp,
+                    shape = RoundedCornerShape(16.dp),
+                    ambientColor = Color.Black.copy(alpha = 0.06f),
+                    spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)
+                )
+                .background(MaterialTheme.colorScheme.surfaceContainerLowest, RoundedCornerShape(16.dp)),
             placeholder = {
                 Text(
                     text = placeholder,
@@ -63,10 +72,11 @@ fun MultilineTextField(
             },
             singleLine = false,
             minLines = minLines,
-            shape = RoundedCornerShape(14.dp),
+            shape = RoundedCornerShape(16.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                // Borde dorado al escribir; borde fino del tema en reposo (igual que el buscador)
+                focusedBorderColor = MaterialTheme.extended.rating,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
                 focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
                 unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest
             )

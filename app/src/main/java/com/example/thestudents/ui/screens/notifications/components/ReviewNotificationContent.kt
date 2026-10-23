@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.notifications.components
 
+import com.example.thestudents.ui.components.RatingPill
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -21,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.thestudents.R
 import com.example.thestudents.ui.theme.TheStudentsTheme
-import com.example.thestudents.ui.utils.RatingBadge
 
 @Composable
 fun ReviewNotificationContent(
@@ -70,8 +70,9 @@ fun ReviewNotificationContent(
         }
 
         // Calificación en un círculo reutilizable
+        // Misma pildora "★ 5" de la tarjeta de reseña
         if (rating > 0) {
-            RatingBadge(rating = rating)
+            RatingPill(rating = rating.toString())
         }
     }
 }

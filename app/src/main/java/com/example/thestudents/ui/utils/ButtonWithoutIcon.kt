@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.utils
 
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,7 +33,7 @@ fun ButtonWithoutIcon(
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary
         ),
-        shape = RoundedCornerShape(8.dp),
+        shape = CircleShape,
         contentPadding = contentPadding,
         modifier = modifier
     ) {
@@ -40,7 +41,8 @@ fun ButtonWithoutIcon(
             text = textoBoton,
             color = MaterialTheme.colorScheme.onPrimary,
             fontSize = fontSize,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 1.sp
         )
     }
 }

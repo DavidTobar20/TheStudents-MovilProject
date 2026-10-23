@@ -208,9 +208,9 @@ private fun ReviewHeader(
     }
 }
 
-// Pildora verde oscuro con estrella dorada: "★ 4,5"
+// Pildora verde oscuro con estrella dorada: "★ 4,5" (tambien se usa en Notificaciones)
 @Composable
-private fun RatingPill(rating: String) {
+fun RatingPill(rating: String) {
     val value = rating.toDoubleOrNull()
     val ratingText = when {
         value == null -> rating

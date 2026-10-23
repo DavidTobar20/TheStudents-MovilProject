@@ -1,5 +1,6 @@
 package com.example.thestudents.ui.screens.writeReview
 
+import com.example.thestudents.ui.components.luxuryCard
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -78,15 +79,17 @@ fun BodyWriteReviewScreen(
             )
             ReviewField(
                 review = review,
-                onContenidoChange = onReviewChange
+                onContenidoChange = onReviewChange,
+                placeholder = "Escribe tu experiencia con $nameReviewed..."
             )
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp, horizontal = 16.dp),
+                    .padding(vertical = 8.dp, horizontal = 16.dp)
+                    .luxuryCard(RoundedCornerShape(20.dp)),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(16.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                shape = RoundedCornerShape(20.dp)
             ) {
                 SettingSwitchRow(
                     modifier = Modifier.padding(16.dp),
@@ -104,7 +107,7 @@ fun BodyWriteReviewScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-                .height(48.dp)
+                .height(52.dp)
         )
     }
 }

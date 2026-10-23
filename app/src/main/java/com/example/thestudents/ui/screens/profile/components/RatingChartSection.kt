@@ -1,5 +1,11 @@
 package com.example.thestudents.ui.screens.profile.components
 
+import com.example.thestudents.R
+import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Spacer
+import com.example.thestudents.ui.components.SectionLabel
+import com.example.thestudents.ui.components.luxuryCard
 import kotlin.math.roundToInt
 import com.example.thestudents.data.local.localReviewsProvider
 import com.example.thestudents.data.Review
@@ -29,12 +35,14 @@ fun RatingChartSection(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .padding(24.dp),
+            .padding(horizontal = 24.dp, vertical = 8.dp)
+            .luxuryCard(RoundedCornerShape(20.dp)),
         color = MaterialTheme.colorScheme.surfaceContainerLowest,
-        shape = RoundedCornerShape(16.dp),
-        shadowElevation = 1.dp
+        shape = RoundedCornerShape(20.dp)
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
+            SectionLabel(text = stringResource(R.string.calificaciones_recibidas))
+            Spacer(modifier = Modifier.height(12.dp))
             // De 5 a 1 estrellas: la barra es el porcentaje de reseñas con esa calificacion
             for (star in 5 downTo 1) {
                 val count = ratings.count { it == star }

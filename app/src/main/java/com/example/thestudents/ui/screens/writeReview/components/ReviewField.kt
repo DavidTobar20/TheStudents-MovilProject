@@ -1,5 +1,7 @@
 package com.example.thestudents.ui.screens.writeReview.components
 
+import com.example.thestudents.ui.components.luxuryCard
+import com.example.thestudents.ui.components.SectionLabel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,37 +30,34 @@ fun ReviewField(
     modifier: Modifier = Modifier,
     review: String,
     onContenidoChange: (String) -> Unit,
-    maxLength: Int = 300) {
+    maxLength: Int = 300,
+    placeholder: String = "Escribe tu experiencia...") {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 16.dp),
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .luxuryCard(RoundedCornerShape(20.dp)),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        shape = RoundedCornerShape(16.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        shape = RoundedCornerShape(20.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = stringResource(R.string.resena_mayuscula),
-                    fontSize = 11.sp,
-                    color = MaterialTheme.colorScheme.secondary,
-                    fontWeight = FontWeight.Bold
-                )
+                SectionLabel(text = stringResource(R.string.resena_mayuscula))
                 Text(
                     text = "${review.length}/$maxLength",
                     fontSize = 11.sp,
-                    color = MaterialTheme.colorScheme.secondary
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
             CustomTextField(
                 value = review,
                 onValueChange = { if (it.length <= maxLength) onContenidoChange(it) },
-                placeholder = "Escribe tu experiencia con Laura...",
+                placeholder = placeholder,
                 singleLine = false,
                 modifier = Modifier
                     .fillMaxWidth()

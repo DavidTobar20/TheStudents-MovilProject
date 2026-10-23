@@ -39,14 +39,12 @@ fun BodyReviews(
     onWriteReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // El margen va en contentPadding para que las sombras de las tarjetas no se corten
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 24.dp),
-        contentPadding = PaddingValues(bottom = 24.dp)
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp)
     ) {
         item {
-            Spacer(modifier = Modifier.height(24.dp))
             HeaderReviews()
         }
         if (sections.isEmpty()) {
