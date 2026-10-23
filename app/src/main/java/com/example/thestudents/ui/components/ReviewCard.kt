@@ -112,40 +112,14 @@ fun ReviewCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Like y dislike en una sola capsula
-            Row(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .border(1.dp, MaterialTheme.colorScheme.surfaceContainerHighest, CircleShape)
-                    .background(MaterialTheme.colorScheme.surfaceContainerLowest),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                ReactionButton(
-                    icon = Icons.Outlined.ThumbUp,
-                    count = review.likesCount,
-                    isSelected = isLiked,
-                    // Like: verde claro de la marca
-                    selectedContainerColor = MaterialTheme.extended.like,
-                    selectedContentColor = MaterialTheme.extended.onLike,
-                    contentDescription = "Me gusta",
-                    onClick = onLikeClick
-                )
-                Box(
-                    modifier = Modifier
-                        .width(1.dp)
-                        .height(22.dp)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                )
-                ReactionButton(
-                    icon = Icons.Outlined.ThumbDown,
-                    count = review.disLikes,
-                    isSelected = isDisliked,
-                    // Dislike: verde oscuro de la marca
-                    selectedContainerColor = MaterialTheme.extended.dislike,
-                    selectedContentColor = MaterialTheme.extended.onDislike,
-                    contentDescription = "No me gusta",
-                    onClick = onDislikeClick
-                )
-            }
+            ReactionCapsule(
+                likes = review.likesCount,
+                dislikes = review.disLikes,
+                isLiked = isLiked,
+                isDisliked = isDisliked,
+                onLikeClick = onLikeClick,
+                onDislikeClick = onDislikeClick
+            )
 
             if (onCommentClick != null) {
                 Row(
@@ -349,43 +323,6 @@ private fun ReviewQuote(content: String) {
             lineHeight = 24.sp,
             fontStyle = FontStyle.Italic,
             color = MaterialTheme.colorScheme.onSurface
-        )
-    }
-}
-
-// Un lado de la capsula de reacciones (like o dislike), de 44 dp de alto para tocarlo facil
-@Composable
-private fun ReactionButton(
-    icon: ImageVector,
-    count: Int,
-    isSelected: Boolean,
-    selectedContainerColor: Color,
-    selectedContentColor: Color,
-    contentDescription: String,
-    onClick: () -> Unit
-) {
-    val contentColor = if (isSelected) selectedContentColor else MaterialTheme.colorScheme.onSurfaceVariant
-
-    Row(
-        modifier = Modifier
-            .height(44.dp)
-            .background(if (isSelected) selectedContainerColor else Color.Transparent)
-            .clickable(role = Role.Button, onClick = onClick)
-            .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = contentDescription,
-            tint = contentColor,
-            modifier = Modifier.size(18.dp)
-        )
-        Text(
-            text = count.toString(),
-            fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = contentColor
         )
     }
 }

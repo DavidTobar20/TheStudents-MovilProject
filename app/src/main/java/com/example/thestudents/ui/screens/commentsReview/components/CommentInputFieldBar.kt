@@ -1,5 +1,10 @@
 package com.example.thestudents.ui.screens.commentsReview.components
 
+import com.example.thestudents.ui.theme.extended
+import com.example.thestudents.ui.theme.OnAvatar
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -46,23 +51,35 @@ fun CommentInputFieldBar(
     commentator: Student
 ) {
     Surface(
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
         modifier = modifier.fillMaxWidth()
     ) {
+      Column {
+        // Borde superior de lado a lado, igual que la franja inferior de la tarjeta de reseña
+        HorizontalDivider(color = MaterialTheme.colorScheme.surfaceContainerHigh, thickness = 1.dp)
         Row(
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 8.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            ProfileIcon(
-                initials = commentator.initials,
-                profileImage = commentator.profileImage,
-                backgroundColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                contentColor = MaterialTheme.colorScheme.primary,
-                fontSize = 19.sp,
-                modifier = Modifier.size(40.dp)
-            )
+            // Avatar con aro dorado fino
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .border(1.5.dp, MaterialTheme.extended.rating, CircleShape)
+                    .padding(2.5.dp)
+                    .clip(CircleShape)
+            ) {
+                ProfileIcon(
+                    initials = commentator.initials,
+                    profileImage = commentator.profileImage,
+                    backgroundColor = commentator.profileColor,
+                    contentColor = OnAvatar,
+                    fontSize = 14.sp,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
             Spacer(modifier = Modifier.width(10.dp))
             CustomTextField(
                 value = commentText,
@@ -72,20 +89,20 @@ fun CommentInputFieldBar(
                 modifier = Modifier.weight(1f),
                 modifierBox = Modifier
                     .weight(1f)
-                    .height(40.dp)
-                    .clip(RoundedCornerShape(20.dp))
+                    .height(44.dp)
+                    .clip(RoundedCornerShape(22.dp))
                     .background(MaterialTheme.colorScheme.surfaceContainerLowest)
                     .border(
                         width = 1.dp,
-                        color = MaterialTheme.colorScheme.outline,
-                        shape = RoundedCornerShape(20.dp)
+                        color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                        shape = RoundedCornerShape(22.dp)
                     )
                     .padding(horizontal = 16.dp)
             )
             Spacer(modifier = Modifier.width(10.dp))
             Box(
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(44.dp)
                     .clip(CircleShape)
                     .background(color = MaterialTheme.colorScheme.primary)
                     .clickable(onClick = onSendClick),
@@ -98,9 +115,8 @@ fun CommentInputFieldBar(
                     modifier = Modifier.size(19.dp)
                 )
             }
-
-
         }
+      }
     }
 }
 

@@ -75,20 +75,22 @@ fun BodyCommentsReviewScreen(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         )
 
+        // Encabezado en versalitas doradas, como "RESEÑA PARA" en la tarjeta
         Text(
             text = stringResource(R.string.comentarios, review.comments.size),
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            fontSize = 11.sp,
+            fontWeight = FontWeight.SemiBold,
+            letterSpacing = 1.4.sp,
+            color = MaterialTheme.colorScheme.tertiary,
+            modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 12.dp, bottom = 4.dp)
         )
 
+        // El margen va en contentPadding para que las sombras de las tarjetas no se corten
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
-                .padding(horizontal = 16.dp),
-            contentPadding = PaddingValues(bottom = 16.dp)
+                .weight(1f),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp)
         ) {
             itemsIndexed(review.comments) { _, comment ->
                 CommentItem(
@@ -103,7 +105,7 @@ fun BodyCommentsReviewScreen(
                     onCommentatorClick = comment.commentator.id
                         .takeIf { it.isNotBlank() }
                         ?.let { id -> { onStudentClick(id) } },
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 12.dp)
                 )
             }
         }

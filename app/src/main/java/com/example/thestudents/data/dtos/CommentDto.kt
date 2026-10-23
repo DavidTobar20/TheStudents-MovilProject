@@ -26,7 +26,7 @@ fun CommentDto.toComment(): Comment {
         content = contenido.orEmpty(),
         likes = likesCount,
         disLikes = disLikes,
-        createdAt = "hace " + timeAgo(fecha_creacion), // timeAgo esta en NotificationDto.kt
+        createdAt = "Hace " + timeAgo(fecha_creacion), // timeAgo esta en NotificationDto.kt
         isLiked = isLiked,
         isDisliked = isDisliked
     )

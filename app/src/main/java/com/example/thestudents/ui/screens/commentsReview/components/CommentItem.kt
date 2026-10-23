@@ -1,5 +1,11 @@
 package com.example.thestudents.ui.screens.commentsReview.components
 
+import com.example.thestudents.ui.components.ReactionCapsule
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.shadow
+import androidx.compose.foundation.border
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -54,174 +60,203 @@ fun CommentItem(
 ) {
     val commentatorModifier =
         if (onCommentatorClick != null) Modifier.clickable(onClick = onCommentatorClick) else Modifier
+    val shape = RoundedCornerShape(20.dp)
 
-    Row(
-        modifier = modifier.fillMaxWidth()
+    // Tarjeta del comentario con el mismo estilo que la de la reseña
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .shadow(
+                elevation = 8.dp,
+                shape = shape,
+                ambientColor = Color.Black.copy(alpha = 0.08f),
+                spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.30f)
+            )
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f), shape)
+            .clip(shape)
+            .background(MaterialTheme.colorScheme.surfaceContainerLowest)
+            .padding(start = 16.dp, end = 8.dp, top = 14.dp, bottom = 14.dp)
     ) {
-        ProfileIcon(
-            initials = comment.commentator.initials,
-            profileImage = comment.commentator.profileImage,
-            backgroundColor = comment.commentator.profileColor,
-            contentColor = OnAvatar,
-            fontSize = 18.sp,
-            modifier = Modifier
-                .size(43.dp)
-                .clip(CircleShape)
-                .then(commentatorModifier)
-        )
-        Spacer(modifier = Modifier.width(10.dp))
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
-            Row(
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            // Avatar con aro dorado fino
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .border(1.5.dp, MaterialTheme.extended.rating, CircleShape)
+                    .padding(2.5.dp)
+                    .clip(CircleShape)
+                    .then(commentatorModifier)
+            ) {
+                ProfileIcon(
+                    initials = comment.commentator.initials,
+                    profileImage = comment.commentator.profileImage,
+                    backgroundColor = comment.commentator.profileColor,
+                    contentColor = OnAvatar,
+                    fontSize = 14.sp,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .then(commentatorModifier),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 Text(
                     text = comment.commentator.name,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    modifier = commentatorModifier
+                    fontSize = 15.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    maxLines = 1
                 )
                 Text(
                     text = comment.createdAt,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 13.sp
+                    fontSize = 12.sp
                 )
             }
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = comment.content,
-                fontSize = 14.sp
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(15.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                SelectableIconButton(
-                    icon = Icons.Outlined.ThumbUp,
-                    count = comment.likes,
-                    isSelected = isLiked,
-                    onClick = onLikeClick,
-                    selectedColor = MaterialTheme.extended.onLike,
-                    selectedContainerColor = MaterialTheme.extended.like
-                )
-                SelectableIconButton(
-                    icon = Icons.Outlined.ThumbDown,
-                    count = comment.disLikes,
-                    isSelected = isDisliked,
-                    onClick = onDislikeClick,
-                    selectedColor = MaterialTheme.extended.onDislike,
-                    selectedContainerColor = MaterialTheme.extended.dislike
+            // Menu "..." igual al de las reseñas (ReviewItem)
+            if (showActions) {
+                CommentActionsMenu(
+                    content = comment.content,
+                    onEditClick = onEditClick,
+                    onDeleteClick = onDeleteClick
                 )
             }
         }
-        // Menu "..." igual al de las reseñas (ReviewItem)
-        if (showActions) {
-            var menuExpanded by remember { mutableStateOf(false) }
-            var showDeleteDialog by remember { mutableStateOf(false) }
-            var showEditDialog by remember { mutableStateOf(false) }
 
-            if (showDeleteDialog) {
-                AlertDialog(
-                    onDismissRequest = { showDeleteDialog = false },
-                    title = { Text("Eliminar comentario") },
-                    text = { Text("¿Estás seguro de que deseas eliminar este comentario? Esta acción no se puede deshacer.") },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                showDeleteDialog = false
-                                onDeleteClick()
-                            }
-                        ) {
-                            Text("Eliminar", color = MaterialTheme.colorScheme.error)
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = { showDeleteDialog = false }) {
-                            Text("Cancelar")
-                        }
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            text = comment.content,
+            fontSize = 14.sp,
+            lineHeight = 21.sp,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(end = 8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+        ReactionCapsule(
+            likes = comment.likes,
+            dislikes = comment.disLikes,
+            isLiked = isLiked,
+            isDisliked = isDisliked,
+            onLikeClick = onLikeClick,
+            onDislikeClick = onDislikeClick,
+            height = 40.dp,
+            iconSize = 16.dp,
+            fontSize = 13.sp
+        )
+    }
+}
+
+@Composable
+private fun CommentActionsMenu(
+    content: String,
+    onEditClick: (String) -> Unit,
+    onDeleteClick: () -> Unit
+) {
+    var menuExpanded by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var showEditDialog by remember { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Eliminar comentario") },
+            text = { Text("¿Estás seguro de que deseas eliminar este comentario? Esta acción no se puede deshacer.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteDialog = false
+                        onDeleteClick()
                     }
-                )
-            }
-
-            if (showEditDialog) {
-                var editedText by remember { mutableStateOf(comment.content) }
-                AlertDialog(
-                    onDismissRequest = { showEditDialog = false },
-                    title = { Text("Editar comentario") },
-                    text = {
-                        OutlinedTextField(
-                            value = editedText,
-                            onValueChange = { editedText = it },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    },
-                    confirmButton = {
-                        TextButton(
-                            enabled = editedText.isNotBlank(),
-                            onClick = {
-                                showEditDialog = false
-                                onEditClick(editedText)
-                            }
-                        ) {
-                            Text("Guardar")
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = { showEditDialog = false }) {
-                            Text("Cancelar")
-                        }
-                    }
-                )
-            }
-
-            Box {
-                IconButton(
-                    onClick = { menuExpanded = true },
-                    modifier = Modifier.size(36.dp)
                 ) {
+                    Text("Eliminar", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
+    if (showEditDialog) {
+        var editedText by remember { mutableStateOf(content) }
+        AlertDialog(
+            onDismissRequest = { showEditDialog = false },
+            title = { Text("Editar comentario") },
+            text = {
+                OutlinedTextField(
+                    value = editedText,
+                    onValueChange = { editedText = it },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = editedText.isNotBlank(),
+                    onClick = {
+                        showEditDialog = false
+                        onEditClick(editedText)
+                    }
+                ) {
+                    Text("Guardar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showEditDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
+    Box {
+        IconButton(
+            onClick = { menuExpanded = true },
+            modifier = Modifier.size(40.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.MoreHoriz,
+                contentDescription = "Opciones",
+                modifier = Modifier.size(22.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = { menuExpanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("Editar") },
+                leadingIcon = {
                     Icon(
-                        imageVector = Icons.Default.MoreHoriz,
-                        contentDescription = "Opciones",
-                        modifier = Modifier.size(24.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        imageVector = Icons.Outlined.Edit,
+                        contentDescription = "Editar"
                     )
+                },
+                onClick = {
+                    menuExpanded = false
+                    showEditDialog = true
                 }
-                DropdownMenu(
-                    expanded = menuExpanded,
-                    onDismissRequest = { menuExpanded = false }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Editar") },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Outlined.Edit,
-                                contentDescription = "Editar"
-                            )
-                        },
-                        onClick = {
-                            menuExpanded = false
-                            showEditDialog = true
-                        }
+            )
+            DropdownMenuItem(
+                text = { Text("Eliminar", color = MaterialTheme.colorScheme.error) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = "Eliminar",
+                        tint = MaterialTheme.colorScheme.error
                     )
-                    DropdownMenuItem(
-                        text = { Text("Eliminar", color = MaterialTheme.colorScheme.error) },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Outlined.Delete,
-                                contentDescription = "Eliminar",
-                                tint = MaterialTheme.colorScheme.error
-                            )
-                        },
-                        onClick = {
-                            menuExpanded = false
-                            showDeleteDialog = true
-                        }
-                    )
+                },
+                onClick = {
+                    menuExpanded = false
+                    showDeleteDialog = true
                 }
-            }
+            )
         }
     }
 }
