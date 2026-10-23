@@ -16,6 +16,8 @@ interface UserRemoteDataSource {
 
     suspend fun updateUser(registerUserDto: RegisterUserDto, userId: String)
 
+    suspend fun updateFcmToken(userId: String, token: String)
+
     suspend fun followOrUnfollowStudent(currentUserId: String, targetUserId: String): Unit
 
     suspend fun getFollowers(userId: String): List<StudentDto>

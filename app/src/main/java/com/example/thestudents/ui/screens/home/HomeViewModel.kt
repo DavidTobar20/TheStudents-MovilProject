@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.data.repository.ReviewRepository
+import com.example.thestudents.data.repository.UserRepository
 import com.example.thestudents.ui.screens.home.components.HomeTab
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val reviewRepository: ReviewRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeState())
@@ -26,6 +28,12 @@ class HomeViewModel @Inject constructor(
     // Reseñas que tienen un like/dislike guardandose en Firestore.
     // Mientras tanto se ignoran nuevos toques para no mandar transacciones encima de otras.
     private val pendingReviews = mutableSetOf<String>()
+
+    init {
+        viewModelScope.launch {
+            userRepository.updateFcmToken()
+        }
+    }
 
     fun onTabSelected(tab: HomeTab) {
         _uiState.update { it.copy(selectedTab = tab) }

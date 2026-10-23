@@ -103,6 +103,11 @@ class UserFirestoreDataSourceImpl @Inject constructor(
         docRef.set(registerUserDto, SetOptions.merge()).await()
     }
 
+    override suspend fun updateFcmToken(userId: String, token: String) {
+        // Solo actualiza el token, sin tocar los demas campos del usuario
+        db.collection("users").document(userId).update("fcmToken", token).await()
+    }
+
     override suspend fun followOrUnfollowStudent(
         currentUserId: String,
         targetUserId: String

@@ -20,6 +20,19 @@ class UserRepository @Inject constructor(
     private val authRemoteDataSource: AuthRemoteDataSource
 ) {
 
+    // El token FCM cambia si se reinstala la app o se borran los datos del emulador.
+    // Se guarda cada vez que el usuario entra para que la Cloud Function mande el push al token correcto.
+    suspend fun updateFcmToken(): Result<Unit> {
+        return try {
+            val userId = authRemoteDataSource.currentUser?.uid ?: return Result.success(Unit)
+            val fcmToken = FirebaseMessaging.getInstance().token.await()
+            userRemoteDataSource.updateFcmToken(userId, fcmToken)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     suspend fun getUserProfile(studentId: String): Result<UserProfile> {
         val currentUserId = authRemoteDataSource.currentUser?.uid ?: ""
 

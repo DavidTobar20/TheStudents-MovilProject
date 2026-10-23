@@ -42,6 +42,8 @@ class UserRetrofitDataSourceImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun updateFcmToken(userId: String, token: String) = Unit
+
     override suspend fun getFollowers(userId: String): List<StudentDto> = emptyList()
 
     override suspend fun getFollowing(userId: String): List<StudentDto> = emptyList()

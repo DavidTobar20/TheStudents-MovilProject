@@ -3,6 +3,7 @@ package com.example.thestudents.ui.screens.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thestudents.data.repository.AuthRepository
+import com.example.thestudents.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class   LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow(LoginState())
     val uiState: StateFlow<LoginState> = _uiState.asStateFlow()
@@ -45,6 +47,7 @@ class   LoginViewModel @Inject constructor(
                     )
 
                 if (result.isSuccess){
+                    userRepository.updateFcmToken()
                     _uiState.update { it.copy(navigate = true) }
                 } else {
                     val mensaje = result.exceptionOrNull()?.message ?: "Error al iniciar sesión"
