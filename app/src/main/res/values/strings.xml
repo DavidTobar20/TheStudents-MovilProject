@@ -24,6 +24,7 @@
     <string name="calificado_en">te ha calificado en</string>
     <string name="le_dio_me_gusta">le dio \"Me Gusta\" a tu reseña sobre</string>
     <string name="solicitud_seguimiento">te envió una solicitud de seguimiento</string>
+    <string name="comenzo_a_seguirte">comenzó a seguirte</string>
     <string name="hace_tiempo">Hace %1$s</string>
     <string name="estrellas">%1$d estrellas</string>
     <string name="back">Back</string>

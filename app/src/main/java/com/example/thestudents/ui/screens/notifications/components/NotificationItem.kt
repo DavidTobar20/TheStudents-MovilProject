@@ -86,6 +86,9 @@ private fun NotificationContentSwitcher(
             userName = notification.student.name,
             reviewOf = notification.reviewOf ?: ""
         )
+        NotificationType.FOLLOW -> FollowNotificationContent(
+            userName = notification.student.name
+        )
         NotificationType.FOLLOW_REQUEST -> FollowRequestContent(
             userName = notification.student.name,
             onAcceptClick = onAcceptClick,

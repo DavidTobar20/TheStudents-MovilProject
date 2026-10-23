@@ -1,7 +1,7 @@
 package com.example.thestudents.data
 
 enum class NotificationType {
-    REVIEW, LIKE, FOLLOW_REQUEST, COMMENT
+    REVIEW, LIKE, FOLLOW_REQUEST, COMMENT, FOLLOW // FOLLOW: alguien empezo a seguirte
 }
 
 data class Notification(

@@ -34,6 +34,7 @@ private fun badgeIconFor(type: NotificationType): ImageVector {
         NotificationType.REVIEW -> Icons.Default.Star
         NotificationType.LIKE -> Icons.Default.ThumbUp
         NotificationType.FOLLOW_REQUEST -> Icons.Default.PersonAdd
+        NotificationType.FOLLOW -> Icons.Default.PersonAdd
         NotificationType.COMMENT -> Icons.Default.ChatBubble
     }
 }

@@ -85,7 +85,7 @@ fun CustomTextFieldPreviewReview(){
         CustomTextField(
             value = "",
             onValueChange = {},
-            placeholder = "Escribe tu experiencia con Laura...",
+            placeholder = "Escribe tu experiencia con esta persona...",
             singleLine = false,
             modifier = Modifier
                 .fillMaxWidth()
