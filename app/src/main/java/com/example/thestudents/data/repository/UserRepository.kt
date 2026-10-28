@@ -50,6 +50,7 @@ class UserRepository @Inject constructor(
     suspend fun getUserById(studentId: String): Result<Student> {
         return try {
             val response = userRemoteDataSource.getUserById(studentId)
+                ?: return Result.failure(Exception("Usuario no encontrado"))
 
             val student = response.toStudent()
 

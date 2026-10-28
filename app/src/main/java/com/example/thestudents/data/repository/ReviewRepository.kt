@@ -94,13 +94,13 @@ class ReviewRepository @Inject constructor(
                 // Datos del autor (nombre, usuario y foto) para mostrarlos en la notificacion.
                 // Si no se puede leer su perfil, al menos se usa la foto del usuario logueado.
                 val emisor = try {
-                    userRemoteDataSource.getUserById(autorId).toSummaryDto()
+                    userRemoteDataSource.getUserById(autorId)?.toSummaryDto()
                 } catch (e: Exception) {
-                    StudentSummaryDto(
-                        id = autorId,
-                        foto_url = authRemoteDataSource.currentUser?.photoUrl?.toString()
-                    )
-                }
+                    null
+                } ?: StudentSummaryDto(
+                    id = autorId,
+                    foto_url = authRemoteDataSource.currentUser?.photoUrl?.toString()
+                )
 
                 val notificationDto = NotificationDto(
                     destinatarioId = resenadoId,

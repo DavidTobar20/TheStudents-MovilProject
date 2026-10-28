@@ -66,14 +66,13 @@ class UserFirestoreDataSourceImpl @Inject constructor(
         )
     }
 
-    override suspend fun getUserById(studentId: String): StudentDto {
+    override suspend fun getUserById(studentId: String): StudentDto? {
         val docRef = db.collection("users").document(studentId)
         val snapshot = docRef.get().await()
         if (!snapshot.exists()) {
-            throw Exception("Usuario no encontrado en Firestore")
+            return null
         }
-        val studentDto = snapshot.toObject(StudentDto::class.java)
-            ?: throw Exception("No se pudo deserializar el estudiante de Firestore")
+        val studentDto = snapshot.toObject(StudentDto::class.java) ?: return null
         return studentDto.copy(
             id = snapshot.id
         )

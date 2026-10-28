@@ -8,7 +8,7 @@ interface UserRemoteDataSource {
 
     suspend fun getUserProfile(studentId: String, currentUserId: String): UserProfileGenericDto
 
-    suspend fun getUserById(studentId: String): StudentDto
+    suspend fun getUserById(studentId: String): StudentDto?
 
     suspend fun registerUser(registerUserDto: RegisterUserDto, userId: String)
 

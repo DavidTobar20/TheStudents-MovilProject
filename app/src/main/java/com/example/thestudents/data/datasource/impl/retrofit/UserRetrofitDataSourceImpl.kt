@@ -15,7 +15,7 @@ class UserRetrofitDataSourceImpl @Inject constructor(
         return service.getUserProfile(studentId)
     }
 
-    override suspend fun getUserById(studentId: String): StudentDto {
+    override suspend fun getUserById(studentId: String): StudentDto? {
         val studentIdEnviar = studentId.toIntOrNull()?.toString() ?: "1"
         return service.getStudentById(studentIdEnviar)
     }
