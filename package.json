@@ -1,0 +1,24 @@
+{
+  "name": "final",
+  "version": "1.0.0",
+  "description": "Bienvenido al repositorio oficial de **TheStudents**, una plataforma móvil diseñada para que estudiantes universitarios puedan reseñarse, calificarse e interactuar a partir de las materias y periodos académicos que han compartido.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidTobar20/TheStudents-MovilProject.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/DavidTobar20/TheStudents-MovilProject/issues"
+  },
+  "homepage": "https://github.com/DavidTobar20/TheStudents-MovilProject#readme",
+  "dependencies": {
+    "firebase-admin": "^14.5.0"
+  }
+}
