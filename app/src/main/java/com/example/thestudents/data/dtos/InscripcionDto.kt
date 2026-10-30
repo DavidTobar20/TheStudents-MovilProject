@@ -9,12 +9,6 @@ data class InscripcionDto(
     val usuario: StudentSummaryDto? = null
 )
 
-data class MateriaDto(
-    val id: String? = null,
-    val nombre: String = "",
-    val periodos: List<String> = emptyList()
-)
-
 fun InscripcionDto.toInscription(): Inscription {
     return Inscription(
         id = id.orEmpty(),
