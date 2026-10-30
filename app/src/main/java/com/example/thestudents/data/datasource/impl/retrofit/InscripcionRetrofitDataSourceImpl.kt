@@ -3,6 +3,7 @@ package com.example.thestudents.data.datasource.impl.retrofit
 import com.example.thestudents.data.datasource.InscripcionRemoteDataSource
 import com.example.thestudents.data.datasource.services.InscripcionRetrofitService
 import com.example.thestudents.data.dtos.InscripcionDto
+import com.example.thestudents.data.dtos.MateriaDto
 import javax.inject.Inject
 
 class InscripcionRetrofitDataSourceImpl @Inject constructor(
@@ -20,7 +21,7 @@ class InscripcionRetrofitDataSourceImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getTodasLasInscripciones(): List<InscripcionDto> {
+    override suspend fun getMaterias(): List<MateriaDto> {
         TODO("Not yet implemented")
     }
 

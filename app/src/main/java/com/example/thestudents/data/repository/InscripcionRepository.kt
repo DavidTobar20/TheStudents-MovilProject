@@ -58,15 +58,16 @@ class InscripcionRepository @Inject constructor(
         }
     }
 
-    // Obtiene las materias y periodos directamente desde las inscripciones registradas en Firestore
+    // Obtiene el catálogo de materias y sus periodos desde la colección "materias" en Firestore
     suspend fun getCatalogoMateriasYPeriodos(): Result<Map<String, List<String>>> {
         return try {
-            val todas = inscripcionRemoteDataSource.getTodasLasInscripciones()
+            val materias = inscripcionRemoteDataSource.getMaterias()
             val mapaMaterias = mutableMapOf<String, MutableSet<String>>()
 
-            todas.forEach { insc ->
-                if (insc.materia.isNotBlank() && insc.periodo.isNotBlank()) {
-                    mapaMaterias.getOrPut(insc.materia) { linkedSetOf() }.add(insc.periodo)
+            materias.forEach { materiaDto ->
+                if (materiaDto.nombre.isNotBlank()) {
+                    val conjuntoPeriodos = mapaMaterias.getOrPut(materiaDto.nombre) { linkedSetOf() }
+                    conjuntoPeriodos.addAll(materiaDto.periodos.filter { it.isNotBlank() })
                 }
             }
 

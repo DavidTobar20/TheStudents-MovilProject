@@ -2,6 +2,7 @@ package com.example.thestudents.data.datasource.impl.firestore
 
 import com.example.thestudents.data.datasource.InscripcionRemoteDataSource
 import com.example.thestudents.data.dtos.InscripcionDto
+import com.example.thestudents.data.dtos.MateriaDto
 import com.example.thestudents.data.dtos.StudentDto
 import com.example.thestudents.data.dtos.StudentSummaryDto
 import com.example.thestudents.data.dtos.toSummaryDto
@@ -57,12 +58,14 @@ class InscripcionFirestoreDataSourceImpl @Inject constructor(
             .mapNotNull { it.toInscripcionDto() }
     }
 
-    override suspend fun getTodasLasInscripciones(): List<InscripcionDto> {
-        return db.collection("inscripciones")
+    override suspend fun getMaterias(): List<MateriaDto> {
+        return db.collection("materias")
             .get()
             .await()
             .documents
-            .mapNotNull { it.toInscripcionDto() }
+            .mapNotNull { doc ->
+                doc.toObject(MateriaDto::class.java)?.copy(id = doc.id)
+            }
     }
 
     override suspend fun createInscripcion(
