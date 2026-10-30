@@ -2,6 +2,9 @@ package com.example.thestudents.data.datasource.impl.firestore
 
 import com.example.thestudents.data.datasource.InscripcionRemoteDataSource
 import com.example.thestudents.data.dtos.InscripcionDto
+import com.example.thestudents.data.dtos.StudentDto
+import com.example.thestudents.data.dtos.StudentSummaryDto
+import com.example.thestudents.data.dtos.toSummaryDto
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -15,12 +18,7 @@ class InscripcionFirestoreDataSourceImpl @Inject constructor(
     // devuelve las inscripciones de los compañeros que comparten materia y periodo con el usuario.
     override suspend fun getInscripcionesPorUsuario(usuarioId: String): List<InscripcionDto> {
         // 1. Mis inscripciones (en qué materias y periodos estoy)
-        val misInscripciones = db.collection("inscripciones")
-            .whereEqualTo("usuario.id", usuarioId)
-            .get()
-            .await()
-            .documents
-            .mapNotNull { it.toInscripcionDto() }
+        val misInscripciones = getMisInscripciones(usuarioId)
 
         // 2. Por cada materia/periodo, traer las inscripciones de los demás estudiantes
         val companeros = mutableListOf<InscripcionDto>()
@@ -48,6 +46,54 @@ class InscripcionFirestoreDataSourceImpl @Inject constructor(
             ?: throw Exception("No se pudo deserializar la inscripción de Firestore")
 
         return inscripcion
+    }
+
+    override suspend fun getMisInscripciones(usuarioId: String): List<InscripcionDto> {
+        return db.collection("inscripciones")
+            .whereEqualTo("usuario.id", usuarioId)
+            .get()
+            .await()
+            .documents
+            .mapNotNull { it.toInscripcionDto() }
+    }
+
+    override suspend fun getTodasLasInscripciones(): List<InscripcionDto> {
+        return db.collection("inscripciones")
+            .get()
+            .await()
+            .documents
+            .mapNotNull { it.toInscripcionDto() }
+    }
+
+    override suspend fun createInscripcion(
+        usuarioId: String,
+        materia: String,
+        periodo: String
+    ): String {
+        // 1. Verificar que el estudiante no haya visto/inscrito ya esta materia (en ningún periodo)
+        val misInscripciones = getMisInscripciones(usuarioId)
+        val yaLaVio = misInscripciones.any { it.materia.equals(materia, ignoreCase = true) }
+        if (yaLaVio) {
+            throw Exception("Ya cursaste o tienes inscrita la materia $materia")
+        }
+
+        // 2. Obtener los datos resumidos del estudiante desde la colección users
+        val userSnapshot = db.collection("users").document(usuarioId).get().await()
+        val usuarioSummary: StudentSummaryDto = if (userSnapshot.exists()) {
+            userSnapshot.toObject(StudentDto::class.java)?.copy(id = userSnapshot.id)?.toSummaryDto()
+                ?: StudentSummaryDto(id = usuarioId)
+        } else {
+            StudentSummaryDto(id = usuarioId)
+        }
+
+        // 3. Guardar la nueva inscripción en Firestore
+        val nuevaInscripcion = mapOf(
+            "materia" to materia,
+            "periodo" to periodo,
+            "usuario" to usuarioSummary
+        )
+        val docRef = db.collection("inscripciones").add(nuevaInscripcion).await()
+        return docRef.id
     }
 
     // El id del documento no viene dentro del documento, hay que copiarlo.

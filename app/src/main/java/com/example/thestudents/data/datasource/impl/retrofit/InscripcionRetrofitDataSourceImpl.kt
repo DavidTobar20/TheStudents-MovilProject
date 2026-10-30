@@ -16,4 +16,20 @@ class InscripcionRetrofitDataSourceImpl @Inject constructor(
         return service.getInscripcionById(inscripcionId)
     }
 
+    override suspend fun getMisInscripciones(usuarioId: String): List<InscripcionDto> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getTodasLasInscripciones(): List<InscripcionDto> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun createInscripcion(
+        usuarioId: String,
+        materia: String,
+        periodo: String
+    ): String {
+        TODO("Not yet implemented")
+    }
+
 }

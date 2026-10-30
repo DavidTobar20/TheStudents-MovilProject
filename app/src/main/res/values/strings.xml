@@ -72,6 +72,14 @@
     <!-- Pantalla para elegir a quien reseñar -->
     <string name="resenar_companeros">RESEÑAR COMPAÑERO</string>
     <string name="personas_con_quienes_has_compartido_clase">Personas con quienes has compartido clase</string>
+    <string name="inscribir_materia">Inscribir materia</string>
+    <string name="selecciona_materia_y_periodo">Selecciona la asignatura y el periodo académico:</string>
+    <string name="seleccionar_materia">Seleccionar materia</string>
+    <string name="periodo_label">Periodo</string>
+    <string name="seleccionar_periodo">Seleccionar periodo</string>
+    <string name="inscribir">Inscribir</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="sin_companeros_en_materia">Aún no hay otros compañeros inscritos en este curso.</string>
 
 
     <!-- Login y Registro -->
