@@ -3,8 +3,11 @@ package com.example.thestudents.ui.screens.reviews.components
 import com.example.thestudents.ui.components.luxuryCard
 import com.example.thestudents.ui.components.SectionLabel
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -20,15 +23,42 @@ fun CourseSectionCard(
     section: CourseSection,
     onStudentClick: (String) -> Unit,
     onWriteReviewClick: (String) -> Unit,
+    onWithdrawClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.padding(vertical = 12.dp)) {
-        // Materia y periodo en letras doradas, como "RESEÑA PARA"
-        SectionLabel(
-            text = "${section.title} · ${section.period}",
-            modifier = Modifier.padding(start = 4.dp)
-        )
-        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Materia y periodo en letras doradas, como "RESEÑA PARA"
+            SectionLabel(
+                text = "${section.title} · ${section.period}",
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 4.dp, end = 8.dp)
+            )
+            TextButton(
+                onClick = onWithdrawClick,
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = MaterialTheme.colorScheme.error
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.DeleteOutline,
+                    contentDescription = stringResource(R.string.retirar_materia),
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = stringResource(R.string.retirar_materia),
+                    style = MaterialTheme.typography.labelMedium
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(6.dp))
         Column(
             modifier = Modifier
                 .fillMaxWidth()

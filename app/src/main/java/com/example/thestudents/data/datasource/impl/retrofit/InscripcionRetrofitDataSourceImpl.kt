@@ -33,4 +33,12 @@ class InscripcionRetrofitDataSourceImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun deleteInscripcion(
+        usuarioId: String,
+        materia: String,
+        periodo: String
+    ) {
+        TODO("Not yet implemented")
+    }
+
 }

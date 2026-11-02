@@ -99,6 +99,32 @@ class InscripcionFirestoreDataSourceImpl @Inject constructor(
         return docRef.id
     }
 
+    // Solo borra la inscripción. Las reseñas de esa materia las borra el ViewModel
+    // usando el deleteReview que ya existe en ReviewRepository.
+    override suspend fun deleteInscripcion(
+        usuarioId: String,
+        materia: String,
+        periodo: String
+    ) {
+        val inscripcionesSnapshot = db.collection("inscripciones")
+            .whereEqualTo("usuario.id", usuarioId)
+            .whereEqualTo("materia", materia)
+            .whereEqualTo("periodo", periodo)
+            .get()
+            .await()
+
+        if (inscripcionesSnapshot.isEmpty) {
+            throw Exception("No se encontró la inscripción para retirar")
+        }
+
+        // Puede haber más de un documento repetido, se borran todos juntos
+        val batch = db.batch()
+        inscripcionesSnapshot.documents.forEach { doc ->
+            batch.delete(doc.reference)
+        }
+        batch.commit().await()
+    }
+
     // El id del documento no viene dentro del documento, hay que copiarlo.
     private fun DocumentSnapshot.toInscripcionDto(): InscripcionDto? {
         val documentId = id

@@ -12,5 +12,7 @@ data class ReviewsState(
     val selectedMateria: String = "",
     val selectedPeriodo: String = "",
     val isEnrolling: Boolean = false,
-    val enrollErrorMessage: String? = null
+    val enrollErrorMessage: String? = null,
+    val sectionToWithdraw: CourseSection? = null,
+    val isWithdrawing: Boolean = false
 )

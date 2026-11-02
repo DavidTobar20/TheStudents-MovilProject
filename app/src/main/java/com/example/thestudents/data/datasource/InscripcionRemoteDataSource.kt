@@ -9,4 +9,5 @@ interface InscripcionRemoteDataSource {
     suspend fun getMisInscripciones(usuarioId: String): List<InscripcionDto>
     suspend fun getMaterias(): List<MateriaDto>
     suspend fun createInscripcion(usuarioId: String, materia: String, periodo: String): String
+    suspend fun deleteInscripcion(usuarioId: String, materia: String, periodo: String)
 }

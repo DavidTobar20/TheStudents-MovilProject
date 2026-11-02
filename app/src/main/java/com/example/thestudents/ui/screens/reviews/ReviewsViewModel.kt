@@ -2,9 +2,11 @@ package com.example.thestudents.ui.screens.reviews
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.thestudents.data.CourseSection
 import com.example.thestudents.data.local.localStudentProvider
 import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.data.repository.InscripcionRepository
+import com.example.thestudents.data.repository.ReviewRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReviewsViewModel @Inject constructor(
     private val inscripcionRepository: InscripcionRepository,
+    private val reviewRepository: ReviewRepository,
     private val authRepository: AuthRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow(ReviewsState())
@@ -152,6 +155,85 @@ class ReviewsViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    fun openWithdrawDialog(section: CourseSection) {
+        _uiState.update {
+            it.copy(sectionToWithdraw = section)
+        }
+    }
+
+    fun closeWithdrawDialog() {
+        _uiState.update {
+            it.copy(sectionToWithdraw = null)
+        }
+    }
+
+    fun confirmarRetiroMateria() {
+        val section = _uiState.value.sectionToWithdraw ?: return
+        val userId = authRepository.currentUser?.uid ?: localStudentProvider.currentUser.id
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isWithdrawing = true) }
+
+            // 1. Reseñas que el usuario hizo y que recibió (métodos que ya existían)
+            val hechasResult = reviewRepository.getReviewsByReviewerId(userId)
+            val recibidasResult = reviewRepository.getReviewsByReviewedStudentId(userId)
+
+            if (hechasResult.isFailure || recibidasResult.isFailure) {
+                val error = hechasResult.exceptionOrNull() ?: recibidasResult.exceptionOrNull()
+                terminarRetiroConError(error?.message ?: "No se pudieron cargar las reseñas de la materia")
+                return@launch
+            }
+
+            // 2. Quedarse solo con las de esta materia y periodo
+            val resenasDeLaMateria = (hechasResult.getOrDefault(emptyList()) +
+                    recibidasResult.getOrDefault(emptyList()))
+                .filter { it.classReviewed == section.title && it.periodReviewed == section.period }
+                .distinctBy { it.id }
+
+            // 3. Borrar cada reseña con el deleteReview que ya existía
+            for (review in resenasDeLaMateria) {
+                val deleteResult = reviewRepository.deleteReview(review.id)
+                if (deleteResult.isFailure) {
+                    terminarRetiroConError(
+                        deleteResult.exceptionOrNull()?.message ?: "No se pudo eliminar una reseña"
+                    )
+                    return@launch
+                }
+            }
+
+            // 4. Al final se retira la inscripción. Si algo falló antes, la materia sigue
+            // inscrita y el usuario puede volver a intentarlo.
+            val retiroResult = inscripcionRepository.retirarMateria(
+                usuarioId = userId,
+                materia = section.title,
+                periodo = section.period
+            )
+            if (retiroResult.isSuccess) {
+                _uiState.update {
+                    it.copy(
+                        isWithdrawing = false,
+                        sectionToWithdraw = null
+                    )
+                }
+                getAllSections()
+            } else {
+                terminarRetiroConError(
+                    retiroResult.exceptionOrNull()?.message ?: "No se pudo retirar la materia"
+                )
+            }
+        }
+    }
+
+    private fun terminarRetiroConError(mensaje: String) {
+        _uiState.update {
+            it.copy(
+                isWithdrawing = false,
+                sectionToWithdraw = null,
+                errorMessage = mensaje
+            )
         }
     }
 }

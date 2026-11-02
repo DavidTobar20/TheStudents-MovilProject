@@ -8,14 +8,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -41,6 +46,7 @@ fun BodyReviews(
     onStudentClick: (String) -> Unit,
     onWriteReviewClick: (String) -> Unit,
     onEnrollClick: () -> Unit = {},
+    onWithdrawClick: (CourseSection) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     // El margen va en contentPadding para que las sombras de las tarjetas no se corten
@@ -84,7 +90,8 @@ fun BodyReviews(
             CourseSectionCard(
                 section = section,
                 onStudentClick = onStudentClick,
-                onWriteReviewClick = onWriteReviewClick
+                onWriteReviewClick = onWriteReviewClick,
+                onWithdrawClick = { onWithdrawClick(section) }
             )
         }
     }
@@ -129,6 +136,60 @@ fun ReviewsScreen(
         )
     }
 
+    val sectionToWithdraw = state.sectionToWithdraw
+    if (sectionToWithdraw != null) {
+        AlertDialog(
+            onDismissRequest = {
+                if (!state.isWithdrawing) {
+                    reviewsViewModel.closeWithdrawDialog()
+                }
+            },
+            title = {
+                Text(
+                    text = stringResource(R.string.confirmar_retiro_titulo),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(
+                        R.string.confirmar_retiro_mensaje,
+                        sectionToWithdraw.title,
+                        sectionToWithdraw.period
+                    ),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = { reviewsViewModel.confirmarRetiroMateria() },
+                    enabled = !state.isWithdrawing,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    if (state.isWithdrawing) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(18.dp),
+                            strokeWidth = 2.dp,
+                            color = MaterialTheme.colorScheme.onError
+                        )
+                    } else {
+                        Text(text = stringResource(R.string.confirmar_retiro_boton))
+                    }
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { reviewsViewModel.closeWithdrawDialog() },
+                    enabled = !state.isWithdrawing
+                ) {
+                    Text(text = stringResource(R.string.cancelar))
+                }
+            }
+        )
+    }
+
     when {
         state.isLoading -> {
             Box(
@@ -161,6 +222,7 @@ fun ReviewsScreen(
                 onStudentClick = onStudentClick,
                 onWriteReviewClick = onWriteReviewClick,
                 onEnrollClick = { reviewsViewModel.openEnrollDialog() },
+                onWithdrawClick = { reviewsViewModel.openWithdrawDialog(it) },
                 modifier = modifier
             )
         }

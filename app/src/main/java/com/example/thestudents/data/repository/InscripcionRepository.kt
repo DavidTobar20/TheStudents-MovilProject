@@ -97,4 +97,21 @@ class InscripcionRepository @Inject constructor(
         }
     }
 
+    suspend fun retirarMateria(
+        usuarioId: String,
+        materia: String,
+        periodo: String
+    ): Result<Unit> {
+        return try {
+            inscripcionRemoteDataSource.deleteInscripcion(
+                usuarioId = usuarioId,
+                materia = materia,
+                periodo = periodo
+            )
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 }
