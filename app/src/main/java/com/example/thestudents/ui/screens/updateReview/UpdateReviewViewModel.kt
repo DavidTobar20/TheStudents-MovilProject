@@ -66,16 +66,11 @@ class UpdateReviewViewModel @Inject constructor(
         _uiState.update { it.copy(contenido = input) }
     }
 
-    fun updateIsAnonymous(input: Boolean) {
-        _uiState.update { it.copy(isAnonymous = input) }
-    }
-
     fun updateReview() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
             val state = _uiState.value
             val ratingStr = if (state.rating > 0) state.rating.toString() else null
-            val estadoStr = if (state.isAnonymous) "anonimo" else "activo"
 
             val result = reviewRepository.updateReview(
                 reviewId = state.reviewId,

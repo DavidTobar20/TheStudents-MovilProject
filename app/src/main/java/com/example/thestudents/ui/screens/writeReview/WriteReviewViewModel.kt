@@ -60,10 +60,6 @@ class WriteReviewViewModel @Inject constructor(
         _uiState.update { it.copy(review = input) }
     }
 
-    fun updateIsAnonymous(input: Boolean){
-        _uiState.update { it.copy(isAnonymous = input) }
-    }
-
     fun createReview() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }

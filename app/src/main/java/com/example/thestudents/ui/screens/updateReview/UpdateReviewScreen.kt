@@ -1,6 +1,5 @@
 package com.example.thestudents.ui.screens.updateReview
 
-import com.example.thestudents.ui.components.luxuryCard
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,9 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -34,7 +30,6 @@ import com.example.thestudents.ui.screens.writeReview.components.ReviewHeader
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ButtonWithoutIcon
 import com.example.thestudents.ui.utils.HeaderBack
-import com.example.thestudents.ui.utils.SettingSwitchRow
 
 @Composable
 fun BodyUpdateReviewScreen(
@@ -42,9 +37,7 @@ fun BodyUpdateReviewScreen(
     rating: Int,
     onRatingSelected: (Int) -> Unit,
     onContenidoChange: (String) -> Unit,
-    onAnonymousChange: (Boolean) -> Unit,
     review: String,
-    isAnonymous: Boolean,
     onUpdateClick: () -> Unit,
     onBackClick: () -> Unit,
     onStudentClick: () -> Unit,
@@ -82,23 +75,6 @@ fun BodyUpdateReviewScreen(
                 review = review,
                 onContenidoChange = onContenidoChange
             )
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp, horizontal = 16.dp)
-                    .luxuryCard(RoundedCornerShape(20.dp)),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLowest),
-                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-                shape = RoundedCornerShape(20.dp)
-            ) {
-                SettingSwitchRow(
-                    modifier = Modifier.padding(16.dp),
-                    title = stringResource(R.string.publicar_de_forma_anonima),
-                    description = stringResource(R.string.tu_nombre_no_aparecer_en_la_resena),
-                    checked = isAnonymous,
-                    onCheckedChange = onAnonymousChange
-                )
-            }
         }
         if (isLoading) {
             Box(
@@ -131,9 +107,7 @@ fun BodyUpdateReviewScreenPreview() {
             rating = 4,
             onRatingSelected = {},
             onContenidoChange = {},
-            onAnonymousChange = {},
             review = "Excelente compañero de trabajo, muy responsable y puntual.",
-            isAnonymous = false,
             onUpdateClick = {},
             onBackClick = {},
             onStudentClick = {},
@@ -196,9 +170,7 @@ fun UpdateReviewScreen(
                     rating = state.rating,
                     onRatingSelected = { updateReviewViewModel.updateRating(it) },
                     onContenidoChange = { updateReviewViewModel.updateContenido(it) },
-                    onAnonymousChange = { updateReviewViewModel.updateIsAnonymous(it) },
                     review = state.contenido,
-                    isAnonymous = state.isAnonymous,
                     onUpdateClick = { updateReviewViewModel.updateReview() },
                     onBackClick = onBackClick,
                     onStudentClick = { onStudentClick(state.student!!.id) },

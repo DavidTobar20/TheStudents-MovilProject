@@ -9,7 +9,6 @@ data class UpdateReviewState(
     val period: String = "",
     val rating: Int = 0,
     val contenido: String = "",
-    val isAnonymous: Boolean = false,
     val navigateToProfile: Boolean = false,
     val isLoading: Boolean = false,
     val error: String? = null

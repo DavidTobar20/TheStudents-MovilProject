@@ -69,16 +69,3 @@ fun SettingSwitchRowPreviewPreferencesSection() {
         )
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun SettingSwitchRowPreviewAnonymous() {
-    TheStudentsTheme() {
-        SettingSwitchRow(
-            title = "Publicar de forma anónima",
-            description = "Tu nombre no aparecerá en la reseña",
-            checked = false,
-            onCheckedChange = {}
-        )
-    }
-}
