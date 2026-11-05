@@ -129,6 +129,49 @@ class RegiterViewModelIntegrationTest {
         Truth.assertThat(viewModel.navigateToHome.value).isFalse()
     }
 
+    @Test
+    fun register_alreadyUsedEmail_showErrorMessage() = runTest {
+        // Arrange
+        val existingEmail = "used_${System.currentTimeMillis()}@example.com"
+        val password = "password123"
+
+        // Crear primero un usuario con ese correo en Firebase Auth
+        Firebase.auth.createUserWithEmailAndPassword(existingEmail, password).await()
+        Firebase.auth.signOut()
+
+        viewModel.onNamesChange("Otro Usuario")
+        viewModel.onUsernameChange("otrousuario")
+        viewModel.onEmailChange(existingEmail)
+        viewModel.onPasswordChange(password)
+        viewModel.onConfirmPasswordChange(password)
+        viewModel.onProgramChange("Ingeniería de Sistemas")
+        viewModel.onSemesterChange("3")
+
+        // Act
+        viewModel.onRegisterClick()
+
+        // Esperar a que se procese la respuesta de error
+        try {
+            withTimeout(10000) {
+                viewModel.mostrarMensajeError.first { it }
+            }
+        } catch (e: Exception) {
+        }
+
+        // Assert
+        Truth.assertThat(viewModel.mostrarMensajeError.value).isTrue()
+        Truth.assertThat(viewModel.errorMessage.value).isEqualTo("El correo electrónico ya está registrado")
+        Truth.assertThat(viewModel.navigateToHome.value).isFalse()
+
+        // Clean up
+        try {
+            val createdUser = Firebase.auth.signInWithEmailAndPassword(existingEmail, password).await().user
+            createdUser?.delete()?.await()
+            Firebase.auth.signOut()
+        } catch (e: Exception) {
+        }
+    }
+
     @After
     fun tearDown() = runTest {
         val user = Firebase.auth.currentUser
