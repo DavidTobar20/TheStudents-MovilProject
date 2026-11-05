@@ -3,9 +3,12 @@ package com.example.thestudents.ui.screens.register
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import android.util.Log
+import com.example.thestudents.data.injection.IoDispatcher
 import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ): ViewModel() {
     private val _uiState = MutableStateFlow(RegisterState())
     val uiState: StateFlow<RegisterState> = _uiState
@@ -101,7 +105,7 @@ class RegisterViewModel @Inject constructor(
             _errorMessage.value = "Las contraseñas no coinciden"
             _mostrarMensajeError.value = true
         } else {
-            viewModelScope.launch {
+            viewModelScope.launch(ioDispatcher) {
                 _uiState.update { it.copy(isLoading = true) }
                 val result = authRepository.signUp(email, password)
                 if (result.isSuccess) {
