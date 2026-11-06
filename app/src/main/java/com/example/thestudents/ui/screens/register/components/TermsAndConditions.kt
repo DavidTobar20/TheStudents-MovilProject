@@ -29,7 +29,7 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
 fun TermsAndConditions(
     termsAccepted: Boolean,
     onTermsAcceptedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier.testTag("termsCheckbox")
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
@@ -40,6 +40,7 @@ fun TermsAndConditions(
         Checkbox(
             checked = termsAccepted,
             onCheckedChange = onTermsAcceptedChange,
+            modifier = Modifier.testTag("termsCheckbox"),
             colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.secondary)
         )
         

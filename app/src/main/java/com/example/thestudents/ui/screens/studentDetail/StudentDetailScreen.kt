@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,6 +74,7 @@ fun BodyStudentDetail(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
+                    .testTag("btnFollow")
             )
         }
         item { RatingChartSection(receivedReviews = receivedReviews) }
@@ -148,7 +150,7 @@ fun StudentDetailScreen(
         studentDetailViewModel.getStudentById(studentId)
     }
 
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize().testTag("studentDetailScreen")) {
         ProfileHeader(onBackClick = onBackClick)
 
         val userProfile = state.userProfile

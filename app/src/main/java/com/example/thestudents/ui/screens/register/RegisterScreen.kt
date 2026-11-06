@@ -251,8 +251,7 @@ fun RegisterBody(
 
             TermsAndConditions(
                 termsAccepted = termsAccepted,
-                onTermsAcceptedChange = onTermsAcceptedChange,
-                modifier = Modifier.testTag("termsCheckbox")
+                onTermsAcceptedChange = onTermsAcceptedChange
             )
 
             Spacer(modifier = Modifier.height(24.dp))

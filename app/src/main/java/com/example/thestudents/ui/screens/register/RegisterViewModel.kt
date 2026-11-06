@@ -101,6 +101,9 @@ class RegisterViewModel @Inject constructor(
         if (names.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || program.isEmpty() || semester.isEmpty()) {
             _errorMessage.value = "Todos los campos son obligatorios excepto bio"
             _mostrarMensajeError.value = true
+        } else if (password.length < 6) {
+            _errorMessage.value = "La contraseña debe tener al menos 6 caracteres"
+            _mostrarMensajeError.value = true
         } else if (password != confirmPassword) {
             _errorMessage.value = "Las contraseñas no coinciden"
             _mostrarMensajeError.value = true

@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,7 +52,8 @@ fun StatsSection(
         StatText(
             count = followersCount,
             label = pluralStringResource(R.plurals.seguidores_label, followersCount),
-            onClick = onFollowersClick
+            onClick = onFollowersClick,
+            countModifier = Modifier.testTag("followersCount")
         )
         StatDot()
         StatText(
@@ -69,7 +71,7 @@ fun StatsSection(
 }
 
 @Composable
-private fun StatText(count: Int, label: String, onClick: (() -> Unit)?) {
+private fun StatText(count: Int, label: String, onClick: (() -> Unit)?, countModifier: Modifier = Modifier) {
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
@@ -81,7 +83,8 @@ private fun StatText(count: Int, label: String, onClick: (() -> Unit)?) {
             text = count.toString(),
             fontSize = 15.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
+            modifier = countModifier
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(

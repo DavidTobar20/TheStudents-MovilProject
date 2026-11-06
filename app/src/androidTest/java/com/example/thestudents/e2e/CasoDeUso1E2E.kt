@@ -1,18 +1,26 @@
 package com.example.thestudents.e2e
 
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import com.example.thestudents.MainActivity
 import com.example.thestudents.data.datasource.AuthRemoteDataSource
 import com.example.thestudents.data.datasource.impl.firestore.ReviewFirestoreDataSourceImpl
 import com.example.thestudents.data.datasource.impl.firestore.UserFirestoreDataSourceImpl
+import com.example.thestudents.data.local.SeedHelper
 import com.example.thestudents.data.repository.AuthRepository
 import com.example.thestudents.data.repository.UserRepository
 import com.google.firebase.Firebase
@@ -20,6 +28,7 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -56,6 +65,18 @@ class CasoDeUso1E2E {
 
         userRepository = UserRepository(userDatasource, reviewRemoteDataSource, authRemoteDataSource)
         authRepository = AuthRepository(authRemoteDataSource)
+
+        // Usuario ya registrado para la prueba de correo duplicado (igual que el profe)
+        runBlocking {
+            if (authRepository.signUp("admin@admin.com", "123456").isFailure) {
+                authRepository.signIn("admin@admin.com", "123456")
+            }
+
+            // Datos de prueba: usuario autor, reseña y comentario (igual que el SeedHelper del profe)
+            SeedHelper.seedUsersAndReviews(Firebase.firestore)
+
+            authRepository.signOut()
+        }
     }
 
     @After
@@ -100,9 +121,15 @@ class CasoDeUso1E2E {
         composeRule.onNodeWithTag("confirmPasswordField").performTextInput("12345")
 
         // Aceptar términos y condiciones para habilitar el botón de registro
-        composeRule.onNodeWithTag("termsCheckbox").performClick()
+        composeRule.onNodeWithTag("termsCheckbox")
+            .performScrollTo()
+            .performClick()
+            .assertIsOn()
 
-        composeRule.onNodeWithTag("btnRegister").performClick()
+        composeRule.onNodeWithTag("btnRegister")
+            .performScrollTo()
+            .assertIsEnabled()
+            .performClick()
 
         // Verificar mensaje de error en el AlertDialog emergente (useUnmergedTree = true)
         composeRule.waitUntil(timeoutMillis = 5000) {
@@ -130,15 +157,22 @@ class CasoDeUso1E2E {
         composeRule.onNodeWithTag("confirmPasswordField").performTextInput("123456")
 
         // Aceptar términos y condiciones
-        composeRule.onNodeWithTag("termsCheckbox").performClick()
+        composeRule.onNodeWithTag("termsCheckbox")
+            .performScrollTo()
+            .performClick()
+            .assertIsOn()
 
-        composeRule.onNodeWithTag("btnRegister").performClick()
+        composeRule.onNodeWithTag("btnRegister")
+            .performScrollTo()
+            .assertIsEnabled()
+            .performClick()
 
-        composeRule.waitUntil(timeoutMillis = 5000) {
+        composeRule.waitUntil(timeoutMillis = 10000) {
             composeRule.onAllNodesWithTag("homeScreen").fetchSemanticsNodes().isNotEmpty()
         }
 
-        composeRule.onNodeWithTag("homeScreen").assertIsDisplayed()
+        // HomeScreen tiene el tag "homeScreen" en dos Column, por eso se toma el primero
+        composeRule.onAllNodesWithTag("homeScreen").onFirst().assertIsDisplayed()
     }
 
     @Test
@@ -160,11 +194,17 @@ class CasoDeUso1E2E {
         composeRule.onNodeWithTag("confirmPasswordField").performTextInput("123456")
 
         // Aceptar términos y condiciones
-        composeRule.onNodeWithTag("termsCheckbox").performClick()
+        composeRule.onNodeWithTag("termsCheckbox")
+            .performScrollTo()
+            .performClick()
+            .assertIsOn()
 
-        composeRule.onNodeWithTag("btnRegister").performClick()
+        composeRule.onNodeWithTag("btnRegister")
+            .performScrollTo()
+            .assertIsEnabled()
+            .performClick()
 
-        composeRule.waitUntil(timeoutMillis = 5000) {
+        composeRule.waitUntil(timeoutMillis = 10000) {
             composeRule.onAllNodesWithTag("errorMessage", useUnmergedTree = true).fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onNodeWithTag("errorMessage", useUnmergedTree = true).assertIsDisplayed()
@@ -188,14 +228,14 @@ class CasoDeUso1E2E {
         composeRule.onNodeWithTag("passwordField").performTextInput("123456")
         composeRule.onNodeWithTag("confirmPasswordField").performTextInput("123456")
 
-        composeRule.onNodeWithTag("termsCheckbox").performClick()
-        composeRule.onNodeWithTag("btnRegister").performClick()
+        composeRule.onNodeWithTag("termsCheckbox").performScrollTo().performClick()
+        composeRule.onNodeWithTag("btnRegister").performScrollTo().performClick()
 
-        composeRule.waitUntil(timeoutMillis = 5000) {
+        composeRule.waitUntil(timeoutMillis = 10000) {
             composeRule.onAllNodesWithTag("homeScreen").fetchSemanticsNodes().isNotEmpty()
         }
 
-        composeRule.waitUntil(timeoutMillis = 5000) {
+        composeRule.waitUntil(timeoutMillis = 10000) {
             composeRule.onAllNodesWithTag("reviewItem").fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onAllNodesWithTag("reviewItem")[0].performClick()
@@ -225,20 +265,25 @@ class CasoDeUso1E2E {
         composeRule.onNodeWithTag("passwordField").performTextInput("123456")
         composeRule.onNodeWithTag("confirmPasswordField").performTextInput("123456")
 
-        composeRule.onNodeWithTag("termsCheckbox").performClick()
-        composeRule.onNodeWithTag("btnRegister").performClick()
+        composeRule.onNodeWithTag("termsCheckbox").performScrollTo().performClick()
+        composeRule.onNodeWithTag("btnRegister").performScrollTo().performClick()
 
-        composeRule.waitUntil(timeoutMillis = 5000) {
+        composeRule.waitUntil(timeoutMillis = 10000) {
             composeRule.onAllNodesWithTag("homeScreen").fetchSemanticsNodes().isNotEmpty()
         }
 
-        composeRule.waitUntil(timeoutMillis = 5000) {
+        composeRule.waitUntil(timeoutMillis = 10000) {
             composeRule.onAllNodesWithTag("reviewItem").fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onAllNodesWithTag("reviewItem")[0].performClick()
 
         composeRule.waitUntil(timeoutMillis = 5000) {
             composeRule.onAllNodesWithTag("commentsReviewScreen").fetchSemanticsNodes().isNotEmpty()
+        }
+
+        // Esperar a que la reseña termine de cargar desde Firestore
+        composeRule.waitUntil(timeoutMillis = 10000) {
+            composeRule.onAllNodesWithTag("reviewAuthorName", useUnmergedTree = true).fetchSemanticsNodes().isNotEmpty()
         }
 
         // Consultar datos directamente de la base de datos (Firebase Firestore)
@@ -249,24 +294,25 @@ class CasoDeUso1E2E {
         assertNotNull("El ID de la reseña en Firebase no debe ser nulo", firstReview.id)
 
         // Comparar campos usando asserts explícitos con los datos de Firebase
+        // (useUnmergedTree = true porque estos textos están dentro de elementos clickeables)
         val authorName = firstReview.autor?.nombre
         if (!authorName.isNullOrBlank()) {
-            composeRule.onNodeWithTag("reviewAuthorName").assertTextEquals(authorName)
+            composeRule.onNodeWithTag("reviewAuthorName", useUnmergedTree = true).assertTextEquals(authorName)
         }
         val targetName = firstReview.resenado?.nombre
         if (!targetName.isNullOrBlank()) {
-            composeRule.onNodeWithTag("reviewTargetName").assertTextEquals(targetName)
+            composeRule.onNodeWithTag("reviewTargetName", useUnmergedTree = true).assertTextEquals(targetName)
         }
         val content = firstReview.contenido
         if (!content.isNullOrBlank()) {
-            composeRule.onNodeWithTag("reviewContent").assertTextContains(content, substring = true)
+            composeRule.onNodeWithTag("reviewContent", useUnmergedTree = true).assertTextContains(content, substring = true)
         }
 
         val dbLikes = firstReview.likesCount ?: 0
         val dbDislikes = firstReview.disLikes ?: 0
 
-        composeRule.onNodeWithTag("reviewLikesCount").assertTextEquals(dbLikes.toString())
-        composeRule.onNodeWithTag("reviewDislikesCount").assertTextEquals(dbDislikes.toString())
+        composeRule.onNodeWithTag("reviewLikesCount", useUnmergedTree = true).assertTextEquals(dbLikes.toString())
+        composeRule.onNodeWithTag("reviewDislikesCount", useUnmergedTree = true).assertTextEquals(dbDislikes.toString())
     }
 
     @Test
@@ -287,14 +333,14 @@ class CasoDeUso1E2E {
         composeRule.onNodeWithTag("passwordField").performTextInput("123456")
         composeRule.onNodeWithTag("confirmPasswordField").performTextInput("123456")
 
-        composeRule.onNodeWithTag("termsCheckbox").performClick()
-        composeRule.onNodeWithTag("btnRegister").performClick()
+        composeRule.onNodeWithTag("termsCheckbox").performScrollTo().performClick()
+        composeRule.onNodeWithTag("btnRegister").performScrollTo().performClick()
 
-        composeRule.waitUntil(timeoutMillis = 5000) {
+        composeRule.waitUntil(timeoutMillis = 10000) {
             composeRule.onAllNodesWithTag("homeScreen").fetchSemanticsNodes().isNotEmpty()
         }
 
-        composeRule.waitUntil(timeoutMillis = 5000) {
+        composeRule.waitUntil(timeoutMillis = 10000) {
             composeRule.onAllNodesWithTag("reviewItem").fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onAllNodesWithTag("reviewItem")[0].performClick()
@@ -303,11 +349,12 @@ class CasoDeUso1E2E {
             composeRule.onAllNodesWithTag("commentsReviewScreen").fetchSemanticsNodes().isNotEmpty()
         }
 
-        composeRule.waitUntil(timeoutMillis = 5000) {
+        composeRule.waitUntil(timeoutMillis = 10000) {
             composeRule.onAllNodesWithTag("commentLikeButton").fetchSemanticsNodes().isNotEmpty()
         }
 
-        val initialLikesText = composeRule.onAllNodesWithTag("commentLikeCount")[0]
+        // commentLikeCount está dentro del botón de like: se busca con useUnmergedTree = true
+        val initialLikesText = composeRule.onAllNodesWithTag("commentLikeCount", useUnmergedTree = true)[0]
             .fetchSemanticsNode().config[androidx.compose.ui.semantics.SemanticsProperties.Text].first().text
         val initialLikes = initialLikesText.toIntOrNull() ?: 0
 
@@ -316,11 +363,11 @@ class CasoDeUso1E2E {
 
         // Verificar explícitamente que aumente en 1
         composeRule.waitUntil(timeoutMillis = 3000) {
-            val updatedText = composeRule.onAllNodesWithTag("commentLikeCount")[0]
+            val updatedText = composeRule.onAllNodesWithTag("commentLikeCount", useUnmergedTree = true)[0]
                 .fetchSemanticsNode().config[androidx.compose.ui.semantics.SemanticsProperties.Text].first().text
             (updatedText.toIntOrNull() ?: 0) == initialLikes + 1
         }
-        composeRule.onAllNodesWithTag("commentLikeCount")[0].assertTextEquals((initialLikes + 1).toString())
+        composeRule.onAllNodesWithTag("commentLikeCount", useUnmergedTree = true)[0].assertTextEquals((initialLikes + 1).toString())
     }
 
     @Test
@@ -341,14 +388,14 @@ class CasoDeUso1E2E {
         composeRule.onNodeWithTag("passwordField").performTextInput("123456")
         composeRule.onNodeWithTag("confirmPasswordField").performTextInput("123456")
 
-        composeRule.onNodeWithTag("termsCheckbox").performClick()
-        composeRule.onNodeWithTag("btnRegister").performClick()
+        composeRule.onNodeWithTag("termsCheckbox").performScrollTo().performClick()
+        composeRule.onNodeWithTag("btnRegister").performScrollTo().performClick()
 
-        composeRule.waitUntil(timeoutMillis = 5000) {
+        composeRule.waitUntil(timeoutMillis = 10000) {
             composeRule.onAllNodesWithTag("homeScreen").fetchSemanticsNodes().isNotEmpty()
         }
 
-        composeRule.waitUntil(timeoutMillis = 5000) {
+        composeRule.waitUntil(timeoutMillis = 10000) {
             composeRule.onAllNodesWithTag("reviewItem").fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onAllNodesWithTag("reviewItem")[0].performClick()
@@ -357,43 +404,56 @@ class CasoDeUso1E2E {
             composeRule.onAllNodesWithTag("commentsReviewScreen").fetchSemanticsNodes().isNotEmpty()
         }
 
-        composeRule.waitUntil(timeoutMillis = 5000) {
+        composeRule.waitUntil(timeoutMillis = 10000) {
             composeRule.onAllNodesWithTag("commentLikeButton").fetchSemanticsNodes().isNotEmpty()
         }
 
-        val initialLikesText = composeRule.onAllNodesWithTag("commentLikeCount")[0]
+        val initialLikesText = composeRule.onAllNodesWithTag("commentLikeCount", useUnmergedTree = true)[0]
             .fetchSemanticsNode().config[androidx.compose.ui.semantics.SemanticsProperties.Text].first().text
         val initialLikes = initialLikesText.toIntOrNull() ?: 0
 
         // Dar like (aumenta a initial + 1)
         composeRule.onAllNodesWithTag("commentLikeButton")[0].performClick()
         composeRule.waitUntil(timeoutMillis = 3000) {
-            val updatedText = composeRule.onAllNodesWithTag("commentLikeCount")[0]
+            val updatedText = composeRule.onAllNodesWithTag("commentLikeCount", useUnmergedTree = true)[0]
                 .fetchSemanticsNode().config[androidx.compose.ui.semantics.SemanticsProperties.Text].first().text
             (updatedText.toIntOrNull() ?: 0) == initialLikes + 1
         }
-        composeRule.onAllNodesWithTag("commentLikeCount")[0].assertTextEquals((initialLikes + 1).toString())
+        composeRule.onAllNodesWithTag("commentLikeCount", useUnmergedTree = true)[0].assertTextEquals((initialLikes + 1).toString())
 
-        // Ir atrás a Home
-        composeRule.activity.onBackPressedDispatcher.onBackPressed()
+        // Ir atrás a Home (la navegación debe hacerse en el hilo de la UI)
+        composeRule.runOnUiThread {
+            composeRule.activity.onBackPressedDispatcher.onBackPressed()
+        }
         composeRule.waitUntil(timeoutMillis = 5000) {
             composeRule.onAllNodesWithTag("homeScreen").fetchSemanticsNodes().isNotEmpty()
         }
 
         // Volver a seleccionar la misma reseña
+        composeRule.waitUntil(timeoutMillis = 10000) {
+            composeRule.onAllNodesWithTag("reviewItem").fetchSemanticsNodes().isNotEmpty()
+        }
         composeRule.onAllNodesWithTag("reviewItem")[0].performClick()
         composeRule.waitUntil(timeoutMillis = 5000) {
             composeRule.onAllNodesWithTag("commentsReviewScreen").fetchSemanticsNodes().isNotEmpty()
         }
 
+        // Esperar a que los comentarios carguen de nuevo con el like guardado
+        composeRule.waitUntil(timeoutMillis = 10000) {
+            val reloadedText = composeRule.onAllNodesWithTag("commentLikeCount", useUnmergedTree = true)
+                .fetchSemanticsNodes().firstOrNull()
+                ?.config?.getOrNull(SemanticsProperties.Text)?.firstOrNull()?.text
+            (reloadedText?.toIntOrNull() ?: -1) == initialLikes + 1
+        }
+
         // Quitar el like (disminuye en 1 volviendo al valor inicial)
         composeRule.onAllNodesWithTag("commentLikeButton")[0].performClick()
         composeRule.waitUntil(timeoutMillis = 3000) {
-            val finalText = composeRule.onAllNodesWithTag("commentLikeCount")[0]
+            val finalText = composeRule.onAllNodesWithTag("commentLikeCount", useUnmergedTree = true)[0]
                 .fetchSemanticsNode().config[androidx.compose.ui.semantics.SemanticsProperties.Text].first().text
             (finalText.toIntOrNull() ?: 0) == initialLikes
         }
-        composeRule.onAllNodesWithTag("commentLikeCount")[0].assertTextEquals(initialLikes.toString())
+        composeRule.onAllNodesWithTag("commentLikeCount", useUnmergedTree = true)[0].assertTextEquals(initialLikes.toString())
     }
 
     @Test
@@ -416,28 +476,31 @@ class CasoDeUso1E2E {
         composeRule.onNodeWithTag("passwordField").performTextInput("1234")
         composeRule.onNodeWithTag("confirmPasswordField").performTextInput("1234")
 
-        composeRule.onNodeWithTag("termsCheckbox").performClick()
-        composeRule.onNodeWithTag("btnRegister").performClick()
+        composeRule.onNodeWithTag("termsCheckbox").performScrollTo().performClick()
+        composeRule.onNodeWithTag("btnRegister").performScrollTo().performClick()
 
         composeRule.waitUntil(timeoutMillis = 5000) {
             composeRule.onAllNodesWithTag("errorMessage", useUnmergedTree = true).fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onNodeWithTag("errorMessage", useUnmergedTree = true).assertIsDisplayed()
 
+        // Cerrar el diálogo de error antes de volver a escribir en el formulario
+        composeRule.onNodeWithText("Aceptar").performClick()
+
         // B. El usuario corrige la contraseña a 123456, ingresa a la aplicación (Home)
         composeRule.onNodeWithTag("passwordField").performTextClearance()
         composeRule.onNodeWithTag("passwordField").performTextInput("123456")
         composeRule.onNodeWithTag("confirmPasswordField").performTextClearance()
         composeRule.onNodeWithTag("confirmPasswordField").performTextInput("123456")
-        composeRule.onNodeWithTag("btnRegister").performClick()
+        composeRule.onNodeWithTag("btnRegister").performScrollTo().performClick()
 
-        composeRule.waitUntil(timeoutMillis = 5000) {
+        composeRule.waitUntil(timeoutMillis = 10000) {
             composeRule.onAllNodesWithTag("homeScreen").fetchSemanticsNodes().isNotEmpty()
         }
-        composeRule.onNodeWithTag("homeScreen").assertIsDisplayed()
+        composeRule.onAllNodesWithTag("homeScreen").onFirst().assertIsDisplayed()
 
         // C. El usuario ingresa a la primera publicación, consulta la BD y compara explícitamente los campos con asserts directos
-        composeRule.waitUntil(timeoutMillis = 5000) {
+        composeRule.waitUntil(timeoutMillis = 10000) {
             composeRule.onAllNodesWithTag("reviewItem").fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onAllNodesWithTag("reviewItem")[0].performClick()
@@ -447,6 +510,11 @@ class CasoDeUso1E2E {
         }
         composeRule.onNodeWithTag("commentsReviewScreen").assertIsDisplayed()
 
+        // Esperar a que la reseña termine de cargar desde Firestore
+        composeRule.waitUntil(timeoutMillis = 10000) {
+            composeRule.onAllNodesWithTag("reviewAuthorName", useUnmergedTree = true).fetchSemanticsNodes().isNotEmpty()
+        }
+
         val reviewDataSource = ReviewFirestoreDataSourceImpl(Firebase.firestore)
         val firebaseReviews = reviewDataSource.getAllReviewsExcludingStudentId("")
         assertTrue("Debe existir al menos una reseña en Firebase", firebaseReviews.isNotEmpty())
@@ -455,57 +523,70 @@ class CasoDeUso1E2E {
 
         val authorName = firstReview.autor?.nombre
         if (!authorName.isNullOrBlank()) {
-            composeRule.onNodeWithTag("reviewAuthorName").assertTextEquals(authorName)
+            composeRule.onNodeWithTag("reviewAuthorName", useUnmergedTree = true).assertTextEquals(authorName)
         }
         val targetName = firstReview.resenado?.nombre
         if (!targetName.isNullOrBlank()) {
-            composeRule.onNodeWithTag("reviewTargetName").assertTextEquals(targetName)
+            composeRule.onNodeWithTag("reviewTargetName", useUnmergedTree = true).assertTextEquals(targetName)
         }
         val content = firstReview.contenido
         if (!content.isNullOrBlank()) {
-            composeRule.onNodeWithTag("reviewContent").assertTextContains(content, substring = true)
+            composeRule.onNodeWithTag("reviewContent", useUnmergedTree = true).assertTextContains(content, substring = true)
         }
 
         val dbLikes = firstReview.likesCount ?: 0
         val dbDislikes = firstReview.disLikes ?: 0
 
-        composeRule.onNodeWithTag("reviewLikesCount").assertTextEquals(dbLikes.toString())
-        composeRule.onNodeWithTag("reviewDislikesCount").assertTextEquals(dbDislikes.toString())
+        composeRule.onNodeWithTag("reviewLikesCount", useUnmergedTree = true).assertTextEquals(dbLikes.toString())
+        composeRule.onNodeWithTag("reviewDislikesCount", useUnmergedTree = true).assertTextEquals(dbDislikes.toString())
 
         // D. Va a la sección de reviews/comentarios, guarda la cantidad de likes iniciales, da like al primer comentario y verifica explícitamente que aumente en 1
-        composeRule.waitUntil(timeoutMillis = 5000) {
+        composeRule.waitUntil(timeoutMillis = 10000) {
             composeRule.onAllNodesWithTag("commentLikeButton").fetchSemanticsNodes().isNotEmpty()
         }
-        val initialLikesText = composeRule.onAllNodesWithTag("commentLikeCount")[0]
+        val initialLikesText = composeRule.onAllNodesWithTag("commentLikeCount", useUnmergedTree = true)[0]
             .fetchSemanticsNode().config[androidx.compose.ui.semantics.SemanticsProperties.Text].first().text
         val initialLikes = initialLikesText.toIntOrNull() ?: 0
 
         composeRule.onAllNodesWithTag("commentLikeButton")[0].performClick()
 
         composeRule.waitUntil(timeoutMillis = 3000) {
-            val updatedText = composeRule.onAllNodesWithTag("commentLikeCount")[0]
+            val updatedText = composeRule.onAllNodesWithTag("commentLikeCount", useUnmergedTree = true)[0]
                 .fetchSemanticsNode().config[androidx.compose.ui.semantics.SemanticsProperties.Text].first().text
             (updatedText.toIntOrNull() ?: 0) == initialLikes + 1
         }
-        composeRule.onAllNodesWithTag("commentLikeCount")[0].assertTextEquals((initialLikes + 1).toString())
+        composeRule.onAllNodesWithTag("commentLikeCount", useUnmergedTree = true)[0].assertTextEquals((initialLikes + 1).toString())
 
         // E. El usuario va atrás (Home), vuelve a seleccionar la publicación, quita el like y verifica explícitamente que disminuya en 1 (vuelva al valor inicial)
-        composeRule.activity.onBackPressedDispatcher.onBackPressed()
+        composeRule.runOnUiThread {
+            composeRule.activity.onBackPressedDispatcher.onBackPressed()
+        }
         composeRule.waitUntil(timeoutMillis = 5000) {
             composeRule.onAllNodesWithTag("homeScreen").fetchSemanticsNodes().isNotEmpty()
         }
 
+        composeRule.waitUntil(timeoutMillis = 10000) {
+            composeRule.onAllNodesWithTag("reviewItem").fetchSemanticsNodes().isNotEmpty()
+        }
         composeRule.onAllNodesWithTag("reviewItem")[0].performClick()
         composeRule.waitUntil(timeoutMillis = 5000) {
             composeRule.onAllNodesWithTag("commentsReviewScreen").fetchSemanticsNodes().isNotEmpty()
         }
 
+        // Esperar a que los comentarios carguen de nuevo con el like guardado
+        composeRule.waitUntil(timeoutMillis = 10000) {
+            val reloadedText = composeRule.onAllNodesWithTag("commentLikeCount", useUnmergedTree = true)
+                .fetchSemanticsNodes().firstOrNull()
+                ?.config?.getOrNull(androidx.compose.ui.semantics.SemanticsProperties.Text)?.firstOrNull()?.text
+            (reloadedText?.toIntOrNull() ?: -1) == initialLikes + 1
+        }
+
         composeRule.onAllNodesWithTag("commentLikeButton")[0].performClick()
         composeRule.waitUntil(timeoutMillis = 3000) {
-            val finalLikeCountText = composeRule.onAllNodesWithTag("commentLikeCount")[0]
+            val finalLikeCountText = composeRule.onAllNodesWithTag("commentLikeCount", useUnmergedTree = true)[0]
                 .fetchSemanticsNode().config[androidx.compose.ui.semantics.SemanticsProperties.Text].first().text
             (finalLikeCountText.toIntOrNull() ?: 0) == initialLikes
         }
-        composeRule.onAllNodesWithTag("commentLikeCount")[0].assertTextEquals(initialLikes.toString())
+        composeRule.onAllNodesWithTag("commentLikeCount", useUnmergedTree = true)[0].assertTextEquals(initialLikes.toString())
     }
 }
