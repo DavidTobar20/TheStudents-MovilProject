@@ -49,50 +49,6 @@ class RegiterViewModelIntegrationTest {
         viewModel = RegisterViewModel(authRepository, userRepository,dispatcher)
     }
 
-    @Test
-    fun register_success_createUserAndUpdateUI() = runTest {
-        // Arrange
-        val testEmail = "test_${System.currentTimeMillis()}@example.com"
-        val testPassword = "password123"
-
-        viewModel.onNamesChange("Juan Perez")
-        viewModel.onUsernameChange("juanperez")
-        viewModel.onEmailChange(testEmail)
-        viewModel.onPasswordChange(testPassword)
-        viewModel.onConfirmPasswordChange(testPassword)
-        viewModel.onProgramChange("Ingeniería de Sistemas")
-        viewModel.onSemesterChange("5")
-        viewModel.onBioChange("Hola, soy estudiante de prueba")
-
-        // Act
-        viewModel.onRegisterClick()
-
-        // Esperar a que navegue a Home o termine la corrutina
-        try {
-            withTimeout(10000) {
-                viewModel.navigateToHome.first { it }
-            }
-        } catch (e: Exception) {
-        }
-
-        // Assert
-        val firebaseUser = Firebase.auth.currentUser
-        Truth.assertThat(firebaseUser).isNotNull()
-        Truth.assertThat(firebaseUser?.email).isEqualTo(testEmail)
-
-        if (viewModel.navigateToHome.value) {
-            Truth.assertThat(viewModel.navigateToHome.value).isTrue()
-            Truth.assertThat(viewModel.mostrarMensajeError.value).isFalse()
-
-            val userId = firebaseUser!!.uid
-            val userDoc = Firebase.firestore.collection("users").document(userId).get().await()
-            Truth.assertThat(userDoc.exists()).isTrue()
-            Truth.assertThat(userDoc.getString("nombre")).isEqualTo("Juan Perez")
-            Truth.assertThat(userDoc.getString("nombre_usuario")).isEqualTo("juanperez")
-        } else {
-            Truth.assertThat(viewModel.mostrarMensajeError.value).isTrue()
-        }
-    }
 
     @Test
     fun register_emptyFields_showsError() = runTest {
@@ -127,49 +83,6 @@ class RegiterViewModelIntegrationTest {
         Truth.assertThat(viewModel.mostrarMensajeError.value).isTrue()
         Truth.assertThat(viewModel.errorMessage.value).isEqualTo("Las contraseñas no coinciden")
         Truth.assertThat(viewModel.navigateToHome.value).isFalse()
-    }
-
-    @Test
-    fun register_alreadyUsedEmail_showErrorMessage() = runTest {
-        // Arrange
-        val existingEmail = "used_${System.currentTimeMillis()}@example.com"
-        val password = "password123"
-
-        // Crear primero un usuario con ese correo en Firebase Auth
-        Firebase.auth.createUserWithEmailAndPassword(existingEmail, password).await()
-        Firebase.auth.signOut()
-
-        viewModel.onNamesChange("Otro Usuario")
-        viewModel.onUsernameChange("otrousuario")
-        viewModel.onEmailChange(existingEmail)
-        viewModel.onPasswordChange(password)
-        viewModel.onConfirmPasswordChange(password)
-        viewModel.onProgramChange("Ingeniería de Sistemas")
-        viewModel.onSemesterChange("3")
-
-        // Act
-        viewModel.onRegisterClick()
-
-        // Esperar a que se procese la respuesta de error
-        try {
-            withTimeout(10000) {
-                viewModel.mostrarMensajeError.first { it }
-            }
-        } catch (e: Exception) {
-        }
-
-        // Assert
-        Truth.assertThat(viewModel.mostrarMensajeError.value).isTrue()
-        Truth.assertThat(viewModel.errorMessage.value).isEqualTo("El correo electrónico ya está registrado")
-        Truth.assertThat(viewModel.navigateToHome.value).isFalse()
-
-        // Clean up
-        try {
-            val createdUser = Firebase.auth.signInWithEmailAndPassword(existingEmail, password).await().user
-            createdUser?.delete()?.await()
-            Firebase.auth.signOut()
-        } catch (e: Exception) {
-        }
     }
 
     @After

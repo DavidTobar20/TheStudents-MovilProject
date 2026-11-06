@@ -363,7 +363,7 @@ class CasoDeUso2E2E {
             composeRule.onAllNodesWithText("Seguidos").fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onNodeWithText("Seguidos").performClick()
-
+        Thread.sleep(5000);
         val followedAuthorName = firstReview.autor?.nombre.orEmpty()
         composeRule.waitUntil(timeoutMillis = 10000) {
             composeRule.onAllNodesWithTag("reviewAuthorName", useUnmergedTree = true)
