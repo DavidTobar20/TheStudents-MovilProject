@@ -17,6 +17,7 @@ import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,7 +29,7 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
 fun TermsAndConditions(
     termsAccepted: Boolean,
     onTermsAcceptedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier.testTag("termsCheckbox")
 ) {
     Row(
         modifier = modifier

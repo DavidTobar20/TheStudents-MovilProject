@@ -36,7 +36,7 @@ fun NumberTextField(
     leadingIcon: ImageVector,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium.copy(
@@ -51,7 +51,7 @@ fun NumberTextField(
                 val filtered = newValue.filter { it.isDigit() }
                 onValueChange(filtered)
             },
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .shadow(
                     elevation = 6.dp,

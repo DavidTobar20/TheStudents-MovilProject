@@ -35,6 +35,7 @@ fun TheStudentsApp() {
 
     val context = LocalContext.current
     // Launcher para pedir permiso
+    /*
     val notificationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
@@ -45,46 +46,46 @@ fun TheStudentsApp() {
             }
         }
     )
-        // Al entrar al Composable, pedimos el permiso si hace falta
-            LaunchedEffect(Unit) {
+    // Al entrar al Composable, pedimos el permiso si hace falta
+    LaunchedEffect(Unit) {
 
-              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (ContextCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.POST_NOTIFICATIONS
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED) {
                     notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                }
-              }
             }
+        }
+    }
 
-        FirebaseMessaging.getInstance().token
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("FCM", "Token: ${task.result}")
-                } else {
-                    Log.e("FCM", "Error obteniendo token", task.exception)
-                }
+    FirebaseMessaging.getInstance().token
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d("FCM", "Token: ${task.result}")
+            } else {
+                Log.e("FCM", "Error obteniendo token", task.exception)
             }
-
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.background,
-            bottomBar = {
-                if (showBottomBar){
-                    FixedBottomBar(
-                        navController = navController
-                    )
-                }
-            }
-        ) {
-            AppNavigation(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it),
-                navController = navController
-            )
         }
 
+     */
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background,
+        bottomBar = {
+            if (showBottomBar){
+                FixedBottomBar(
+                    navController = navController
+                )
+            }
         }
+    ) {
+        AppNavigation(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
+            navController = navController
+        )
+    }
+}

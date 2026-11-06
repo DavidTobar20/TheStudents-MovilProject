@@ -29,6 +29,8 @@ import com.example.thestudents.ui.utils.ButtonWithoutIcon
 import com.example.thestudents.ui.utils.DiamondDivider
 
 
+import androidx.compose.ui.platform.testTag
+
 @Composable
 fun BodyLoginScreen(
     email: String,
@@ -48,7 +50,8 @@ fun BodyLoginScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 32.dp, vertical = 24.dp),
+            .padding(horizontal = 32.dp, vertical = 24.dp)
+            .testTag("loginScreen"),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LogoApp()
@@ -89,6 +92,7 @@ fun BodyLoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
+                .testTag("btnLogin")
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -113,7 +117,9 @@ fun BodyLoginScreen(
             )
             Text(
                 text = stringResource(R.string.crear_cuenta),
-                modifier = Modifier.clickable { onCreateAccountClick() },
+                modifier = Modifier
+                    .clickable { onCreateAccountClick() }
+                    .testTag("btnRegister"),
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 textDecoration = TextDecoration.Underline,
@@ -156,12 +162,12 @@ fun BodyLoginScreenPreview() {
  */
 @Composable
 fun LoginScreen(
-    modifier: Modifier = Modifier,
+    loginViewModel: LoginViewModel,
+    modifier: Modifier = Modifier.testTag("loginScreen"),
     onLoginSuccess: () -> Unit = {},
     onSSOClick: () -> Unit = {},
     onCreateAccountClick: () -> Unit = {},
-    onForgotPasswordClick: () -> Unit = {},
-    loginViewModel: LoginViewModel
+    onForgotPasswordClick: () -> Unit = {}
 ) {
     val state by loginViewModel.uiState.collectAsState()
 

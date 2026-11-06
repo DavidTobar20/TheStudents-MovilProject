@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,7 +53,8 @@ fun FormularioRegistro (
             leadingIcon = Icons.Default.Email,
             isPasswordField = false,
             isPasswordVisible = false,
-            onPasswordToggle = {}
+            onPasswordToggle = {},
+            modifier = Modifier.testTag("emailField")
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -66,7 +68,8 @@ fun FormularioRegistro (
             leadingIcon = Icons.Default.Lock,
             isPasswordField = true,
             isPasswordVisible = isPasswordVisible,
-            onPasswordToggle = onPasswordToggle
+            onPasswordToggle = onPasswordToggle,
+            modifier = Modifier.testTag("passwordField")
         )
 
         if (showError) {
@@ -74,7 +77,7 @@ fun FormularioRegistro (
                 text = errorMessage,
                 color = MaterialTheme.colorScheme.error,
                 fontSize = 12.sp,
-                modifier = Modifier.padding(top = 4.dp)
+                modifier = Modifier.padding(top = 4.dp).testTag("errorMessage")
             )
         }
 

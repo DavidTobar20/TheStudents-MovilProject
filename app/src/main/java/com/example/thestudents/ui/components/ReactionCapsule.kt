@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,7 +47,11 @@ fun ReactionCapsule(
     modifier: Modifier = Modifier,
     height: Dp = 44.dp,
     iconSize: Dp = 18.dp,
-    fontSize: TextUnit = 14.sp
+    fontSize: TextUnit = 14.sp,
+    likeButtonModifier: Modifier = Modifier.testTag("commentLikeButton"),
+    likeCountModifier: Modifier = Modifier.testTag("commentLikeCount"),
+    dislikeButtonModifier: Modifier = Modifier,
+    dislikeCountModifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
@@ -66,7 +71,9 @@ fun ReactionCapsule(
             height = height,
             iconSize = iconSize,
             fontSize = fontSize,
-            onClick = onLikeClick
+            onClick = onLikeClick,
+            modifier = likeButtonModifier,
+            countModifier = likeCountModifier
         )
         Box(
             modifier = Modifier
@@ -85,7 +92,9 @@ fun ReactionCapsule(
             height = height,
             iconSize = iconSize,
             fontSize = fontSize,
-            onClick = onDislikeClick
+            onClick = onDislikeClick,
+            modifier = dislikeButtonModifier,
+            countModifier = dislikeCountModifier
         )
     }
 }
@@ -101,12 +110,14 @@ private fun ReactionButton(
     height: Dp,
     iconSize: Dp,
     fontSize: TextUnit,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    countModifier: Modifier = Modifier
 ) {
     val contentColor = if (isSelected) selectedContentColor else MaterialTheme.colorScheme.onSurfaceVariant
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .height(height)
             .background(if (isSelected) selectedContainerColor else Color.Transparent)
             .clickable(role = Role.Button, onClick = onClick)
@@ -124,7 +135,8 @@ private fun ReactionButton(
             text = count.toString(),
             fontSize = fontSize,
             fontWeight = FontWeight.SemiBold,
-            color = contentColor
+            color = contentColor,
+            modifier = countModifier
         )
     }
 }

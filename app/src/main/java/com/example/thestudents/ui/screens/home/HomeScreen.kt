@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.testTag
 import com.example.thestudents.R
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.local.localReviewsProvider
@@ -35,10 +36,10 @@ import com.example.thestudents.ui.theme.TheStudentsTheme
 
 @Composable
 fun HomeScreen(
-    onReviewClick: (String) -> Unit,
-    onStudentClick: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    modifier: Modifier = Modifier.testTag("homeScreen"),
+    onReviewClick: (String) -> Unit = {},
+    onStudentClick: (String) -> Unit = {}
 ) {
     val state by homeViewModel.uiState.collectAsState()
 
@@ -105,7 +106,10 @@ fun BodyHomeScreen(
     onReviewerClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(modifier = modifier
+        .fillMaxSize()
+        .testTag("homeScreen")
+    ) {
         HomeTabs(
             selectedTab = selectedTab,
             onTabSelected = onTabSelected
@@ -148,7 +152,9 @@ fun BodyHomeScreen(
                             onCommentClick = { onCommentClick(review.id) },
                             onCardClick = { onCardClick(review.id) },
                             onReviewerClick = { onReviewerClick(review.reviewer.id) },
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                                .testTag("reviewItem")
                         )
                     }
                 }

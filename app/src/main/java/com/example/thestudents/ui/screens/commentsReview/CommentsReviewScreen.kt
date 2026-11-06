@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.platform.testTag
 import com.example.thestudents.R
 import com.example.thestudents.data.Review
 import com.example.thestudents.data.Student
@@ -158,7 +159,7 @@ fun CommentsReviewScreen(
     reviewId: String,
     onBackClick: () -> Unit,
     onStudentClick: (String) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.testTag("commentsReviewScreen")
 ) {
     val state by commentsReviewViewModel.uiState.collectAsState()
 
@@ -169,7 +170,7 @@ fun CommentsReviewScreen(
 
     val review = state.review
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize()) {
         HeaderBack(
             title = stringResource(R.string.resena),
             onBackClick = onBackClick

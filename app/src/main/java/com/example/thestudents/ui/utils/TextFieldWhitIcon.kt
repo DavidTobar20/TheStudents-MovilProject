@@ -35,6 +35,7 @@ fun TextFieldWhitIcon(
     isPasswordField: Boolean,
     isPasswordVisible: Boolean,
     onPasswordToggle: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
@@ -48,7 +49,7 @@ fun TextFieldWhitIcon(
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .shadow(
                     elevation = 6.dp,

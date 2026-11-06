@@ -31,12 +31,15 @@ import com.example.thestudents.R
 import com.example.thestudents.ui.utils.TextFieldWhitIcon
 
 
+import androidx.compose.ui.platform.testTag
+
 @Composable
 fun RegisterScreen(
-    onRegisterClick: () -> Unit,
-    onSsoClick: () -> Unit,
-    onNavigateToLogin: () -> Unit,
-    registerViewModel: RegisterViewModel
+    registerViewModel: RegisterViewModel,
+    modifier: Modifier = Modifier.testTag("registerScreen"),
+    onRegisterClick: () -> Unit = {},
+    onSsoClick: () -> Unit = {},
+    onNavigateToLogin: () -> Unit = {}
 ) {
     val state by registerViewModel.uiState.collectAsState()
     val errorMsg by registerViewModel.errorMessage.collectAsState()
@@ -54,7 +57,7 @@ fun RegisterScreen(
         AlertDialog(
             onDismissRequest = { registerViewModel.onErrorDismiss() },
             title = { Text(text = "Error de registro") },
-            text = { Text(text = errorMsg) },
+            text = { Text(text = errorMsg, modifier = Modifier.testTag("errorMessage")) },
             confirmButton = {
                 TextButton(onClick = { registerViewModel.onErrorDismiss() }) {
                     Text(text = "Aceptar")
@@ -64,6 +67,7 @@ fun RegisterScreen(
     }
 
     RegisterBody(
+        modifier = modifier,
         names = state.names,
         onNamesChange = { registerViewModel.onNamesChange(it) },
         username = state.username,
@@ -139,7 +143,8 @@ fun RegisterBody(
                 leadingIcon = Icons.Default.Person,
                 isPasswordField = false,
                 isPasswordVisible = false,
-                onPasswordToggle = {}
+                onPasswordToggle = {},
+                modifier = Modifier.testTag("nameField")
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -153,7 +158,8 @@ fun RegisterBody(
                 leadingIcon = Icons.Default.AccountCircle,
                 isPasswordField = false,
                 isPasswordVisible = false,
-                onPasswordToggle = {}
+                onPasswordToggle = {},
+                modifier = Modifier.testTag("userNameField")
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -167,7 +173,8 @@ fun RegisterBody(
                 leadingIcon = Icons.Default.School,
                 isPasswordField = false,
                 isPasswordVisible = false,
-                onPasswordToggle = {}
+                onPasswordToggle = {},
+                modifier = Modifier.testTag("paisField")
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -178,7 +185,8 @@ fun RegisterBody(
                 onValueChange = onSemesterChange,
                 label = stringResource(R.string.semestre),
                 placeholder = stringResource(R.string.ingresa_tu_semestre),
-                leadingIcon = Icons.Default.FormatListNumbered
+                leadingIcon = Icons.Default.FormatListNumbered,
+                modifier = Modifier.testTag("semesterField")
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -190,7 +198,8 @@ fun RegisterBody(
                 label = stringResource(R.string.biografia),
                 placeholder = stringResource(R.string.cuentanos_sobre_ti),
                 leadingIcon = Icons.Default.Info,
-                minLines = 3
+                minLines = 3,
+                modifier = Modifier.testTag("bioField")
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -204,7 +213,8 @@ fun RegisterBody(
                 leadingIcon = Icons.Default.Email,
                 isPasswordField = false,
                 isPasswordVisible = false,
-                onPasswordToggle = {}
+                onPasswordToggle = {},
+                modifier = Modifier.testTag("emailField")
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -218,7 +228,8 @@ fun RegisterBody(
                 leadingIcon = Icons.Default.Lock,
                 isPasswordField = true,
                 isPasswordVisible = isPasswordVisible,
-                onPasswordToggle = onPasswordToggle
+                onPasswordToggle = onPasswordToggle,
+                modifier = Modifier.testTag("passwordField")
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -232,14 +243,16 @@ fun RegisterBody(
                 leadingIcon = Icons.Default.Lock,
                 isPasswordField = true,
                 isPasswordVisible = isConfirmPasswordVisible,
-                onPasswordToggle = onConfirmPasswordToggle
+                onPasswordToggle = onConfirmPasswordToggle,
+                modifier = Modifier.testTag("confirmPasswordField")
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             TermsAndConditions(
                 termsAccepted = termsAccepted,
-                onTermsAcceptedChange = onTermsAcceptedChange
+                onTermsAcceptedChange = onTermsAcceptedChange,
+                modifier = Modifier.testTag("termsCheckbox")
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -250,7 +263,8 @@ fun RegisterBody(
                 enabled = termsAccepted,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp),
+                    .height(56.dp)
+                    .testTag("btnRegister"),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondary,

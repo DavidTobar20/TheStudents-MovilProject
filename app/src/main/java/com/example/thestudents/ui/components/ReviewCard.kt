@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -111,14 +112,18 @@ fun ReviewCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Like y dislike en una sola capsula
+            // Like y dislike en una sola capsula con tags de reseña
             ReactionCapsule(
                 likes = review.likesCount,
                 dislikes = review.disLikes,
                 isLiked = isLiked,
                 isDisliked = isDisliked,
                 onLikeClick = onLikeClick,
-                onDislikeClick = onDislikeClick
+                onDislikeClick = onDislikeClick,
+                likeButtonModifier = Modifier.testTag("reviewLikeButton"),
+                likeCountModifier = Modifier.testTag("reviewLikesCount"),
+                dislikeButtonModifier = Modifier.testTag("reviewDislikeButton"),
+                dislikeCountModifier = Modifier.testTag("reviewDislikesCount")
             )
 
             if (onCommentClick != null) {
@@ -192,7 +197,8 @@ private fun ReviewHeader(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
-                maxLines = 1
+                maxLines = 1,
+                modifier = Modifier.testTag("reviewAuthorName")
             )
             if (time.isNotBlank()) {
                 Text(
@@ -278,7 +284,8 @@ private fun ReviewTarget(review: Review) {
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
-                maxLines = 1
+                maxLines = 1,
+                modifier = Modifier.testTag("reviewTargetName")
             )
         }
         if (review.classReviewed.isNotBlank() || review.periodReviewed.isNotBlank()) {
@@ -322,7 +329,8 @@ private fun ReviewQuote(content: String) {
             fontSize = 15.sp,
             lineHeight = 24.sp,
             fontStyle = FontStyle.Italic,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.testTag("reviewContent")
         )
     }
 }
