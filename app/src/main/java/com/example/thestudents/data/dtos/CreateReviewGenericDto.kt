@@ -5,6 +5,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
+// Agregamos el campo de latitud y longitud para guardar la ubicación de donde fue publicado
 data class CreateReviewGenericDto(
     val autor_id: String? = null,
     val resenado_id: String? = null,

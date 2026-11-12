@@ -8,6 +8,7 @@ import com.example.thestudents.data.dtos.HomeFeedDto
 import com.example.thestudents.data.dtos.ReviewDto
 import com.example.thestudents.data.dtos.StudentDto
 import com.example.thestudents.data.dtos.StudentSummaryDto
+import com.example.thestudents.data.dtos.isReviewWithinLast24Hours
 import com.example.thestudents.data.dtos.toSummaryDto
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
@@ -131,8 +132,10 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
             periodo = review.periodo,
             contenido = review.contenido,
             rating = review.rating,
+            // Cuando creamos una reseña mandamos la latitud y longitud de donde fue creada
             latitud = review.latitud,
             longitud = review.longitud,
+
             autor = autorSummaryDto,
             resenado = resenadoSummaryDto
         )
@@ -259,7 +262,9 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
         awaitClose { listener.remove() }
     }
 
-    override suspend fun listenAllReviews(studentId: String): Flow<List<ReviewDto>> = callbackFlow {
+
+
+    override suspend fun listenRecentReviews(studentId: String): Flow<List<ReviewDto>> = callbackFlow {
         var lastJob: Job? = null
 
         val listener = db.collection("reviews").addSnapshotListener { snapshot, error ->
@@ -269,9 +274,12 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
             }
 
             if (snapshot != null) {
+                val nowMillis = System.currentTimeMillis()
                 val reviews = snapshot.documents.mapNotNull { doc ->
                     val review = doc.toObject(ReviewDto::class.java) ?: return@mapNotNull null
                     review.copy(id = doc.id)
+                }.filter { review ->
+                    isReviewWithinLast24Hours(review.fechaCreacion, nowMillis)
                 }
 
                 lastJob?.cancel()

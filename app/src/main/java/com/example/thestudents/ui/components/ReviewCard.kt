@@ -4,23 +4,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
-import androidx.compose.material.icons.outlined.ThumbDown
-import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -34,24 +27,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thestudents.R
 import com.example.thestudents.data.Review
-import com.example.thestudents.data.Student
 import com.example.thestudents.data.local.localReviewsProvider
-import com.example.thestudents.ui.theme.OnAvatar
 import com.example.thestudents.ui.theme.TheStudentsTheme
-import com.example.thestudents.ui.theme.extended
-import com.example.thestudents.ui.utils.ProfileIcon
 
 @Composable
 fun ReviewCard(
@@ -151,187 +137,6 @@ fun ReviewCard(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun ReviewHeader(
-    reviewer: Student,
-    time: String,
-    rating: String?,
-    onReviewerClick: (() -> Unit)?
-) {
-    val clickModifier = if (onReviewerClick != null) Modifier.clickable(onClick = onReviewerClick) else Modifier
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // Avatar con aro dorado fino
-        Box(
-            modifier = Modifier
-                .size(48.dp)
-                .border(1.5.dp, MaterialTheme.extended.rating, CircleShape)
-                .padding(3.dp)
-                .clip(CircleShape)
-                .then(clickModifier)
-        ) {
-            ProfileIcon(
-                initials = reviewer.initials,
-                profileImage = reviewer.profileImage,
-                backgroundColor = reviewer.profileColor,
-                contentColor = OnAvatar,
-                fontSize = 15.sp,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .then(clickModifier),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            Text(
-                text = reviewer.name,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                maxLines = 1,
-                modifier = Modifier.testTag("reviewAuthorName")
-            )
-            if (time.isNotBlank()) {
-                Text(
-                    text = time,
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-        if (rating != null) {
-            RatingPill(rating = rating)
-        }
-    }
-}
-
-// Pildora verde oscuro con estrella dorada: "★ 4,5" (tambien se usa en Notificaciones)
-@Composable
-fun RatingPill(rating: String) {
-    val value = rating.toDoubleOrNull()
-    val ratingText = when {
-        value == null -> rating
-        value % 1.0 == 0.0 -> value.toInt().toString()
-        else -> value.toString().replace('.', ',')
-    }
-
-    Row(
-        modifier = Modifier
-            .height(32.dp)
-            .clip(CircleShape)
-            .background(MaterialTheme.extended.ratingPill)
-            .padding(horizontal = 12.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Star,
-            contentDescription = null,
-            tint = MaterialTheme.extended.ratingPillStar,
-            modifier = Modifier.size(14.dp)
-        )
-        Text(
-            text = ratingText,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.extended.onRatingPill
-        )
-    }
-}
-
-// Recuadro "RESEÑA PARA Valeria" con la materia y el periodo a la derecha
-@Composable
-private fun ReviewTarget(review: Review) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainer)
-            .padding(horizontal = 12.dp, vertical = 10.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        ProfileIcon(
-            initials = review.reviewedStudent.initials,
-            profileImage = review.reviewedStudent.profileImage,
-            backgroundColor = review.reviewedStudent.profileColor,
-            contentColor = OnAvatar,
-            fontSize = 13.sp,
-            modifier = Modifier.size(32.dp)
-        )
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(1.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.resena_para),
-                fontSize = 10.sp,
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = 1.4.sp,
-                color = MaterialTheme.colorScheme.tertiary
-            )
-            Text(
-                text = review.reviewedStudent.name,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary,
-                maxLines = 1,
-                modifier = Modifier.testTag("reviewTargetName")
-            )
-        }
-        if (review.classReviewed.isNotBlank() || review.periodReviewed.isNotBlank()) {
-            Column(
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.spacedBy(1.dp)
-            ) {
-                if (review.classReviewed.isNotBlank()) {
-                    Text(
-                        text = review.classReviewed,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                if (review.periodReviewed.isNotBlank()) {
-                    Text(
-                        text = stringResource(R.string.periodo_x, review.periodReviewed),
-                        fontSize = 11.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
-    }
-}
-
-// Contenido en cursiva con comillas doradas
-@Composable
-private fun ReviewQuote(content: String) {
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(
-            text = "\u201C",
-            fontSize = 44.sp,
-            lineHeight = 36.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.extended.rating
-        )
-        Text(
-            text = content,
-            fontSize = 15.sp,
-            lineHeight = 24.sp,
-            fontStyle = FontStyle.Italic,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.testTag("reviewContent")
-        )
     }
 }
 

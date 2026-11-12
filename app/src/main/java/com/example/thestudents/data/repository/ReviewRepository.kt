@@ -13,7 +13,6 @@ import com.example.thestudents.data.datasource.impl.firestore.UserFirestoreDataS
 import com.example.thestudents.data.dtos.CreateReviewGenericDto
 import com.example.thestudents.data.dtos.NotificationDto
 import com.example.thestudents.data.dtos.StudentSummaryDto
-import com.example.thestudents.data.dtos.isReviewWithinLast24Hours
 import com.example.thestudents.data.dtos.toSummaryDto
 import com.google.firebase.Timestamp
 import com.example.thestudents.data.dtos.toComment
@@ -196,14 +195,9 @@ class ReviewRepository @Inject constructor(
     }
 
     suspend fun getRecentMapReviewsLive(studentId: String): Flow<List<Review>> {
-        return reviewRemoteDataSource.listenAllReviews(studentId).map { reviewsDto ->
-            val nowMillis = System.currentTimeMillis()
+        return reviewRemoteDataSource.listenRecentReviews(studentId).map { reviewsDto ->
             reviewsDto
-                .filter { dto ->
-                    dto.latitud != null &&
-                        dto.longitud != null &&
-                        isReviewWithinLast24Hours(dto.fechaCreacion, nowMillis)
-                }
+                .filter { dto -> dto.latitud != null && dto.longitud != null }
                 .map { it.toReview() }
         }
     }

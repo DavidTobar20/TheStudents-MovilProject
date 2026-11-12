@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -49,7 +48,7 @@ fun HomeScreen(
     }
 
     Column(modifier = modifier.fillMaxSize()) {
-        HomeTopBar(onMapClick = onMapClick)
+        HomeTopBar()
 
         when {
             state.isLoading -> {
@@ -88,7 +87,8 @@ fun HomeScreen(
                     onDislikeClick = { index -> homeViewModel.updateDislikedReviews(index) },
                     onCommentClick = onReviewClick,
                     onCardClick = onReviewClick,
-                    onReviewerClick = onStudentClick
+                    onReviewerClick = onStudentClick,
+                    onMapClick = onMapClick
                 )
             }
         }
@@ -105,7 +105,8 @@ fun BodyHomeScreen(
     onCommentClick: (String) -> Unit,
     onCardClick: (String) -> Unit,
     onReviewerClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onMapClick: () -> Unit
 ) {
     Column(modifier = modifier
         .fillMaxSize()
@@ -113,7 +114,8 @@ fun BodyHomeScreen(
     ) {
         HomeTabs(
             selectedTab = selectedTab,
-            onTabSelected = onTabSelected
+            onTabSelected = onTabSelected,
+            onMapClick = onMapClick
         )
 
         Box(modifier = Modifier.fillMaxSize()) {
@@ -177,7 +179,8 @@ fun BodyHomeScreenPreview() {
             onDislikeClick = {},
             onCommentClick = {},
             onCardClick = {},
-            onReviewerClick = {}
+            onReviewerClick = {},
+            onMapClick = {}
         )
     }
 }
@@ -197,7 +200,8 @@ fun HomeScreenPreview() {
                 onDislikeClick = {},
                 onCommentClick = {},
                 onCardClick = {},
-                onReviewerClick = {}
+                onReviewerClick = {},
+                onMapClick = {}
             )
         }
     }

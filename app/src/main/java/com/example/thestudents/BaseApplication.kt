@@ -13,7 +13,7 @@ import dagger.hilt.android.HiltAndroidApp
  */
 @HiltAndroidApp
 class BaseApplication : Application(){
-    override fun onCreate() {
+    /*override fun onCreate() {
         super.onCreate()
 
         FirebaseApp.initializeApp(this)
@@ -27,5 +27,5 @@ class BaseApplication : Application(){
                 // Evita cierres si los emuladores ya fueron configurados
             }
         }
-    }
+    }*/
 }

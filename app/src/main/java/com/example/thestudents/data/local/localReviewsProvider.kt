@@ -1,17 +1,8 @@
 package com.example.thestudents.data.local
 
 import com.example.thestudents.data.Review
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 
 object localReviewsProvider {
-    private fun isoHoursAgo(hours: Int): String {
-        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
-        format.timeZone = TimeZone.getTimeZone("UTC")
-        return format.format(Date(System.currentTimeMillis() - hours * 3_600_000L))
-    }
 
     val allReviews = listOf(
         Review(
@@ -27,8 +18,7 @@ object localReviewsProvider {
             rating = "4.5",
             comments = localCommentsProvider.allComments,
             latitude = 4.6285,
-            longitude = -74.0646,
-            createdAtIso = isoHoursAgo(2)
+            longitude = -74.0646
         ),
         Review(
             id = "2",
@@ -43,8 +33,7 @@ object localReviewsProvider {
             rating = "4.5",
             comments = localCommentsProvider.allComments,
             latitude = 4.6268,
-            longitude = -74.0638,
-            createdAtIso = isoHoursAgo(5)
+            longitude = -74.0638
         ),
         Review(
             id = "3",
@@ -59,8 +48,7 @@ object localReviewsProvider {
             rating = null,
             comments = localCommentsProvider.allComments.subList(0, 1),
             latitude = 4.6301,
-            longitude = -74.0652,
-            createdAtIso = isoHoursAgo(12)
+            longitude = -74.0652
         ),
         Review(
             id = "4",

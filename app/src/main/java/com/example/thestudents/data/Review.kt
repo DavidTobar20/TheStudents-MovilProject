@@ -16,6 +16,5 @@ data class Review(
     val isLiked: Boolean = false,
     val isDisliked: Boolean = false,
     val latitude: Double? = null,
-    val longitude: Double? = null,
-    val createdAtIso: String? = null
+    val longitude: Double? = null
 )

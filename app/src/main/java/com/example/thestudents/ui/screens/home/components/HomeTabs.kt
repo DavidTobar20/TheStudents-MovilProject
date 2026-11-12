@@ -1,17 +1,25 @@
 package com.example.thestudents.ui.screens.home.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,26 +33,46 @@ enum class HomeTab { ALL, FOLLOWED }
 fun HomeTabs(
     selectedTab: HomeTab,
     onTabSelected: (HomeTab) -> Unit,
+    onMapClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),
-            horizontalArrangement = Arrangement.Center
+            contentAlignment = Alignment.Center
         ) {
-            TabItem(
-                text = stringResource(R.string.todos),
-                isSelected = selectedTab == HomeTab.ALL,
-                onClick = { onTabSelected(HomeTab.ALL) }
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            TabItem(
-                text = stringResource(R.string.seguidos),
-                isSelected = selectedTab == HomeTab.FOLLOWED,
-                onClick = { onTabSelected(HomeTab.FOLLOWED) }
-            )
+            Row(
+                modifier = Modifier.align(Alignment.Center),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                TabItem(
+                    text = stringResource(R.string.todos),
+                    isSelected = selectedTab == HomeTab.ALL,
+                    onClick = { onTabSelected(HomeTab.ALL) }
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                TabItem(
+                    text = stringResource(R.string.seguidos),
+                    isSelected = selectedTab == HomeTab.FOLLOWED,
+                    onClick = { onTabSelected(HomeTab.FOLLOWED) }
+                )
+            }
+
+            IconButton(
+                onClick = onMapClick,
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .testTag("btnOpenMap")
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Map,
+                    contentDescription = stringResource(id = R.string.ver_mapa_resenas),
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
         HorizontalDivider(
             modifier = Modifier.padding(horizontal = 24.dp),
@@ -60,7 +88,8 @@ fun HomeTabsPreview() {
         Surface {
             HomeTabs(
                 selectedTab = HomeTab.ALL,
-                onTabSelected = {}
+                onTabSelected = {},
+                onMapClick = {}
             )
         }
     }

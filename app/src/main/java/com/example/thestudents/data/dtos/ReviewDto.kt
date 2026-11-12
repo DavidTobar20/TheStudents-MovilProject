@@ -73,8 +73,7 @@ fun ReviewDto.toReview(): Review {
         isLiked = isLiked,
         isDisliked = isDisliked,
         latitude = latitud,
-        longitude = longitud,
-        createdAtIso = fechaCreacion
+        longitude = longitud
     )
 }
 

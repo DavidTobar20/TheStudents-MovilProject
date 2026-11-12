@@ -8,6 +8,7 @@ plugins {
     //Messaging
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    //Mantiene secreta la API KEY del mapa
     alias(libs.plugins.mapsplatform.secrets.plugin)
 }
 

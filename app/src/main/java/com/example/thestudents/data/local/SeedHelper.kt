@@ -46,7 +46,7 @@ object SeedHelper {
             "periodo" to "2026-2",
             "rating" to "5",
             "contenido" to "Excelente compañero, muy responsable",
-            "fechaCreacion" to currentIsoDate(),
+            "fechaCreacion" to "2026-01-01T00:00:00.000Z",
             "latitud" to 4.6285,
             "longitud" to -74.0646,
             "likesCount" to 0,

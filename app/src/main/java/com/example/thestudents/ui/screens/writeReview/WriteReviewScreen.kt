@@ -42,9 +42,6 @@ import com.example.thestudents.ui.screens.writeReview.components.ReviewHeader
 import com.example.thestudents.ui.theme.TheStudentsTheme
 import com.example.thestudents.ui.utils.ButtonWithoutIcon
 import com.example.thestudents.ui.utils.HeaderBack
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -146,7 +143,6 @@ fun BodyWriteReviewScreenPreview() {
     }
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @SuppressLint("MissingPermission")
 @Composable
 fun WriteReviewScreen(
@@ -159,19 +155,11 @@ fun WriteReviewScreen(
 ) {
     val state by writeReviewViewModel.uiState.collectAsState()
     val context = LocalContext.current
-    val locationPermissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
 
     LaunchedEffect(Unit) {
         writeReviewViewModel.getInscriptionById(inscriptionId)
-        if (!locationPermissionState.status.isGranted) {
-            locationPermissionState.launchPermissionRequest()
-        }
-    }
 
-    LaunchedEffect(locationPermissionState.status.isGranted) {
-        if (locationPermissionState.status.isGranted &&
-            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        ) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                 if (location != null) {

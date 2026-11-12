@@ -34,8 +34,20 @@ fun TheStudentsApp() {
     val showBottomBar = selectedTab != Screen.Login.route && selectedTab != Screen.Register.route
 
     val context = LocalContext.current
-    // Launcher para pedir permiso
-    /*
+
+    // Launcher para pedir permiso de ubicación
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (isGranted) {
+                Log.d("LocationPermission", "Permiso de ubicación concedido ✅")
+            } else {
+                Log.d("LocationPermission", "Permiso de ubicación denegado ❌")
+            }
+        }
+    )
+
+    // Launcher para pedir permiso de notificaciones y secuencialmente pedir ubicación
     val notificationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
@@ -44,18 +56,29 @@ fun TheStudentsApp() {
             } else {
                 Log.d("FCM", "Permiso de notificaciones denegado ❌")
             }
-        }
-    )
-    // Al entrar al Composable, pedimos el permiso si hace falta
-    LaunchedEffect(Unit) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Una vez que el usuario responde al de notificaciones, pedimos el de ubicación si falta
             if (ContextCompat.checkSelfPermission(
                     context,
-                    Manifest.permission.POST_NOTIFICATIONS
-            ) != PackageManager.PERMISSION_GRANTED) {
-                    notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             }
+        }
+    )
+
+    // Al entrar al Composable, pedimos secuencialmente los permisos
+    LaunchedEffect(Unit) {
+        val needsNotification = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+
+        val needsLocation = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+
+        if (needsNotification) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } else if (needsLocation) {
+            locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
 
@@ -67,8 +90,6 @@ fun TheStudentsApp() {
                 Log.e("FCM", "Error obteniendo token", task.exception)
             }
         }
-
-     */
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

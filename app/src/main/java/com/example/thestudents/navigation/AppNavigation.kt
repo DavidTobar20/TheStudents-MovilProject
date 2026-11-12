@@ -59,6 +59,7 @@ const val IS_FOLLOWING_LIST_ARG = "isFollowingList"
 
 /** Determina qué pestaña debe marcarse como activa en la barra inferior. */
 fun selectedTabFor(route: String?): String? = when (route) {
+    //Creamos la opción de que cuando seleccione ver el mapa se llene el icono de home en la barra inferior
     Screen.ReviewsMap.route -> Screen.Home.route
     Screen.EditProfile.route,
     Screen.CommentsReview.route,
@@ -74,6 +75,7 @@ sealed class Screen(val route: String) {
     data object Login : Screen("login")
     data object Register : Screen("register")
     data object Home : Screen("home")
+    // Creamos la ruta de navegación para la pantalla del mapa
     data object ReviewsMap : Screen("reviews_map")
     data object Search : Screen("search")
     data object Notifications : Screen("notifications")
