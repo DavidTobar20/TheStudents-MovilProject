@@ -131,6 +131,8 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
             periodo = review.periodo,
             contenido = review.contenido,
             rating = review.rating,
+            latitud = review.latitud,
+            longitud = review.longitud,
             autor = autorSummaryDto,
             resenado = resenadoSummaryDto
         )
@@ -234,6 +236,42 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
                 }.filter { review ->
                     val autorIdStr = review.autor?.id
                     autorIdStr != studentId
+                }
+
+                lastJob?.cancel()
+                lastJob = launch {
+                    if (studentId.isNotEmpty()) {
+                        reviews.map { review ->
+                            async {
+                                val reviewId = review.id ?: return@async
+                                val reviewRef = db.collection("reviews").document(reviewId)
+                                val liked = async { reviewRef.collection("likes").document(studentId).get().await().exists() }
+                                val disliked = async { reviewRef.collection("dislikes").document(studentId).get().await().exists() }
+                                review.isLiked = liked.await()
+                                review.isDisliked = disliked.await()
+                            }
+                        }.awaitAll()
+                    }
+                    trySend(reviews).isSuccess
+                }
+            }
+        }
+        awaitClose { listener.remove() }
+    }
+
+    override suspend fun listenAllReviews(studentId: String): Flow<List<ReviewDto>> = callbackFlow {
+        var lastJob: Job? = null
+
+        val listener = db.collection("reviews").addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                close(error)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null) {
+                val reviews = snapshot.documents.mapNotNull { doc ->
+                    val review = doc.toObject(ReviewDto::class.java) ?: return@mapNotNull null
+                    review.copy(id = doc.id)
                 }
 
                 lastJob?.cancel()

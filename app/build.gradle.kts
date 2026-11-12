@@ -8,6 +8,7 @@ plugins {
     //Messaging
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.mapsplatform.secrets.plugin)
 }
 
 android {
@@ -95,6 +96,12 @@ dependencies {
 
     //Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
+
+    //Mapas y Localizacion (Google Maps Compose + Play Services Location + Permisos)
+    implementation(libs.maps.compose)
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+    implementation(libs.accompanist.permissions)
 
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

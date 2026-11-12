@@ -8,6 +8,8 @@ data class WriteReviewState(
     val period: String = "",
     val rating: Int = 0,
     val review: String = "",
+    val latitude: Double? = null,
+    val longitude: Double? = null,
     val navigateToHome: Boolean = false,
     val error: String? = null,
     val isLoading: Boolean = false

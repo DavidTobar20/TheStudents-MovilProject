@@ -39,7 +39,8 @@ fun HomeScreen(
     homeViewModel: HomeViewModel,
     modifier: Modifier = Modifier.testTag("homeScreen"),
     onReviewClick: (String) -> Unit = {},
-    onStudentClick: (String) -> Unit = {}
+    onStudentClick: (String) -> Unit = {},
+    onMapClick: () -> Unit = {}
 ) {
     val state by homeViewModel.uiState.collectAsState()
 
@@ -48,7 +49,7 @@ fun HomeScreen(
     }
 
     Column(modifier = modifier.fillMaxSize()) {
-        HomeTopBar()
+        HomeTopBar(onMapClick = onMapClick)
 
         when {
             state.isLoading -> {

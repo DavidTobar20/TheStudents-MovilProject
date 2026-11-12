@@ -11,7 +11,9 @@ data class CreateReviewGenericDto(
     val materia: String? = null,
     val periodo: String? = null,
     val contenido: String? = null,
-    val rating: String? = null
+    val rating: String? = null,
+    val latitud: Double? = null,
+    val longitud: Double? = null
 )
 
 data class CreateReviewRetrofitDto(
@@ -20,7 +22,9 @@ data class CreateReviewRetrofitDto(
     val materia: String? = null,
     val periodo: String? = null,
     val contenido: String? = null,
-    val rating: String? = null
+    val rating: String? = null,
+    val latitud: Double? = null,
+    val longitud: Double? = null
 )
 
 fun currentIsoDate(): String {
@@ -36,6 +40,8 @@ data class CreateReviewFirebaseDto(
     val periodo: String? = null,
     val contenido: String? = null,
     val rating: String? = null,
+    val latitud: Double? = null,
+    val longitud: Double? = null,
     val likesCount: Int = 0,
     val disLikes: Int = 0,
     val fechaCreacion: String = currentIsoDate(),

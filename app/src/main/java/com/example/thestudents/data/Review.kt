@@ -14,5 +14,8 @@ data class Review(
     val comments: List<Comment>,
     val commentsCount: Int = 0, // contador guardado en la reseña (para Home, donde no se cargan los comentarios)
     val isLiked: Boolean = false,
-    val isDisliked: Boolean = false
+    val isDisliked: Boolean = false,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
+    val createdAtIso: String? = null
 )

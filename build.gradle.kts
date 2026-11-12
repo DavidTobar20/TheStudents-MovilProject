@@ -8,4 +8,5 @@ plugins {
 
     //messaging
     alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.mapsplatform.secrets.plugin) apply false
 }

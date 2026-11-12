@@ -30,6 +30,8 @@ import com.example.thestudents.ui.screens.home.HomeScreen
 import com.example.thestudents.ui.screens.home.HomeViewModel
 import com.example.thestudents.ui.screens.login.LoginScreen
 import com.example.thestudents.ui.screens.login.LoginViewModel
+import com.example.thestudents.ui.screens.map.ReviewsMapScreen
+import com.example.thestudents.ui.screens.map.ReviewsMapViewModel
 import com.example.thestudents.ui.screens.notifications.NotificationsScreen
 import com.example.thestudents.ui.screens.notifications.NotificationsViewModel
 import com.example.thestudents.ui.screens.profile.ProfileScreen
@@ -57,6 +59,7 @@ const val IS_FOLLOWING_LIST_ARG = "isFollowingList"
 
 /** Determina qué pestaña debe marcarse como activa en la barra inferior. */
 fun selectedTabFor(route: String?): String? = when (route) {
+    Screen.ReviewsMap.route -> Screen.Home.route
     Screen.EditProfile.route,
     Screen.CommentsReview.route,
     Screen.StudentDetail.route,
@@ -71,6 +74,7 @@ sealed class Screen(val route: String) {
     data object Login : Screen("login")
     data object Register : Screen("register")
     data object Home : Screen("home")
+    data object ReviewsMap : Screen("reviews_map")
     data object Search : Screen("search")
     data object Notifications : Screen("notifications")
     data object Profile : Screen("profile")
@@ -192,7 +196,18 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         HomeScreen(
             onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
+            onMapClick = { navController.navigate(Screen.ReviewsMap.route) },
             homeViewModel = homeViewModel
+        )
+    }
+
+    composable(Screen.ReviewsMap.route) {
+        val reviewsMapViewModel: ReviewsMapViewModel = hiltViewModel()
+        ReviewsMapScreen(
+            reviewsMapViewModel = reviewsMapViewModel,
+            onBackClick = { navController.popBackStack() },
+            onReviewClick = { id -> navController.navigate(Screen.CommentsReview.createRoute(id)) },
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
         )
     }
 

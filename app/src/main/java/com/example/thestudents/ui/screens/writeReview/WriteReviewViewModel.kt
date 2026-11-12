@@ -60,6 +60,10 @@ class WriteReviewViewModel @Inject constructor(
         _uiState.update { it.copy(review = input) }
     }
 
+    fun updateLocation(latitude: Double?, longitude: Double?) {
+        _uiState.update { it.copy(latitude = latitude, longitude = longitude) }
+    }
+
     fun createReview() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
@@ -78,7 +82,9 @@ class WriteReviewViewModel @Inject constructor(
                 materia = state.className,
                 periodo = state.period,
                 rating = ratingStr,
-                contenido = state.review
+                contenido = state.review,
+                latitud = state.latitude,
+                longitud = state.longitude
             )
 
             if (result.isSuccess) {

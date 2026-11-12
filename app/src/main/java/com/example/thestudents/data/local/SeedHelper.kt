@@ -1,5 +1,6 @@
 package com.example.thestudents.data.local
 
+import com.example.thestudents.data.dtos.currentIsoDate
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -45,7 +46,9 @@ object SeedHelper {
             "periodo" to "2026-2",
             "rating" to "5",
             "contenido" to "Excelente compañero, muy responsable",
-            "fechaCreacion" to "2026-01-01T00:00:00.000Z",
+            "fechaCreacion" to currentIsoDate(),
+            "latitud" to 4.6285,
+            "longitud" to -74.0646,
             "likesCount" to 0,
             "disLikes" to 0,
             "commentsCount" to 1

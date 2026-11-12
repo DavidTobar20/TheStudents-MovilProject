@@ -13,6 +13,7 @@ import com.example.thestudents.data.datasource.impl.firestore.UserFirestoreDataS
 import com.example.thestudents.data.dtos.CreateReviewGenericDto
 import com.example.thestudents.data.dtos.NotificationDto
 import com.example.thestudents.data.dtos.StudentSummaryDto
+import com.example.thestudents.data.dtos.isReviewWithinLast24Hours
 import com.example.thestudents.data.dtos.toSummaryDto
 import com.google.firebase.Timestamp
 import com.example.thestudents.data.dtos.toComment
@@ -78,7 +79,9 @@ class ReviewRepository @Inject constructor(
         materia: String,
         periodo: String,
         rating: String?,
-        contenido: String
+        contenido: String,
+        latitud: Double? = null,
+        longitud: Double? = null
     ): Result<Unit> {
         return try{
             val createReviewDto = CreateReviewGenericDto(
@@ -87,7 +90,9 @@ class ReviewRepository @Inject constructor(
                 materia = materia,
                 periodo = periodo,
                 rating = rating,
-                contenido = contenido
+                contenido = contenido,
+                latitud = latitud,
+                longitud = longitud
             )
             val reviewId = reviewRemoteDataSource.createReview(createReviewDto)
             try {
@@ -188,6 +193,19 @@ class ReviewRepository @Inject constructor(
 
     suspend fun getHomeFeedLive(studentId: String): Flow<HomeFeed> {
         return reviewRemoteDataSource.listenHomeFeed(studentId).map { it.toHomeFeed() }
+    }
+
+    suspend fun getRecentMapReviewsLive(studentId: String): Flow<List<Review>> {
+        return reviewRemoteDataSource.listenAllReviews(studentId).map { reviewsDto ->
+            val nowMillis = System.currentTimeMillis()
+            reviewsDto
+                .filter { dto ->
+                    dto.latitud != null &&
+                        dto.longitud != null &&
+                        isReviewWithinLast24Hours(dto.fechaCreacion, nowMillis)
+                }
+                .map { it.toReview() }
+        }
     }
 
     suspend fun getComments(reviewId: String): Result<List<Comment>> {

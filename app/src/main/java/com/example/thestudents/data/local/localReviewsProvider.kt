@@ -1,8 +1,18 @@
 package com.example.thestudents.data.local
 
 import com.example.thestudents.data.Review
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 object localReviewsProvider {
+    private fun isoHoursAgo(hours: Int): String {
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+        format.timeZone = TimeZone.getTimeZone("UTC")
+        return format.format(Date(System.currentTimeMillis() - hours * 3_600_000L))
+    }
+
     val allReviews = listOf(
         Review(
             id = "1",
@@ -11,11 +21,14 @@ object localReviewsProvider {
             classReviewed = "MATE120",
             periodReviewed = "2025-3",
             content = "Muy responsable, aportó ideas clave en todas las etapas del proyecto.",
-            time = "Hace 3 días",
+            time = "Hace 2 horas",
             likesCount = 5,
             disLikes = 0,
             rating = "4.5",
-            comments = localCommentsProvider.allComments
+            comments = localCommentsProvider.allComments,
+            latitude = 4.6285,
+            longitude = -74.0646,
+            createdAtIso = isoHoursAgo(2)
         ),
         Review(
             id = "2",
@@ -24,11 +37,14 @@ object localReviewsProvider {
             classReviewed = "MATE120",
             periodReviewed = "2025-3",
             content = "Muy responsable, aportó ideas clave en todas las etapas del proyecto.",
-            time = "Hace 3 días",
+            time = "Hace 5 horas",
             likesCount = 5,
             disLikes = 0,
             rating = "4.5",
-            comments = localCommentsProvider.allComments
+            comments = localCommentsProvider.allComments,
+            latitude = 4.6268,
+            longitude = -74.0638,
+            createdAtIso = isoHoursAgo(5)
         ),
         Review(
             id = "3",
@@ -37,11 +53,14 @@ object localReviewsProvider {
             classReviewed = "MATE110",
             periodReviewed = "2026-1",
             content = "Excelente compañero, explica muy bien los temas complejos y es muy puntual.",
-            time = "Hace 1 semana",
+            time = "Hace 12 horas",
             likesCount = 12,
             disLikes = 0,
             rating = null,
-            comments = localCommentsProvider.allComments.subList(0, 1)
+            comments = localCommentsProvider.allComments.subList(0, 1),
+            latitude = 4.6301,
+            longitude = -74.0652,
+            createdAtIso = isoHoursAgo(12)
         ),
         Review(
             id = "4",

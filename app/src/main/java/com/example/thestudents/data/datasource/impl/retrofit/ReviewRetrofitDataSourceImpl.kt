@@ -38,7 +38,9 @@ class ReviewRetrofitDataSourceImpl @Inject constructor(
             materia = review.materia,
             periodo = review.periodo,
             contenido = review.contenido,
-            rating = review.rating
+            rating = review.rating,
+            latitud = review.latitud,
+            longitud = review.longitud
         )
         service.createReview(retrofitDto)
         return ""
@@ -54,7 +56,9 @@ class ReviewRetrofitDataSourceImpl @Inject constructor(
             materia = review.materia,
             periodo = review.periodo,
             contenido = review.contenido,
-            rating = review.rating
+            rating = review.rating,
+            latitud = review.latitud,
+            longitud = review.longitud
         )
         service.updateReview(reviewId, retrofitDto)
     }
@@ -79,6 +83,10 @@ class ReviewRetrofitDataSourceImpl @Inject constructor(
     }
 
     override suspend fun listenAllReviewsExcludingStudentId(studentId: String): Flow<List<ReviewDto>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun listenAllReviews(studentId: String): Flow<List<ReviewDto>> {
         TODO("Not yet implemented")
     }
 

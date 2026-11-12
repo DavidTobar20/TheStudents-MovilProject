@@ -28,6 +28,8 @@ interface ReviewRemoteDataSource {
 
     suspend fun listenAllReviewsExcludingStudentId(studentId: String): Flow<List<ReviewDto>>
 
+    suspend fun listenAllReviews(studentId: String): Flow<List<ReviewDto>>
+
     suspend fun listenHomeFeed(studentId: String): Flow<HomeFeedDto>
 
     suspend fun getComments(reviewId: String, studentId: String): List<CommentDto>

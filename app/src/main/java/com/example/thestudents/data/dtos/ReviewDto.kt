@@ -20,6 +20,8 @@ data class ReviewDto(
     val resenado: StudentSummaryDto? = null,
     val materia: String? = null,
     val periodo: String? = null,
+    val latitud: Double? = null,
+    val longitud: Double? = null,
     var isLiked: Boolean = false,
     var isDisliked: Boolean = false
 )
@@ -69,6 +71,25 @@ fun ReviewDto.toReview(): Review {
         comments = emptyList(),
         commentsCount = commentsCount ?: 0,
         isLiked = isLiked,
-        isDisliked = isDisliked
+        isDisliked = isDisliked,
+        latitude = latitud,
+        longitude = longitud,
+        createdAtIso = fechaCreacion
     )
+}
+
+fun isReviewWithinLast24Hours(rawTime: String?, nowMillis: Long = System.currentTimeMillis()): Boolean {
+    if (rawTime.isNullOrBlank()) return false
+    val date = try {
+        val isoFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+        isoFormat.timeZone = TimeZone.getTimeZone("UTC")
+        isoFormat.parse(rawTime)
+    } catch (_: Exception) {
+        null
+    } ?: return false
+
+    val diffMillis = nowMillis - date.time
+    val twentyFourHoursMillis = 24L * 60L * 60L * 1000L
+    // Acepta reseñas publicadas en las ultimas 24 horas (y un pequeño margen por si el reloj local va unos minutos atrasado)
+    return diffMillis in (-300_000L)..twentyFourHoursMillis
 }
