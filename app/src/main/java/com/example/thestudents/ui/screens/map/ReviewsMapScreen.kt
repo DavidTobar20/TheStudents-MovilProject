@@ -15,7 +15,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +28,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -133,9 +131,6 @@ fun ReviewsMapScreen(
 
     LaunchedEffect(Unit) {
         reviewsMapViewModel.loadRecentReviews()
-        if (!locationPermissionState.status.isGranted) {
-            locationPermissionState.launchPermissionRequest()
-        }
     }
 
     // Sensor de luminosidad para alternar entre mapa claro y oscuro (Sesion 9 - Mapas)
@@ -234,8 +229,6 @@ fun ReviewsMapScreen(
                     searchedAddressTitle = state.searchedAddressTitle,
                     userLocation = state.userLocation,
                     isDarkMap = state.isDarkMap || isSystemInDarkTheme(),
-                    hasLocationPermission = locationPermissionState.status.isGranted,
-                    onRequestPermissionClick = { locationPermissionState.launchPermissionRequest() },
                     onSearchQueryChange = { reviewsMapViewModel.updateSearchQuery(it) },
                     onSearchSubmit = {
                         val found = findLocationByAddress(geocoder, state.searchQuery)
@@ -266,8 +259,6 @@ fun BodyReviewsMapScreen(
     searchedAddressTitle: String,
     userLocation: LatLng?,
     isDarkMap: Boolean,
-    hasLocationPermission: Boolean,
-    onRequestPermissionClick: () -> Unit,
     onSearchQueryChange: (String) -> Unit,
     onSearchSubmit: () -> Unit,
     onSelectReview: (Review?) -> Unit,
@@ -376,8 +367,7 @@ fun BodyReviewsMapScreen(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
         ) {
             MapSearchField(
                 value = searchQuery,
@@ -390,9 +380,7 @@ fun BodyReviewsMapScreen(
 
             // Etiqueta informativa: filtro de las ultimas 24 horas y cantidad de marcadores
             MapFilterBadge(
-                recentReviewsCount = recentReviews.size,
-                hasLocationPermission = hasLocationPermission,
-                onRequestPermissionClick = onRequestPermissionClick
+                recentReviewsCount = recentReviews.size
             )
 
             // Aviso discreto cuando no hay reseñas en las ultimas 24h
@@ -402,7 +390,7 @@ fun BodyReviewsMapScreen(
         }
 
         // Boton flotante para centrar la camara en la ubicacion actual o en Bogota
-        if (selectedReview == null && hasLocationPermission) {
+        if (selectedReview == null) {
             MapMyLocationButton(
                 onClick = {
                     val target = userLocation ?: initialTarget

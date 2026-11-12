@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -12,9 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,13 +28,11 @@ import com.example.thestudents.R
 @Composable
 fun MapFilterBadge(
     recentReviewsCount: Int,
-    hasLocationPermission: Boolean,
-    onRequestPermissionClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
@@ -68,26 +63,6 @@ fun MapFilterBadge(
                 color = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.testTag("map24hBadge")
             )
-        }
-
-        if (!hasLocationPermission) {
-            Surface(
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.secondaryContainer,
-                shadowElevation = 4.dp
-            ) {
-                TextButton(
-                    onClick = onRequestPermissionClick,
-                    modifier = Modifier.height(32.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.solicitar_permiso),
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                }
-            }
         }
     }
 }
