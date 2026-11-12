@@ -88,6 +88,7 @@ fun isReviewWithinLast24Hours(rawTime: String?, nowMillis: Long = System.current
     } ?: return false
 
     val diffMillis = nowMillis - date.time
+
     val twentyFourHoursMillis = 24L * 60L * 60L * 1000L
     // Acepta reseñas publicadas en las ultimas 24 horas (y un pequeño margen por si el reloj local va unos minutos atrasado)
     return diffMillis in (-300_000L)..twentyFourHoursMillis
