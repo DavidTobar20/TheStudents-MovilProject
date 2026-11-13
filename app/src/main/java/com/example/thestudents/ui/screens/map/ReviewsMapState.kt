@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.LatLng
 data class ReviewsMapState(
     val recentReviews: List<Review> = emptyList(),
     val selectedReview: Review? = null,
+    val overlappingReviews: List<Review> = emptyList(),
     val searchQuery: String = "",
     val searchedLocation: LatLng? = null,
     val searchedAddressTitle: String = "",

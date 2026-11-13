@@ -28,6 +28,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +43,7 @@ import com.example.thestudents.R
 import com.example.thestudents.data.Review
 import com.example.thestudents.ui.screens.map.components.MapEmptyReviewsNotice
 import com.example.thestudents.ui.screens.map.components.MapFilterBadge
+import com.example.thestudents.ui.screens.map.components.MapMultipleReviewsDialog
 import com.example.thestudents.ui.screens.map.components.MapMyLocationButton
 import com.example.thestudents.ui.screens.map.components.MapReviewInfoCard
 import com.example.thestudents.ui.screens.map.components.MapSearchField
@@ -224,6 +226,7 @@ fun ReviewsMapScreen(
                 BodyReviewsMapScreen(
                     recentReviews = state.recentReviews,
                     selectedReview = state.selectedReview,
+                    overlappingReviews = state.overlappingReviews,
                     searchQuery = state.searchQuery,
                     searchedLocation = state.searchedLocation,
                     searchedAddressTitle = state.searchedAddressTitle,
@@ -241,7 +244,10 @@ fun ReviewsMapScreen(
                             }
                         }
                     },
+                    onMarkerClick = { lat, lon -> reviewsMapViewModel.onMarkerClick(lat, lon) },
                     onSelectReview = { reviewsMapViewModel.selectReview(it) },
+                    onSelectOverlappingReview = { review -> reviewsMapViewModel.selectOverlappingReview(review) },
+                    onDismissOverlapping = { reviewsMapViewModel.dismissOverlappingReviews() },
                     onReviewClick = onReviewClick,
                     onStudentClick = onStudentClick
                 )
@@ -254,6 +260,7 @@ fun ReviewsMapScreen(
 fun BodyReviewsMapScreen(
     recentReviews: List<Review>,
     selectedReview: Review?,
+    overlappingReviews: List<Review>,
     searchQuery: String,
     searchedLocation: LatLng?,
     searchedAddressTitle: String,
@@ -261,7 +268,10 @@ fun BodyReviewsMapScreen(
     isDarkMap: Boolean,
     onSearchQueryChange: (String) -> Unit,
     onSearchSubmit: () -> Unit,
+    onMarkerClick: (Double, Double) -> Unit,
     onSelectReview: (Review?) -> Unit,
+    onSelectOverlappingReview: (Review) -> Unit,
+    onDismissOverlapping: () -> Unit,
     onReviewClick: (String) -> Unit,
     onStudentClick: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -327,19 +337,21 @@ fun BodyReviewsMapScreen(
                 val lat = review.latitude
                 val lon = review.longitude
                 if (lat != null && lon != null) {
-                    val ratingLabel = if (review.rating != null) "★ ${review.rating}" else ""
-                    Marker(
-                        state = rememberUpdatedMarkerState(
-                            position = LatLng(lat, lon)
-                        ),
-                        title = "${review.reviewer.name} → ${review.reviewedStudent.name} $ratingLabel".trim(),
-                        snippet = "${review.classReviewed} • ${review.content}",
-                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE),
-                        onClick = {
-                            onSelectReview(review)
-                            false
-                        }
-                    )
+                    key(review.id) {
+                        val ratingLabel = if (review.rating != null) "★ ${review.rating}" else ""
+                        Marker(
+                            state = rememberUpdatedMarkerState(
+                                position = LatLng(lat, lon)
+                            ),
+                            title = "${review.reviewer.name} → ${review.reviewedStudent.name} $ratingLabel".trim(),
+                            snippet = "${review.classReviewed} • ${review.content}",
+                            icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE),
+                            onClick = {
+                                onMarkerClick(lat, lon)
+                                false
+                            }
+                        )
+                    }
                 }
             }
 
@@ -399,6 +411,15 @@ fun BodyReviewsMapScreen(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(start = 16.dp, bottom = 24.dp)
+            )
+        }
+
+        // Dialogo si hay multiples reseñas en la misma ubicacion
+        if (overlappingReviews.isNotEmpty()) {
+            MapMultipleReviewsDialog(
+                reviews = overlappingReviews,
+                onReviewSelected = onSelectOverlappingReview,
+                onDismiss = onDismissOverlapping
             )
         }
 

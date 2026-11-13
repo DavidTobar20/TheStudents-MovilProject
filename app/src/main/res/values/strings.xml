@@ -217,4 +217,5 @@
         <item quantity="one">. \"%1$s\" (con %2$d estrella)</item>
         <item quantity="other">. \"%1$s\" (con %2$d estrellas)</item>
     </plurals>
+    <string name="resenas_en_esta_ubicacion">Reseñas en esta ubicación</string>
 </resources>

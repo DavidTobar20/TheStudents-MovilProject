@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.abs
 
 @HiltViewModel
 class ReviewsMapViewModel @Inject constructor(
@@ -50,6 +51,33 @@ class ReviewsMapViewModel @Inject constructor(
 
     fun selectReview(review: Review?) {
         _uiState.update { it.copy(selectedReview = review) }
+    }
+
+    fun onMarkerClick(latitude: Double, longitude: Double) {
+        val matching = _uiState.value.recentReviews.filter { 
+            it.latitude != null && it.longitude != null && 
+            abs(it.latitude - latitude) < 0.00001 && 
+            abs(it.longitude - longitude) < 0.00001 
+        }
+        when {
+            matching.size == 1 -> {
+                _uiState.update { it.copy(selectedReview = matching.first(), overlappingReviews = emptyList()) }
+            }
+            matching.size > 1 -> {
+                _uiState.update { it.copy(overlappingReviews = matching, selectedReview = null) }
+            }
+            else -> {
+                _uiState.update { it.copy(selectedReview = null, overlappingReviews = emptyList()) }
+            }
+        }
+    }
+
+    fun selectOverlappingReview(review: Review) {
+        _uiState.update { it.copy(selectedReview = review, overlappingReviews = emptyList()) }
+    }
+
+    fun dismissOverlappingReviews() {
+        _uiState.update { it.copy(overlappingReviews = emptyList()) }
     }
 
     fun updateSearchQuery(query: String) {
