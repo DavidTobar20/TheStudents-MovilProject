@@ -218,4 +218,71 @@
         <item quantity="other">. \"%1$s\" (con %2$d estrellas)</item>
     </plurals>
     <string name="resenas_en_esta_ubicacion">Reseñas en esta ubicación</string>
+    <!-- Arma tu equipo (recomendador de compañeros) -->
+    <string name="arma_tu_equipo_cta">Arma tu equipo ideal</string>
+    <string name="arma_tu_equipo_titulo">ARMA TU EQUIPO</string>
+    <string name="arma_tu_equipo_intro">Estos estudiantes también marcaron que verán esta materia. Los ordenamos según sus reseñas y tu experiencia con ellos.</string>
+    <string name="como_calculamos_match">¿Cómo calculamos el match?</string>
+    <string name="analizando_resenas">Analizando las reseñas de tus compañeros…</string>
+    <string name="sin_companeros_para_equipo">Por ahora nadie más ha marcado que verá esta materia. Ya quedaste visible: cuando otros la marquen, te encontrarán y podrás volver a revisar aquí.</string>
+    <string name="reintentar">Reintentar</string>
+    <string name="tu_equipo_sugerido">Tu equipo sugerido</string>
+    <string name="compatibilidad_equipo">Compatibilidad del equipo</string>
+    <string name="integrantes_contandote">Integrantes (contándote)</string>
+    <string name="quitar_integrante">Quitar un integrante</string>
+    <string name="agregar_integrante">Agregar un integrante</string>
+    <string name="tu">Tú</string>
+    <string name="restablecer_sugerencia">Restablecer sugerencia</string>
+    <string name="enviar_invitacion_equipo">Enviar invitación al equipo</string>
+    <string name="selecciona_companeros">Elige al menos un compañero para invitar</string>
+    <string name="companeros_recomendados">Compañeros recomendados</string>
+    <string name="agregar_al_equipo">Agregar</string>
+    <string name="en_equipo">En el equipo</string>
+    <string name="equipo_completo">Equipo completo</string>
+    <string name="tier_ideal">Match ideal</string>
+    <string name="tier_bueno">Buen match</string>
+    <string name="tier_por_conocer">Por conocer</string>
+    <string name="tier_riesgo">Con cuidado</string>
+    <string name="match_razon_trabajaron_bien">Ya trabajaron juntos (le diste ★ %1$s)</string>
+    <string name="match_razon_trabajaron_mal">Mala experiencia previa (le diste ★ %1$s)</string>
+    <string name="match_razon_te_califico">Te calificó con ★ %1$s</string>
+    <string name="match_razon_lo_sigues">Lo sigues</string>
+    <string name="match_razon_pocas_resenas">Pocas reseñas aún</string>
+    <string name="match_razon_resenas_bajas">Reseñas bajas de otros compañeros</string>
+    <string name="como_funciona_titulo">¿Cómo funciona el match?</string>
+    <string name="como_funciona_texto" formatted="false">Calculamos un puntaje de 0 a 100 para cada compañero:\n\n• 55 % Reputación: promedio de estrellas que ha recibido, ajustado para que pocas reseñas no pesen igual que muchas. Las reseñas de esta misma materia valen más.\n• 15 % Confianza: cuántas reseñas lo respaldan.\n• 20 % Afinidad: cómo se calificaron entre ustedes si ya trabajaron juntos.\n• 10 % Social: si lo sigues y cuántas materias han visto juntos.\n\nSolo te recomendamos estudiantes que también marcaron que verán la materia.\n\nSi tuviste una mala experiencia con alguien o tiene reseñas muy bajas, lo marcamos como “Con cuidado” y no lo sugerimos automáticamente.</string>
+    <string name="entendido">Entendido</string>
+    <string name="te_invito_a_su_equipo">te invitó a su equipo de</string>
+    <string name="ver_perfil_companero">Ver perfil</string>
+    <string name="arma_tu_equipo_semestre">Arma tu equipo para %1$s</string>
+    <string name="semestre_x">Semestre %1$s</string>
+    <string name="elige_materia_proxima">¿Qué materia vas a ver?</string>
+    <string name="elige_materia_proxima_desc">Elige una materia del próximo semestre y te recomendamos con quién trabajar según las reseñas.</string>
+    <string name="sin_materias_disponibles">No hay materias del catálogo que aún no hayas visto.</string>
+    <string name="buscar_equipo">Buscar equipo</string>
+    <string name="buscar_equipo_aviso">Quedarás visible para otros estudiantes que busquen equipo en esa materia.</string>
+    <string name="mis_busquedas">Ya buscas equipo en</string>
+    <string name="dejar_de_buscar">Dejar de buscar equipo</string>
+    <string name="cambiar_materia">Cambiar materia</string>
+    <string name="seccion_buscan_equipo">También verán esta materia</string>
+    <plurals name="match_razon_reputacion">
+        <item quantity="one">★ %1$s · %2$d reseña</item>
+        <item quantity="other">★ %1$s · %2$d reseñas</item>
+    </plurals>
+    <plurals name="match_razon_materia">
+        <item quantity="one">★ %1$s en esta materia</item>
+        <item quantity="other">★ %1$s en esta materia (%2$d reseñas)</item>
+    </plurals>
+    <plurals name="match_razon_materias_compartidas">
+        <item quantity="one">Ya vieron %1$d materia juntos</item>
+        <item quantity="other">Ya vieron %1$d materias juntos</item>
+    </plurals>
+    <plurals name="integrantes_seleccionados">
+        <item quantity="one">%1$d de %2$d compañero elegido</item>
+        <item quantity="other">%1$d de %2$d compañeros elegidos</item>
+    </plurals>
+    <plurals name="invitaciones_enviadas">
+        <item quantity="one">¡Listo! Se envió %1$d invitación. Tu compañero la verá en sus notificaciones.</item>
+        <item quantity="other">¡Listo! Se enviaron %1$d invitaciones. Tus compañeros las verán en sus notificaciones.</item>
+    </plurals>
 </resources>

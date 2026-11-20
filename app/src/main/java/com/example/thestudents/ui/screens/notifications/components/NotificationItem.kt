@@ -103,6 +103,12 @@ private fun NotificationContentSwitcher(
             snippet = notification.snippet ?: "",
             onViewDetailClick = onViewDetailClick
         )
+        NotificationType.TEAM_INVITE -> TeamInviteNotificationContent(
+            userName = notification.student.name,
+            subject = notification.subject ?: "",
+            period = notification.period ?: "",
+            onViewProfileClick = onViewDetailClick
+        )
     }
 }
 

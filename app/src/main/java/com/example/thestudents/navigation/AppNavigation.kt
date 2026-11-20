@@ -46,6 +46,8 @@ import com.example.thestudents.ui.screens.splash.SplashScreen
 import com.example.thestudents.ui.screens.splash.SplashViewModel
 import com.example.thestudents.ui.screens.studentDetail.StudentDetailScreen
 import com.example.thestudents.ui.screens.studentDetail.StudentDetailViewModel
+import com.example.thestudents.ui.screens.teamMatch.TeamMatchScreen
+import com.example.thestudents.ui.screens.teamMatch.TeamMatchViewModel
 import com.example.thestudents.ui.screens.updateReview.UpdateReviewScreen
 import com.example.thestudents.ui.screens.updateReview.UpdateReviewViewModel
 import com.example.thestudents.ui.screens.writeReview.WriteReviewScreen
@@ -102,6 +104,9 @@ sealed class Screen(val route: String) {
     data object FollowList : Screen("follow_list/{$STUDENT_ID_ARG}/{$IS_FOLLOWING_LIST_ARG}") {
         fun createRoute(userId: String, isFollowingList: Boolean) = "follow_list/$userId/$isFollowingList"
     }
+
+    // "Arma tu equipo" para el próximo semestre
+    data object TeamMatch : Screen("team_match")
 }
 
 /**
@@ -235,7 +240,17 @@ private fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         ReviewsScreen(
             reviewsViewModel = reviewsViewModel,
             onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) },
-            onWriteReviewClick = { id -> navController.navigate(Screen.WriteReview.createRoute(id)) }
+            onWriteReviewClick = { id -> navController.navigate(Screen.WriteReview.createRoute(id)) },
+            onTeamMatchClick = { navController.navigate(Screen.TeamMatch.route) }
+        )
+    }
+
+    composable(Screen.TeamMatch.route) {
+        val teamMatchViewModel: TeamMatchViewModel = hiltViewModel()
+        TeamMatchScreen(
+            teamMatchViewModel = teamMatchViewModel,
+            onBackClick = { navController.popBackStack() },
+            onStudentClick = { id -> navController.navigate(Screen.StudentDetail.createRoute(id)) }
         )
     }
 

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChatBubble
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.ThumbUp
@@ -37,6 +38,7 @@ private fun badgeIconFor(type: NotificationType): ImageVector {
         NotificationType.FOLLOW_REQUEST -> Icons.Default.PersonAdd
         NotificationType.FOLLOW -> Icons.Default.PersonAdd
         NotificationType.COMMENT -> Icons.Default.ChatBubble
+        NotificationType.TEAM_INVITE -> Icons.Default.Groups
     }
 }
 

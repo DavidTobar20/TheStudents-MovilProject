@@ -1,7 +1,8 @@
 package com.example.thestudents.data
 
 enum class NotificationType {
-    REVIEW, LIKE, FOLLOW_REQUEST, COMMENT, FOLLOW // FOLLOW: alguien empezo a seguirte
+    REVIEW, LIKE, FOLLOW_REQUEST, COMMENT, FOLLOW, // FOLLOW: alguien empezo a seguirte
+    TEAM_INVITE // alguien te invito a su equipo de trabajo ("Arma tu equipo")
 }
 
 data class Notification(
@@ -16,5 +17,6 @@ data class Notification(
     val reviewOf: String? = null,
     val courseCode: String? = null,
     val snippet: String? = null,
-    val reviewId: String? = null
+    val reviewId: String? = null,
+    val period: String? = null // periodo de la materia (invitaciones de equipo)
 )

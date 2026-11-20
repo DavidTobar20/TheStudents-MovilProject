@@ -9,14 +9,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +39,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.thestudents.R
 import com.example.thestudents.data.CourseSection
 import com.example.thestudents.data.local.localCourseSectionProvider
+import com.example.thestudents.data.AcademicPeriod
 import com.example.thestudents.ui.screens.reviews.components.CourseSectionCard
 import com.example.thestudents.ui.screens.reviews.components.EnrollSubjectDialog
 import com.example.thestudents.ui.screens.reviews.components.HeaderReviews
@@ -47,6 +53,7 @@ fun BodyReviews(
     onWriteReviewClick: (String) -> Unit,
     onEnrollClick: () -> Unit = {},
     onWithdrawClick: (CourseSection) -> Unit = {},
+    onTeamMatchClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     // El margen va en contentPadding para que las sombras de las tarjetas no se corten
@@ -67,6 +74,23 @@ fun BodyReviews(
                     .fillMaxWidth()
                     .height(48.dp)
             )
+            Spacer(modifier = Modifier.height(8.dp))
+            // "Arma tu equipo": los grupos se hacen al inicio de cada semestre
+            Button(
+                onClick = onTeamMatchClick,
+                shape = CircleShape,
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+            ) {
+                Icon(Icons.Filled.Groups, contentDescription = null, modifier = Modifier.size(20.dp))
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.arma_tu_equipo_semestre, AcademicPeriod.upcoming()),
+                    fontWeight = FontWeight.Bold
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
         }
         if (sections.isEmpty()) {
@@ -117,6 +141,7 @@ fun ReviewsScreen(
     onStudentClick: (String) -> Unit,
     onWriteReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier,
+    onTeamMatchClick: () -> Unit = {},
     reviewsViewModel: ReviewsViewModel
 ) {
     val state by reviewsViewModel.uiState.collectAsState()
@@ -223,6 +248,7 @@ fun ReviewsScreen(
                 onWriteReviewClick = onWriteReviewClick,
                 onEnrollClick = { reviewsViewModel.openEnrollDialog() },
                 onWithdrawClick = { reviewsViewModel.openWithdrawDialog(it) },
+                onTeamMatchClick = onTeamMatchClick,
                 modifier = modifier
             )
         }

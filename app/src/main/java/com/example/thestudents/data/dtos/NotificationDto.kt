@@ -10,8 +10,9 @@ data class NotificationDto(
     val destinatarioId: String? = null,
     val emisorId: String? = null,
     val resenaId: String? = null, // reseña a la que lleva "Ver reseña completa"
-    val tipo: String? = null, // REVIEW, LIKE, FOLLOW_REQUEST, COMMENT
+    val tipo: String? = null, // REVIEW, LIKE, FOLLOW_REQUEST, COMMENT, FOLLOW, TEAM_INVITE
     val materia: String? = null,
+    val periodo: String? = null, // usado por TEAM_INVITE
     val rating: Int? = null,
     val comentario: String? = null,
     val resenaDe: String? = null,
@@ -35,7 +36,8 @@ fun NotificationDto.toNotification(): Notification {
         reviewOf = resenaDe,
         courseCode = codigoMateria,
         snippet = fragmento,
-        reviewId = resenaId
+        reviewId = resenaId,
+        period = periodo
     )
 }
 
